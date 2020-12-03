@@ -1,1 +1,1 @@
-# jelly_toll_mechanics
+# Code for mechanical model of jelly roll swelling
