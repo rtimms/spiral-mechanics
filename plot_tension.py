@@ -17,12 +17,13 @@ lam = E * nu / (1 + nu) / (1 - 2 * nu)
 mu = E / 2 / (1 + nu)
 N = 10
 r0 = 0.5
-omega = np.sqrt(2 * np.pi * mu / (lam + 2 * mu))
+# omega = np.sqrt(2 * np.pi * mu / (lam + 2 * mu))
+omega = np.sqrt(mu / (lam + 2 * mu))
 
 # Compute the tension from the boundary layer solution
 # Note: the solution is different for the first wind
-theta1 = np.linspace(0, 2 * np.pi, 50)
-theta2 = np.linspace(2 * np.pi, 2 * np.pi * N, 50 * (N - 1))
+theta1 = np.linspace(0, 2 * np.pi, 60)
+theta2 = np.linspace(2 * np.pi, 2 * np.pi * N, 60 * (N - 1))
 theta = np.concatenate((theta1, theta2))
 
 
@@ -41,7 +42,7 @@ def tension(alpha):
 # COMSOL returns T(s), so we plot everything as a function of arc length
 def arc_length(theta):
     integrand = np.sqrt(
-        (r0 + delta * theta / 2 / np.pi) ** 2 + (delta * theta / 2 / np.pi) ** 2
+        (r0 + delta * theta / 2 / np.pi) ** 2 + (delta / 2 / np.pi) ** 2
     )
     return integrate.cumtrapz(integrand, theta, initial=0)
 

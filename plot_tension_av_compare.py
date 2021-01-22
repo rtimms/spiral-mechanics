@@ -40,7 +40,7 @@ def tension(alpha):
 # COMSOL returns T(s), so we plot everything as a function of arc length
 def arc_length(theta):
     integrand = np.sqrt(
-        (r0 + delta * theta / 2 / np.pi) ** 2 + (delta * theta / 2 / np.pi) ** 2
+        (r0 + delta * theta / 2 / np.pi) ** 2 + (delta / 2 / np.pi) ** 2
     )
     return integrate.cumtrapz(integrand, theta, initial=0)
 
@@ -49,25 +49,25 @@ def arc_length(theta):
 def load_comsol(alpha):
     alpha100 = int(alpha * 100)
     comsol1 = pd.read_csv(
-        f"data/E_cc_1e4/T1_alpha{alpha100}.csv", comment="#", header=None
+        f"data/E_cc_100000/T1_alpha{alpha100}.csv", comment="#", header=None
     ).to_numpy()
-    comsol2 = pd.read_csv(
-        f"data/E_cc_1e4/T2_alpha{alpha100}.csv", comment="#", header=None
-    ).to_numpy()
+    # comsol2 = pd.read_csv(
+    #    f"data/E_cc_100000/T2_alpha{alpha100}.csv", comment="#", header=None
+    # ).to_numpy()
     comsol3 = pd.read_csv(
-        f"data/E_cc_1e4/T3_alpha{alpha100}.csv", comment="#", header=None
+        f"data/E_cc_100000/T3_alpha{alpha100}.csv", comment="#", header=None
     ).to_numpy()
-    comsol4 = pd.read_csv(
-        f"data/E_cc_1e4/T4_alpha{alpha100}.csv", comment="#", header=None
-    ).to_numpy()
+    # comsol4 = pd.read_csv(
+    #    f"data/E_cc_100000/T4_alpha{alpha100}.csv", comment="#", header=None
+    # ).to_numpy()
     comsol5 = pd.read_csv(
-        f"data/E_cc_1e4/T5_alpha{alpha100}.csv", comment="#", header=None
+        f"data/E_cc_100000/T5_alpha{alpha100}.csv", comment="#", header=None
     ).to_numpy()
     s = comsol3[:, 0]  # arc length (at midpoint)
     T_m = comsol3[:, 1]  # T at midpoint of current collector
     T_av = (
-        comsol1[:, 1] + comsol2[:, 1] + comsol3[:, 1] + comsol4[:, 1] + comsol5[:, 1]
-    ) / 5  # "average" over 5 equispaced curves
+        comsol1[:, 1] + comsol3[:, 1] + comsol5[:, 1]
+    ) / 3  # "average" over 5 equispaced curves
     return s, T_m, T_av
 
 
