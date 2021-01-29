@@ -1,6 +1,6 @@
 #
-# Plot the tension in the boundary layers near r=r0 and r=r1 in the jelly roll
-# mechanics problem
+# Plot the tension in the boundary layer near r=r0 in the jelly roll mechanics
+# problem
 #
 import numpy as np
 from scipy import integrate
@@ -16,20 +16,19 @@ lam = E * nu / (1 + nu) / (1 - 2 * nu)
 mu = E / 2 / (1 + nu)
 N = 10
 r0 = 0.5
-r1 = r0 + delta * N
 omega = np.sqrt(2 * np.pi * mu / (lam + 2 * mu))
 # omega = np.sqrt(mu / (lam + 2 * mu))
+T00 = r0 * 2 * mu * alpha * (3 * lam + 2 * mu) / lam
 
 
 # Compute the tension from the boundary layer solution
-# Note: the solution is different for the first and last winds
+# Note: the solution is different for the first wind
 theta1 = np.linspace(0, 2 * np.pi, 60)
-theta2 = np.linspace(2 * np.pi, 2 * np.pi * (N - 1), 60 * (N - 2))
-theta3 = np.linspace(2 * np.pi * (N - 1), 2 * np.pi * N, 60)
-theta = np.concatenate((theta1, theta2, theta3))
+theta2 = np.linspace(2 * np.pi, 2 * np.pi * N, 60 * (N - 1))
+theta = np.concatenate((theta1, theta2))
 
 
-def tension_r0(alpha):
+def tension(alpha):
     T1 = -r0 * alpha * (3 * lam + 2 * mu) * (1 - np.exp(-omega * theta1))
     T2 = (
         -r0
@@ -38,35 +37,7 @@ def tension_r0(alpha):
         * np.exp(-omega * theta2)
         * (np.exp(2 * np.pi * omega) - 1)
     )
-    T3 = (
-        -r0
-        * alpha
-        * (3 * lam + 2 * mu)
-        * np.exp(-omega * theta3)
-        * (np.exp(2 * np.pi * omega) - 1)
-    )
-    return np.concatenate((T1, T2, T3))
-
-
-def tension_r1(alpha):
-    T1 = (
-        r1
-        * alpha
-        * (3 * lam + 2 * mu)
-        * np.exp(omega * (theta1 - 2 * N * np.pi))
-        * (np.exp(2 * np.pi * omega) - 1)
-    )
-    T2 = (
-        r1
-        * alpha
-        * (3 * lam + 2 * mu)
-        * np.exp(omega * (theta2 - 2 * N * np.pi))
-        * (np.exp(2 * np.pi * omega) - 1)
-    )
-    T3 = (
-        r1 * alpha * (3 * lam + 2 * mu) * (1 - np.exp(omega * (theta3 - 2 * N * np.pi)))
-    )
-    return np.concatenate((T1, T2, T3))
+    return np.concatenate((T1, T2))
 
 
 # COMSOL returns T(s), so we plot everything as a function of arc length
@@ -90,16 +61,11 @@ def load_comsol(E_cc, alpha):
 
 
 # Plot solution(s)
-N_plot = N
+N_plot = 5
 path = "data/"
 alpha100 = int(alpha * 100)
 fig, ax = plt.subplots()
-plt.plot(
-    arc_length(theta), tension_r0(alpha), "-", label=r"Asymptotic ($r=r_0 + \delta R$)"
-)
-plt.plot(
-    arc_length(theta), tension_r1(alpha), "-", label=r"Asymptotic ($r=r_1 + \delta R$)"
-)
+plt.plot(arc_length(theta), tension(alpha), "-", label="Asymptotic")
 comsol = pd.read_csv(
     path + f"T3_alpha{alpha100}.csv", comment="#", header=None
 ).to_numpy()
@@ -107,9 +73,9 @@ s = comsol[:, 0]  # arc length
 T = comsol[:, 1]  # tension
 plt.plot(s, T, "--", label="COMSOL")
 plt.xlim(arc_length(np.array([0, N_plot * 2 * np.pi])))
-# plt.ylim([-0.3, 0.05])
+plt.ylim([-0.3, 0.05])
 plt.xlabel(r"$s$")
 plt.ylabel(r"$T(s)$")
-plt.title("$T(s)$, " r"$\alpha$ = " + f"{alpha}")
+plt.title(f"$T(s)$ in the first {N_plot} winds \n" r"$\alpha$ = " + f"{alpha}")
 plt.legend()
 plt.show()
