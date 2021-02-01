@@ -20,7 +20,7 @@ r0 = 0.5
 r1 = r0 + delta * N
 omega = np.sqrt(mu / (lam + 2 * mu))
 N_plot = 4  # number of winds to plot
-path = "data/d01h0002"  # path to data
+path = "data/d01h0002/"  # path to data
 
 # Compute the boundary layer solution -----------------------------------------
 # Note: the tension is different for the first wind
