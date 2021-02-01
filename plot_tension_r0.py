@@ -20,7 +20,7 @@ r0 = 0.5
 r1 = r0 + delta * N
 omega = np.sqrt(mu / (lam + 2 * mu))
 N_plot = 4  # number of winds to plot
-path = "data/d01h0002/"  # path to data
+path = "data/d01h0005/"  # path to data
 
 # Compute the boundary layer solution -----------------------------------------
 # Note: the tension is different for the first wind
@@ -44,6 +44,12 @@ def arc_length(theta):
     return integrate.cumtrapz(integrand, theta, initial=0)
 
 
+# get s coords of the ends of each wind
+winds = []
+for n in list(range(N_plot)):
+    w = arc_length((np.linspace(0, n * 2 * pi, 60)))[-1]
+    winds.append(w)
+
 # tension
 fig, ax = plt.subplots()
 plt.plot(arc_length(theta), T, "-", label="Asymptotic")
@@ -51,6 +57,8 @@ comsol = pd.read_csv(
     path + f"T3_alpha{alpha100}.csv", comment="#", header=None
 ).to_numpy()
 plt.plot(comsol[:, 0], comsol[:, 1], "--", label="COMSOL")
+for w in winds:
+    plt.axvline(x=w, linestyle=":", color="lightgrey")
 plt.xlim(arc_length(np.array([0, N_plot * 2 * pi])))
 plt.ylim([-r0 * alpha * (3 * lam + 2 * mu) * 1.2, 0.01])
 plt.xlabel(r"$s$")

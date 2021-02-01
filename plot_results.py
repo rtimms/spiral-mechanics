@@ -20,7 +20,7 @@ r0 = 0.5
 r1 = r0 + delta * N
 omega = np.sqrt(mu / (lam + 2 * mu))
 N_plot = 4  # number of winds to plot
-path = "data/d01h0002/"  # path to data
+path = "data/d01h0005_u0r1/"  # path to data
 
 # Compute the boundary layer solution -----------------------------------------
 # Note: the tension is different for the first wind
@@ -77,6 +77,12 @@ def arc_length(theta):
     return integrate.cumtrapz(integrand, theta, initial=0)
 
 
+# get s coords of the ends of each wind
+winds = []
+for n in list(range(N_plot)):
+    w = arc_length((np.linspace(0, n * 2 * pi, 60)))[-1]
+    winds.append(w)
+
 # functions of theta
 fig, ax = plt.subplots()
 plt.plot(theta, f1, "-", label=r"$f_1$")
@@ -95,6 +101,8 @@ comsol = pd.read_csv(
     path + f"u3_alpha{alpha100}.csv", comment="#", header=None
 ).to_numpy()
 plt.plot(comsol[:, 0], comsol[:, 1], "--", label="COMSOL")
+for w in winds:
+    plt.axvline(x=w, linestyle=":", color="lightgrey")
 plt.xlim(arc_length(np.array([0, N_plot * 2 * pi])))
 plt.xlabel(r"$s$")
 plt.ylabel(r"$u$")
@@ -108,6 +116,8 @@ comsol = pd.read_csv(
     path + f"v3_alpha{alpha100}.csv", comment="#", header=None
 ).to_numpy()
 plt.plot(comsol[:, 0], comsol[:, 1], "--", label="COMSOL")
+for w in winds:
+    plt.axvline(x=w, linestyle=":", color="lightgrey")
 plt.xlim(arc_length(np.array([0, N_plot * 2 * pi])))
 plt.xlabel(r"$s$")
 plt.ylabel(r"$v$")
@@ -121,6 +131,8 @@ comsol = pd.read_csv(
     path + f"err3_alpha{alpha100}.csv", comment="#", header=None
 ).to_numpy()
 plt.plot(comsol[:, 0], comsol[:, 1], "--", label="COMSOL")
+for w in winds:
+    plt.axvline(x=w, linestyle=":", color="lightgrey")
 plt.xlim(arc_length(np.array([0, N_plot * 2 * pi])))
 plt.xlabel(r"$s$")
 plt.ylabel(r"$\epsilon_{rr}$")
@@ -137,6 +149,8 @@ comsol = pd.read_csv(
     path + f"ett3_alpha{alpha100}.csv", comment="#", header=None
 ).to_numpy()
 plt.plot(comsol[:, 0], comsol[:, 1], "--", label="COMSOL")
+for w in winds:
+    plt.axvline(x=w, linestyle=":", color="lightgrey")
 plt.xlim(arc_length(np.array([0, N_plot * 2 * pi])))
 plt.xlabel(r"$s$")
 plt.ylabel(r"$\epsilon_{\theta\theta}$")
@@ -153,6 +167,8 @@ comsol = pd.read_csv(
     path + f"ert3_alpha{alpha100}.csv", comment="#", header=None
 ).to_numpy()
 plt.plot(comsol[:, 0], comsol[:, 1], "--", label="COMSOL")
+for w in winds:
+    plt.axvline(x=w, linestyle=":", color="lightgrey")
 plt.xlim(arc_length(np.array([0, N_plot * 2 * pi])))
 plt.xlabel(r"$s$")
 plt.ylabel(r"$\epsilon_{r\theta}$")
@@ -169,6 +185,8 @@ comsol = pd.read_csv(
     path + f"T3_alpha{alpha100}.csv", comment="#", header=None
 ).to_numpy()
 plt.plot(comsol[:, 0], comsol[:, 1], "--", label="COMSOL")
+for w in winds:
+    plt.axvline(x=w, linestyle=":", color="lightgrey")
 plt.xlim(arc_length(np.array([0, N_plot * 2 * pi])))
 plt.xlabel(r"$s$")
 plt.ylabel(r"$T$")
