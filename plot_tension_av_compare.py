@@ -16,7 +16,7 @@ lam = E * nu / (1 + nu) / (1 - 2 * nu)
 mu = E / 2 / (1 + nu)
 N = 10
 r0 = 0.5
-omega = np.sqrt(2 * np.pi * mu / (lam + 2 * mu))
+omega = np.sqrt(mu / (lam + 2 * mu))
 
 # Compute the tension from the boundary layer solution
 # Note: the solution is different for the first wind

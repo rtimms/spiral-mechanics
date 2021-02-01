@@ -8,7 +8,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Parameters
-alpha = 0.15  # expansion coefficient
+alpha = 0.1  # expansion coefficient
 delta = 0.1
 E = 1  # active material Young's modulus
 nu = 1 / 3
@@ -17,8 +17,7 @@ mu = E / 2 / (1 + nu)
 N = 10
 r0 = 0.5
 r1 = r0 + delta * N
-omega = np.sqrt(2 * np.pi * mu / (lam + 2 * mu))
-# omega = np.sqrt(mu / (lam + 2 * mu))
+omega = np.sqrt(mu / (lam + 2 * mu))
 
 
 # Compute the tension from the boundary layer solution

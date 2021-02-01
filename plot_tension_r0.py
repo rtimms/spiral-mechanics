@@ -8,7 +8,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Parameters
-alpha = 0.15  # expansion coefficient
+alpha = 0.1  # expansion coefficient
 delta = 0.1
 E = 1  # active material Young's modulus
 nu = 1 / 3
@@ -16,8 +16,7 @@ lam = E * nu / (1 + nu) / (1 - 2 * nu)
 mu = E / 2 / (1 + nu)
 N = 10
 r0 = 0.5
-omega = np.sqrt(2 * np.pi * mu / (lam + 2 * mu))
-# omega = np.sqrt(mu / (lam + 2 * mu))
+omega = np.sqrt(mu / (lam + 2 * mu))
 T00 = r0 * 2 * mu * alpha * (3 * lam + 2 * mu) / lam
 
 

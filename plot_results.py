@@ -18,9 +18,9 @@ mu = E / 2 / (1 + nu)
 N = 10
 r0 = 0.5
 r1 = r0 + delta * N
-omega = np.sqrt(2 * pi * mu / (lam + 2 * mu))
-# omega = np.sqrt(mu / (lam + 2 * mu))
-
+omega = np.sqrt(mu / (lam + 2 * mu))
+N_plot = 4  # number of winds to plot
+path = "data/d01h0002"  # path to data
 
 # Compute the boundary layer solution -----------------------------------------
 # Note: the tension is different for the first wind
@@ -68,8 +68,6 @@ T = np.concatenate((T1, T2))
 
 
 # Plot solution(s) ------------------------------------------------------------
-N_plot = 4  # number of winds to plot
-path = "data/"
 alpha100 = int(alpha * 100)
 
 
@@ -119,10 +117,10 @@ plt.legend()
 # radial strain
 fig, ax = plt.subplots()
 plt.plot(arc_length(theta), e_rr, "-", label="Asymptotic")
-# comsol = pd.read_csv(
-#    path + f"err3_alpha{alpha100}.csv", comment="#", header=None
-# ).to_numpy()
-# plt.plot(comsol[:, 0], comsol[:, 1], "--", label="COMSOL")
+comsol = pd.read_csv(
+    path + f"err3_alpha{alpha100}.csv", comment="#", header=None
+).to_numpy()
+plt.plot(comsol[:, 0], comsol[:, 1], "--", label="COMSOL")
 plt.xlim(arc_length(np.array([0, N_plot * 2 * pi])))
 plt.xlabel(r"$s$")
 plt.ylabel(r"$\epsilon_{rr}$")
@@ -135,10 +133,10 @@ plt.legend()
 # azimuthal strain
 fig, ax = plt.subplots()
 plt.plot(arc_length(theta), e_tt, "-", label="Asymptotic")
-# comsol = pd.read_csv(
-#    path + f"ett3_alpha{alpha100}.csv", comment="#", header=None
-# ).to_numpy()
-# plt.plot(comsol[:, 0], comsol[:, 1], "--", label="COMSOL")
+comsol = pd.read_csv(
+    path + f"ett3_alpha{alpha100}.csv", comment="#", header=None
+).to_numpy()
+plt.plot(comsol[:, 0], comsol[:, 1], "--", label="COMSOL")
 plt.xlim(arc_length(np.array([0, N_plot * 2 * pi])))
 plt.xlabel(r"$s$")
 plt.ylabel(r"$\epsilon_{\theta\theta}$")
@@ -151,10 +149,10 @@ plt.legend()
 # shear strain
 fig, ax = plt.subplots()
 plt.plot(arc_length(theta), e_rt, "-", label="Asymptotic")
-# comsol = pd.read_csv(
-#    path + f"ert3_alpha{alpha100}.csv", comment="#", header=None
-# ).to_numpy()
-# plt.plot(comsol[:, 0], comsol[:, 1], "--", label="COMSOL")
+comsol = pd.read_csv(
+    path + f"ert3_alpha{alpha100}.csv", comment="#", header=None
+).to_numpy()
+plt.plot(comsol[:, 0], comsol[:, 1], "--", label="COMSOL")
 plt.xlim(arc_length(np.array([0, N_plot * 2 * pi])))
 plt.xlabel(r"$s$")
 plt.ylabel(r"$\epsilon_{r\theta}$")
