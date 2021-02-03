@@ -19,9 +19,7 @@ N = 10
 r0 = 0.5
 r1 = r0 + delta * N
 omega = np.sqrt(mu / (lam + 2 * mu))
-N_plot = 10  # number of winds to plot
-path = "data/free/h001/"  # path to data (free outer)
-# path = "data/fixed/h001/"  # path to data (fixed outer)
+N_plot = 9  # number of winds to plot
 
 # Compute the boundary layer solution -----------------------------------------
 # Note: the tension is different for the first wind
@@ -69,8 +67,6 @@ T = np.concatenate((T1, T2))
 
 
 # Plot solution(s) ------------------------------------------------------------
-alpha100 = int(alpha * 100)
-
 
 # COMSOL returns T(s), so we plot everything as a function of arc length
 def arc_length(theta):
@@ -84,22 +80,16 @@ for n in list(range(N_plot)):
     w = arc_length((np.linspace(0, n * 2 * pi, 60)))[-1]
     winds.append(w)
 
-# functions of theta
-fig, ax = plt.subplots()
-plt.plot(theta, f1, "-", label=r"$f_1$")
-plt.plot(theta, f2, "-", label=r"$f_2$")
-plt.plot(theta, g1, "-", label=r"$g_1$")
-plt.plot(theta, g2, "-", label=r"$g_2$")
-plt.xlim(arc_length(np.array([0, N_plot * 2 * pi])))
-plt.xlabel(r"$\theta$")
-plt.title(f"Solutions in the first {N_plot} winds \n" r"$\alpha$ = " + f"{alpha}")
-plt.legend()
+
+names = ["free", "fixed"]
+paths = ["data/free/h001/", "data/fixed/h001/"]
 
 # radial displacement
 fig, ax = plt.subplots()
-plt.plot(arc_length(theta), u, "-", label="Asymptotic")
-comsol = pd.read_csv(path + "u3.csv", comment="#", header=None).to_numpy()
-plt.plot(comsol[:, 0], comsol[:, 1], "--", label="COMSOL")
+plt.plot(arc_length(theta), u, "-", label=r"Asymptotic ($r=r_0+\delta R$)")
+for name, path in zip(names, paths):
+    comsol = pd.read_csv(path + "u3.csv", comment="#", header=None).to_numpy()
+    plt.plot(comsol[:, 0], comsol[:, 1], "--", label=f"COMSOL ({name} outer)")
 for w in winds:
     plt.axvline(x=w, linestyle=":", color="lightgrey")
 plt.xlim(arc_length(np.array([0, N_plot * 2 * pi])))
@@ -110,9 +100,10 @@ plt.legend()
 
 # azimuthal displacement
 fig, ax = plt.subplots()
-plt.plot(arc_length(theta), v, "-", label="Asymptotic")
-comsol = pd.read_csv(path + "v3.csv", comment="#", header=None).to_numpy()
-plt.plot(comsol[:, 0], comsol[:, 1], "--", label="COMSOL")
+plt.plot(arc_length(theta), v, "-", label=r"Asymptotic ($r=r_0+\delta R$)")
+for name, path in zip(names, paths):
+    comsol = pd.read_csv(path + "v3.csv", comment="#", header=None).to_numpy()
+    plt.plot(comsol[:, 0], comsol[:, 1], "--", label=f"COMSOL ({name} outer)")
 for w in winds:
     plt.axvline(x=w, linestyle=":", color="lightgrey")
 plt.xlim(arc_length(np.array([0, N_plot * 2 * pi])))
@@ -123,9 +114,10 @@ plt.legend()
 
 # radial strain
 fig, ax = plt.subplots()
-plt.plot(arc_length(theta), e_rr, "-", label="Asymptotic")
-comsol = pd.read_csv(path + "err3.csv", comment="#", header=None).to_numpy()
-plt.plot(comsol[:, 0], comsol[:, 1], "--", label="COMSOL")
+plt.plot(arc_length(theta), e_rr, "-", label=r"Asymptotic ($r=r_0+\delta R$)")
+for name, path in zip(names, paths):
+    comsol = pd.read_csv(path + "err3.csv", comment="#", header=None).to_numpy()
+    plt.plot(comsol[:, 0], comsol[:, 1], "--", label=f"COMSOL ({name} outer)")
 for w in winds:
     plt.axvline(x=w, linestyle=":", color="lightgrey")
 plt.xlim(arc_length(np.array([0, N_plot * 2 * pi])))
@@ -136,9 +128,10 @@ plt.legend()
 
 # azimuthal strain
 fig, ax = plt.subplots()
-plt.plot(arc_length(theta), e_tt, "-", label="Asymptotic")
-comsol = pd.read_csv(path + "ett3.csv", comment="#", header=None).to_numpy()
-plt.plot(comsol[:, 0], comsol[:, 1], "--", label="COMSOL")
+plt.plot(arc_length(theta), e_tt, "-", label=r"Asymptotic ($r=r_0+\delta R$)")
+for name, path in zip(names, paths):
+    comsol = pd.read_csv(path + "ett3.csv", comment="#", header=None).to_numpy()
+    plt.plot(comsol[:, 0], comsol[:, 1], "--", label=f"COMSOL ({name} outer)")
 for w in winds:
     plt.axvline(x=w, linestyle=":", color="lightgrey")
 plt.xlim(arc_length(np.array([0, N_plot * 2 * pi])))
@@ -149,9 +142,10 @@ plt.legend()
 
 # shear strain
 fig, ax = plt.subplots()
-plt.plot(arc_length(theta), e_rt, "-", label="Asymptotic")
-comsol = pd.read_csv(path + "ert3.csv", comment="#", header=None).to_numpy()
-plt.plot(comsol[:, 0], comsol[:, 1], "--", label="COMSOL")
+plt.plot(arc_length(theta), e_rt, "-", label=r"Asymptotic ($r=r_0+\delta R$)")
+for name, path in zip(names, paths):
+    comsol = pd.read_csv(path + "ert3.csv", comment="#", header=None).to_numpy()
+    plt.plot(comsol[:, 0], comsol[:, 1], "--", label=f"COMSOL ({name} outer)")
 for w in winds:
     plt.axvline(x=w, linestyle=":", color="lightgrey")
 plt.xlim(arc_length(np.array([0, N_plot * 2 * pi])))
@@ -162,9 +156,10 @@ plt.legend()
 
 # tension
 fig, ax = plt.subplots()
-plt.plot(arc_length(theta), T, "-", label="Asymptotic")
-comsol = pd.read_csv(path + "T3.csv", comment="#", header=None).to_numpy()
-plt.plot(comsol[:, 0], comsol[:, 1], "--", label="COMSOL")
+plt.plot(arc_length(theta), T, "-", label=r"Asymptotic ($r=r_0+\delta R$)")
+for name, path in zip(names, paths):
+    comsol = pd.read_csv(path + "T3.csv", comment="#", header=None).to_numpy()
+    plt.plot(comsol[:, 0], comsol[:, 1], "--", label=f"COMSOL ({name} outer)")
 for w in winds:
     plt.axvline(x=w, linestyle=":", color="lightgrey")
 plt.xlim(arc_length(np.array([0, N_plot * 2 * pi])))
