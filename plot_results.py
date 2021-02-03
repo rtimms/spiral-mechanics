@@ -19,13 +19,14 @@ N = 10
 r0 = 0.5
 r1 = r0 + delta * N
 omega = np.sqrt(mu / (lam + 2 * mu))
-N_plot = 4  # number of winds to plot
-path = "data/d01h0005_u0r1/"  # path to data
+N_plot = 7  # number of winds to plot
+# path = "data/d01h0001/"  # path to data (free outer)
+path = "data/d01h0001_u0r1/"  # path to data (fixed outer)
 
 # Compute the boundary layer solution -----------------------------------------
 # Note: the tension is different for the first wind
 theta1 = np.linspace(0, 2 * pi, 60)
-theta2 = np.linspace(2 * pi, 2 * pi * (N - 1), 60 * (N - 2))
+theta2 = np.linspace(2 * pi, 2 * pi * N, 60 * (N - 1))
 theta = np.concatenate((theta1, theta2))
 
 # plot displacements at fixed R
