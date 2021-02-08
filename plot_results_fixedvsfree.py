@@ -89,7 +89,7 @@ for n in list(range(N_plot)):
 # names = ["free", "fixed"]
 # paths = ["data/free/h001/", "data/fixed/h001/"]
 names = ["fixed"]
-paths = ["data/fixed/h001/"]
+paths = ["data/fixed/h0005/"]
 
 # radial displacement
 fig, ax = plt.subplots()
@@ -104,6 +104,7 @@ plt.xlabel(r"$s$")
 plt.ylabel(r"$u$")
 plt.title(f"$u(s; R=0.5)$ in the first {N_plot} winds")
 plt.legend()
+plt.savefig("figs/u.pdf", dpi=300)
 
 # azimuthal displacement
 fig, ax = plt.subplots()
@@ -118,6 +119,7 @@ plt.xlabel(r"$s$")
 plt.ylabel(r"$v$")
 plt.title(f"$v(s; R=0.5)$ in the first {N_plot} winds")
 plt.legend()
+plt.savefig("figs/v.pdf", dpi=300)
 
 # radial strain
 fig, ax = plt.subplots()
@@ -132,6 +134,7 @@ plt.xlabel(r"$s$")
 plt.ylabel(r"$\epsilon_{rr}$")
 plt.title(r"$\epsilon_{rr}(s; R=0.5)$" + f"in the first {N_plot} winds")
 plt.legend()
+plt.savefig("figs/err.pdf", dpi=300)
 
 # azimuthal strain
 fig, ax = plt.subplots()
@@ -146,6 +149,7 @@ plt.xlabel(r"$s$")
 plt.ylabel(r"$\epsilon_{\theta\theta}$")
 plt.title(r"$\epsilon_{\theta\theta}(s; R=0.5)$" + f"in the first {N_plot} winds")
 plt.legend()
+plt.savefig("figs/ett.pdf", dpi=300)
 
 # shear strain
 fig, ax = plt.subplots()
@@ -160,6 +164,7 @@ plt.xlabel(r"$s$")
 plt.ylabel(r"$\epsilon_{r\theta}$")
 plt.title(r"$\epsilon_{r\theta}(s; R=0.5)$" + f"in the first {N_plot} winds")
 plt.legend()
+plt.savefig("figs/ert.pdf", dpi=300)
 
 # radial stress
 fig, ax = plt.subplots()
@@ -174,6 +179,7 @@ plt.xlabel(r"$s$")
 plt.ylabel(r"$\sigma_{rr}$")
 plt.title(r"$\sigma_{rr}(s)$" + f"in the first {N_plot} winds")
 plt.legend()
+plt.savefig("figs/srr.pdf", dpi=300)
 
 # azimuthal stress
 fig, ax = plt.subplots()
@@ -188,6 +194,7 @@ plt.xlabel(r"$s$")
 plt.ylabel(r"$\sigma_{\theta\theta}$")
 plt.title(r"$\sigma_{\theta\theta}(s)$" + f"in the first {N_plot} winds")
 plt.legend()
+plt.savefig("figs/stt.pdf", dpi=300)
 
 # shear stress
 fig, ax = plt.subplots()
@@ -202,6 +209,7 @@ plt.xlabel(r"$s$")
 plt.ylabel(r"$\sigma_{r\theta}$")
 plt.title(r"$\sigma_{r\theta}(s)$" + f"in the first {N_plot} winds")
 plt.legend()
+plt.savefig("figs/srt.pdf", dpi=300)
 
 # tension
 fig, ax = plt.subplots()
@@ -216,5 +224,6 @@ plt.xlabel(r"$s$")
 plt.ylabel(r"$T$")
 plt.title(f"$T(s)$ in the first {N_plot} winds")
 plt.legend()
+plt.savefig("figs/T.pdf", dpi=300)
 
 plt.show()

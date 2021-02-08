@@ -20,7 +20,7 @@ r0 = 0.5
 r1 = r0 + delta * N
 omega = np.sqrt(mu / (lam + 2 * mu))
 N_plot = 9  # number of winds to plot
-path = "data/fixed/h001/"  # path to data
+path = "data/fixed/h0005/"  # path to data
 
 # Compute the boundary layer solution -----------------------------------------
 theta = np.linspace(0, 2 * pi * N, 60 * N)
@@ -103,4 +103,5 @@ ax[1, 1].set_ylabel(r"$g_2$")
 # ax[1, 1].legend()
 
 plt.tight_layout()
+plt.savefig("figs/fg.pdf", dpi=300)
 plt.show()
