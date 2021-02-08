@@ -39,7 +39,7 @@ D = 0
 # functions of theta
 f1 = -alpha * (3 * lam + 2 * mu) / (lam + 2 * mu) - A * exp(-omega * (theta + 2 * pi))
 f2 = B + C * exp(-omega * theta)
-g1 = -(lam + 2 * mu) * omega / (2 * pi * mu) * A * exp(-omega * (theta + 2 * pi))
+g1 = -(lam + 2 * mu) / mu * omega * A * exp(-omega * (theta + 2 * pi))
 g2 = D - C / omega * exp(-omega * theta)
 
 # radial displacement
@@ -54,11 +54,16 @@ v = g1 * (R - theta / 2 / pi) + g2
 # radial strain
 e_rr = alpha * (3 * lam + 2 * mu) / (lam + 2 * mu) + f1
 # azimuthal strain
-dg1 = np.gradient(g1, theta)
-dg2 = np.gradient(g2, theta)
-e_tt = (delta / r0) * (dg1 * (R - theta / 2 / pi) + dg2 + u)
+e_tt = (delta / r0) * (np.gradient(v, theta) + u)
 # shear strain
 e_rt = g1 / 2
+
+# radial stress
+s_rr = (lam + 2 * mu) * f1
+# azimuthal stress
+s_tt = -2 * mu * alpha * (3 * lam + 2 * mu) / (lam + 2 * mu) + lam * f1
+# shear stress
+s_rt = mu * g1
 
 # tension
 T1 = -r0 * alpha * (3 * lam + 2 * mu) * (1 - exp(-omega * theta1))
@@ -81,8 +86,10 @@ for n in list(range(N_plot)):
     winds.append(w)
 
 
-names = ["free", "fixed"]
-paths = ["data/free/h001/", "data/fixed/h001/"]
+# names = ["free", "fixed"]
+# paths = ["data/free/h001/", "data/fixed/h001/"]
+names = ["fixed"]
+paths = ["data/fixed/h001/"]
 
 # radial displacement
 fig, ax = plt.subplots()
@@ -152,6 +159,48 @@ plt.xlim(arc_length(np.array([0, N_plot * 2 * pi])))
 plt.xlabel(r"$s$")
 plt.ylabel(r"$\epsilon_{r\theta}$")
 plt.title(r"$\epsilon_{r\theta}(s; R=0.5)$" + f"in the first {N_plot} winds")
+plt.legend()
+
+# radial stress
+fig, ax = plt.subplots()
+plt.plot(arc_length(theta), s_rr, "-", label=r"Asymptotic ($r=r_0+\delta R$)")
+for name, path in zip(names, paths):
+    comsol = pd.read_csv(path + "srr3.csv", comment="#", header=None).to_numpy()
+    plt.plot(comsol[:, 0], comsol[:, 1], "--", label=f"COMSOL ({name} outer)")
+for w in winds:
+    plt.axvline(x=w, linestyle=":", color="lightgrey")
+plt.xlim(arc_length(np.array([0, N_plot * 2 * pi])))
+plt.xlabel(r"$s$")
+plt.ylabel(r"$\sigma_{rr}$")
+plt.title(r"$\sigma_{rr}(s)$" + f"in the first {N_plot} winds")
+plt.legend()
+
+# azimuthal stress
+fig, ax = plt.subplots()
+plt.plot(arc_length(theta), s_tt, "-", label=r"Asymptotic ($r=r_0+\delta R$)")
+for name, path in zip(names, paths):
+    comsol = pd.read_csv(path + "stt3.csv", comment="#", header=None).to_numpy()
+    plt.plot(comsol[:, 0], comsol[:, 1], "--", label=f"COMSOL ({name} outer)")
+for w in winds:
+    plt.axvline(x=w, linestyle=":", color="lightgrey")
+plt.xlim(arc_length(np.array([0, N_plot * 2 * pi])))
+plt.xlabel(r"$s$")
+plt.ylabel(r"$\sigma_{\theta\theta}$")
+plt.title(r"$\sigma_{\theta\theta}(s)$" + f"in the first {N_plot} winds")
+plt.legend()
+
+# shear stress
+fig, ax = plt.subplots()
+plt.plot(arc_length(theta), s_rt, "-", label=r"Asymptotic ($r=r_0+\delta R$)")
+for name, path in zip(names, paths):
+    comsol = pd.read_csv(path + "srt3.csv", comment="#", header=None).to_numpy()
+    plt.plot(comsol[:, 0], comsol[:, 1], "--", label=f"COMSOL ({name} outer)")
+for w in winds:
+    plt.axvline(x=w, linestyle=":", color="lightgrey")
+plt.xlim(arc_length(np.array([0, N_plot * 2 * pi])))
+plt.xlabel(r"$s$")
+plt.ylabel(r"$\sigma_{r\theta}$")
+plt.title(r"$\sigma_{r\theta}(s)$" + f"in the first {N_plot} winds")
 plt.legend()
 
 # tension
