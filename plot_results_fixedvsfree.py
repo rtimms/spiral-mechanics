@@ -20,6 +20,10 @@ r0 = 0.5
 r1 = r0 + delta * N
 omega = np.sqrt(mu / (lam + 2 * mu))
 N_plot = 9  # number of winds to plot
+# names = ["free", "fixed"]
+# paths = ["data/free/h001/", "data/fixed/h001/"]
+names = ["fixed"]
+paths = ["data/fixed/h001/"]
 
 # Compute the boundary layer solution -----------------------------------------
 # Note: the tension is different for the first wind
@@ -86,13 +90,7 @@ for n in list(range(N_plot)):
     winds.append(w)
 
 
-# names = ["free", "fixed"]
-# paths = ["data/free/h001/", "data/fixed/h001/"]
-names = ["fixed"]
-paths = ["data/fixed/h0005/"]
-
 # radial displacement
-fig, ax = plt.subplots()
 plt.plot(arc_length(theta), u, "-", label=r"Asymptotic ($r=r_0+\delta R$)")
 for name, path in zip(names, paths):
     comsol = pd.read_csv(path + "u3.csv", comment="#", header=None).to_numpy()
