@@ -56,9 +56,10 @@ fig, ax = plt.subplots(2, 2)
 
 # f1
 comsol = pd.read_csv(path + "srr3.csv", comment="#", header=None).to_numpy()
+f1_s = comsol[:, 0]
 f1_comsol = comsol[:, 1] / (lam + 2 * mu)  # f1 = sigma_rr / (lambda+2*mu)
 ax[0, 0].plot(arc_length((theta)), f1, "-", label="Asymptotic ")
-ax[0, 0].plot(comsol[:, 0], f1_comsol, "-", label="COMSOL")
+ax[0, 0].plot(f1_s, f1_comsol, "-", label="COMSOL")
 for w in winds:
     ax[0, 0].axvline(x=w, linestyle=":", color="lightgrey")
 ax[0, 0].set_xlim(arc_length(np.array([0, N_plot * 2 * pi])))
@@ -67,10 +68,11 @@ ax[0, 0].set_ylabel(r"$f_1$")
 ax[0, 0].legend()
 
 # f2
-comsol = pd.read_csv(path + "u5.csv", comment="#", header=None).to_numpy()
+comsol = pd.read_csv(path + "u1.csv", comment="#", header=None).to_numpy()
+f2_s = comsol[:, 0]
 f2_comsol = comsol[:, 1]  # f2 = u(R=theta/2/pi)
 ax[0, 1].plot(arc_length((theta)), f2, "-", label="Asymptotic ")
-ax[0, 1].plot(comsol[:, 0], f2_comsol, "-", label="COMSOL")
+ax[0, 1].plot(f2_s, f2_comsol, "-", label="COMSOL")
 for w in winds:
     ax[0, 1].axvline(x=w, linestyle=":", color="lightgrey")
 ax[0, 1].set_xlim(arc_length(np.array([0, N_plot * 2 * pi])))
@@ -80,9 +82,10 @@ ax[0, 1].set_ylabel(r"$f_2$")
 
 # g1
 comsol = pd.read_csv(path + "srt3.csv", comment="#", header=None).to_numpy()
+g1_s = comsol[:, 0]
 g1_comsol = comsol[:, 1] / mu  # g1 = sigma_rt/mu
 ax[1, 0].plot(arc_length((theta)), g1, "-", label="Asymptotic ")
-ax[1, 0].plot(comsol[:, 0], g1_comsol, "-", label="COMSOL")
+ax[1, 0].plot(g1_s, g1_comsol, "-", label="COMSOL")
 for w in winds:
     ax[1, 0].axvline(x=w, linestyle=":", color="lightgrey")
 ax[1, 0].set_xlim(arc_length(np.array([0, N_plot * 2 * pi])))
@@ -91,10 +94,11 @@ ax[1, 0].set_ylabel(r"$g_1$")
 # ax[1, 0].legend()
 
 # g2
-comsol = pd.read_csv(path + "v5.csv", comment="#", header=None).to_numpy()
+comsol = pd.read_csv(path + "v1.csv", comment="#", header=None).to_numpy()
+g2_s = comsol[:, 0]
 g2_comsol = comsol[:, 1]  # g2 = v(R=theta/2/pi)
 ax[1, 1].plot(arc_length((theta)), g2, "-", label="Asymptotic ")
-ax[1, 1].plot(comsol[:, 0], g2_comsol, "-", label="COMSOL")
+ax[1, 1].plot(g2_s, g2_comsol, "-", label="COMSOL")
 for w in winds:
     ax[1, 1].axvline(x=w, linestyle=":", color="lightgrey")
 ax[1, 1].set_xlim(arc_length(np.array([0, N_plot * 2 * pi])))
@@ -104,4 +108,5 @@ ax[1, 1].set_ylabel(r"$g_2$")
 
 plt.tight_layout()
 plt.savefig("figs/fg.pdf", dpi=300)
+
 plt.show()

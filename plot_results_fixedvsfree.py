@@ -40,7 +40,7 @@ D = 0
 f1 = -alpha * (3 * lam + 2 * mu) / (lam + 2 * mu) - A * exp(-omega * (theta + 2 * pi))
 f2 = B + C * exp(-omega * theta)
 g1 = -(lam + 2 * mu) / mu * omega * A * exp(-omega * (theta + 2 * pi))
-g2 = D - C / omega * exp(-omega * theta)
+g2 = D + C / omega * exp(-omega * theta)
 
 # radial displacement
 u = (
