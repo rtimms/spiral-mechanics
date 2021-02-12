@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 # Parameters ------------------------------------------------------------------
 alpha = 0.10  # expansion coefficient
 delta = 0.1
+hh = 0.01  # current collector thickness
 E = 1  # active material Young's modulus
 nu = 1 / 3
 lam = E * nu / (1 + nu) / (1 - 2 * nu)
@@ -76,7 +77,9 @@ for tt in theta:
     r.append(r0 + delta * tt / 2 / pi)
 r = np.array(r)
 theta = np.array(theta)
+winds_m = [r0 - hh / 2 + delta * n for n in list(range(N_plot))]
 winds = [r0 + delta * n for n in list(range(N_plot))]
+winds_p = [r0 + hh / 2 + delta * n for n in list(range(N_plot))]
 
 # radial displacement
 ax[0, 0].plot(r, u(r, theta), "-", label="Asymptotic")
@@ -85,8 +88,9 @@ ax[0, 0].plot(comsol[:, 0], comsol[:, 1], "--", label="COMSOL")
 ax[0, 0].set_ylabel(r"$u$")
 ax[0, 0].set_title(r"$\theta=0$")
 ax[0, 0].legend()
-for w in winds:
-    ax[0, 0].axvline(x=w, linestyle=":", color="lightgrey")
+for w_m, w_p in zip(winds_m, winds_p):
+    ax[0, 0].axvline(x=w_m, linestyle=":", color="lightgrey")
+    ax[0, 0].axvline(x=w_p, linestyle=":", color="lightgrey")
 ax[0, 0].set_xlim([r[0], r[-1]])
 ax[0, 0].set_xlabel(r"$r$")
 
@@ -97,9 +101,10 @@ ax[0, 1].plot(comsol[:, 0], comsol[:, 1], "--", label="COMSOL")
 ax[0, 1].set_xlim([r[0], r[-1]])
 ax[0, 1].set_ylabel(r"$v$")
 ax[0, 1].set_title(r"$\theta=0$")
-for w in winds:
-    ax[0, 1].axvline(x=w, linestyle=":", color="lightgrey")
-ax[0, 1].set_xlim([r0, r1])
+for w_m, w_p in zip(winds_m, winds_p):
+    ax[0, 1].axvline(x=w_m, linestyle=":", color="lightgrey")
+    ax[0, 1].axvline(x=w_p, linestyle=":", color="lightgrey")
+ax[0, 1].set_xlim([r[0], r[-1]])
 ax[0, 1].set_xlabel(r"$r$")
 
 # at theta = pi
@@ -109,15 +114,23 @@ for tt in theta:
     r.append(r0 + delta * tt / 2 / pi)
 r = np.array(r)
 theta = np.array(theta)
+winds_m = [
+    r0 - hh / 2 + delta * (2 * pi * n + pi) / 2 / pi for n in list(range(N_plot))
+]
 winds = [r0 + delta * (2 * pi * n + pi) / 2 / pi for n in list(range(N_plot))]
+winds_p = [
+    r0 + hh / 2 + delta * (2 * pi * n + pi) / 2 / pi for n in list(range(N_plot))
+]
+
 # radial displacement
 ax[1, 0].plot(r, u(r, theta), "-", label="Asymptotic")
 comsol = pd.read_csv(path + f"u_pi.csv", comment="#", header=None).to_numpy()
 ax[1, 0].plot(comsol[:, 0], comsol[:, 1], "--", label="COMSOL")
 ax[1, 0].set_ylabel(r"$u$")
 ax[1, 0].set_title(r"$\theta=\pi$")
-for w in winds:
-    ax[1, 0].axvline(x=w, linestyle=":", color="lightgrey")
+for w_m, w_p in zip(winds_m, winds_p):
+    ax[1, 0].axvline(x=w_m, linestyle=":", color="lightgrey")
+    ax[1, 0].axvline(x=w_p, linestyle=":", color="lightgrey")
 ax[1, 0].set_xlim([r[0], r[-1]])
 ax[1, 0].set_xlabel(r"$r$")
 # azimuthal displacement
@@ -127,8 +140,9 @@ ax[1, 1].plot(comsol[:, 0], comsol[:, 1], "--", label="COMSOL")
 ax[1, 1].set_xlim([r[0], r[-1]])
 ax[1, 1].set_ylabel(r"$v$")
 ax[1, 1].set_title(r"$\theta=\pi$")
-for w in winds:
-    ax[1, 1].axvline(x=w, linestyle=":", color="lightgrey")
+for w_m, w_p in zip(winds_m, winds_p):
+    ax[1, 1].axvline(x=w_m, linestyle=":", color="lightgrey")
+    ax[1, 1].axvline(x=w_p, linestyle=":", color="lightgrey")
 ax[1, 1].set_xlim([r[0], r[-1]])
 ax[1, 1].set_xlabel(r"$r$")
 plt.tight_layout()
