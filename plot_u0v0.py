@@ -2,6 +2,7 @@ import numpy as np
 from numpy import pi, exp
 import pandas as pd
 import scipy.interpolate as interp
+import itertools
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter, MultipleLocator
 
@@ -9,7 +10,7 @@ from matplotlib.ticker import FuncFormatter, MultipleLocator
 # Parameters ------------------------------------------------------------------
 alpha = 0.10  # expansion coefficient
 delta = 0.1
-hh = 0.001  # current collector thickness
+hh = 0.005  # current collector thickness
 E = 1  # active material Young's modulus
 nu = 1 / 3
 lam = E * nu / (1 + nu) / (1 - 2 * nu)
@@ -20,6 +21,7 @@ r1 = r0 + delta * N
 omega = np.sqrt(mu / (lam + 2 * mu))
 N_plot = 9  # number of winds to plot
 path = "data/"  # path to data
+
 
 # Compute the boundary layer solution -----------------------------------------
 
@@ -163,6 +165,7 @@ for ax in ax.reshape(-1):
 
 plt.tight_layout()
 
+
 # Plot at theta = 0 -----------------------------------------------------------
 
 fig, ax = plt.subplots(2, 2)
@@ -177,12 +180,21 @@ theta = np.array(theta)
 winds_m = [r0 - hh / 2 + delta * n for n in list(range(N_plot))]
 winds = [r0 + delta * n for n in list(range(N_plot))]
 winds_p = [r0 + hh / 2 + delta * n for n in list(range(N_plot))]
+windswinds = np.array(list(itertools.chain(*zip(winds[:-1], winds[1:]))))
+thetatheta = np.array(list(itertools.chain(*zip(theta[:-1], theta[:-1]))))
 
 # radial displacement
-ax[0, 0].plot(r, u(r, theta), "-", label="Asymptotic")
+ax[0, 0].plot(r, u(r, theta), "-", color="tab:blue", label="Asymptotic")
 comsol = pd.read_csv(path + f"u_0.csv", comment="#", header=None).to_numpy()
-ax[0, 0].plot(comsol[:, 0], comsol[:, 1], "--", label="COMSOL")
-ax[0, 0].plot(np.array(winds_p), f2_comsol(theta), "o", label=r"$f_2(\theta)$")
+ax[0, 0].plot(comsol[:, 0], comsol[:, 1], "--", color="tab:orange", label="COMSOL")
+ax[0, 0].plot(np.array(winds), f2(theta), "o", color="tab:blue", label=r"$f_2$")
+ax[0, 0].plot(
+    np.array(winds_p),
+    f2_comsol(theta),
+    "x",
+    color="tab:orange",
+    label=r"$f_2$ (COMSOL)",
+)
 # ax[0, 0].plot(
 #    np.array(winds_m),
 #    -(alpha * (3 * lam + 2 * mu) / (lam + 2 * mu) + f1_comsol(theta - 2 * pi))
@@ -191,19 +203,19 @@ ax[0, 0].plot(np.array(winds_p), f2_comsol(theta), "o", label=r"$f_2(\theta)$")
 #    label=r"$-\alpha(3\lambda + 2\mu) / (\lambda + 2\mu)- f_1(\theta-2\pi) + f_2(\theta-2\pi)$",
 # )
 ax[0, 0].set_ylabel(r"$u$")
-ax[0, 0].set_title(r"$\theta=0$")
-for w_m, w_p in zip(winds_m, winds_p):
-    ax[0, 0].axvline(x=w_m, linestyle=":", color="lightgrey")
-    ax[0, 0].axvline(x=w_p, linestyle=":", color="lightgrey")
-ax[0, 0].set_xlim([r[0], r[-1]])
-ax[0, 0].set_xlabel(r"$r$")
 # ax[0, 0].legend()
+
 # azimuthal displacement
-ax[0, 1].plot(r, v(r, theta), "-", label="Asymptotic")
+ax[0, 1].plot(r, v(r, theta), "-", color="tab:blue", label="Asymptotic")
 comsol = pd.read_csv(path + f"v_0.csv", comment="#", header=None).to_numpy()
-ax[0, 1].plot(comsol[:, 0], comsol[:, 1], "--", label="COMSOL")
+ax[0, 1].plot(comsol[:, 0], comsol[:, 1], "--", color="tab:orange", label="COMSOL")
+ax[0, 1].plot(np.array(winds), g2(theta), "o", color="tab:blue", label=r"$g_2$")
 ax[0, 1].plot(
-    np.array(winds_p), g2_comsol(np.array(theta)), "o", label=r"$g_2(\theta)$"
+    np.array(winds_p),
+    g2_comsol(theta),
+    "x",
+    color="tab:orange",
+    label=r"$g_2$ (COMSOL)",
 )
 # ax[0, 1].plot(
 #    np.array(winds_m),
@@ -212,40 +224,138 @@ ax[0, 1].plot(
 #    label=r"$-g_1(\theta-2\pi) + g_2(\theta-2\pi)$",
 # )
 ax[0, 1].set_ylabel(r"$v$")
-ax[0, 1].set_title(r"$\theta=0$")
-for w_m, w_p in zip(winds_m, winds_p):
-    ax[0, 1].axvline(x=w_m, linestyle=":", color="lightgrey")
-    ax[0, 1].axvline(x=w_p, linestyle=":", color="lightgrey")
-ax[0, 1].set_xlim([r[0], r[-1]])
-ax[0, 1].set_xlabel(r"$r$")
-# normal stress
-ax[1, 0].plot(np.array(winds), f1(theta), "-", label="Asymptotic")
-comsol = pd.read_csv(path + f"srr_0.csv", comment="#", header=None).to_numpy()
-ax[1, 0].plot(comsol[:, 0], comsol[:, 1] / (lam + 2 * mu), "--", label="COMSOL")
-ax[1, 0].plot(
-    np.array(winds_p), f1_comsol(np.array(theta)), "o", label=r"$f_1(\theta)$"
-)
-ax[1, 0].set_ylabel(r"$\sigma_{rr}/(\lambda+2\mu)$")
-ax[1, 0].set_title(r"$\theta=0$")
-for w_m, w_p in zip(winds_m, winds_p):
-    ax[1, 0].axvline(x=w_m, linestyle=":", color="lightgrey")
-    ax[1, 0].axvline(x=w_p, linestyle=":", color="lightgrey")
-ax[1, 0].set_xlim([r[0], r[-1]])
-ax[1, 0].set_xlabel(r"$r$")
-# shear stress
-ax[1, 1].plot(np.array(winds), g1(theta), "-", label="Asymptotic")
-comsol = pd.read_csv(path + f"srt_0.csv", comment="#", header=None).to_numpy()
-ax[1, 1].plot(comsol[:, 0], comsol[:, 1] / mu, "--", label="COMSOL")
-ax[1, 1].plot(
-    np.array(winds_p), g1_comsol(np.array(theta)), "o", label=r"$g_1(\theta)$"
-)
-ax[1, 1].set_ylabel(r"$\sigma_{r\theta}/\mu$")
-ax[1, 1].set_title(r"$\theta=0$")
-for w_m, w_p in zip(winds_m, winds_p):
-    ax[1, 1].axvline(x=w_m, linestyle=":", color="lightgrey")
-    ax[1, 1].axvline(x=w_p, linestyle=":", color="lightgrey")
-ax[1, 1].set_xlim([r[0], r[-1]])
-ax[1, 1].set_xlabel(r"$r$")
 
+# normal stress
+ax[1, 0].plot(windswinds, f1(thetatheta), "-", color="tab:blue", label="Asymptotic")
+comsol = pd.read_csv(path + f"srr_0.csv", comment="#", header=None).to_numpy()
+ax[1, 0].plot(
+    comsol[:, 0],
+    comsol[:, 1] / (lam + 2 * mu),
+    "--",
+    color="tab:orange",
+    label="COMSOL",
+)
+ax[1, 0].plot(np.array(winds), f1(theta), "o", color="tab:blue", label=r"$f_1$")
+ax[1, 0].plot(
+    np.array(winds_p), f1_comsol(theta), "x", color="tab:orange", label=r"$f_1$ COMSOL"
+)
+ax[1, 0].set_ylabel(r"$f_1=\sigma_{rr}/(\lambda+2\mu)$")
+
+# shear stress
+ax[1, 1].plot(windswinds, g1(thetatheta), "-", color="tab:blue", label="Asymptotic")
+comsol = pd.read_csv(path + f"srt_0.csv", comment="#", header=None).to_numpy()
+ax[1, 1].plot(comsol[:, 0], comsol[:, 1] / mu, "--", color="tab:orange", label="COMSOL")
+ax[1, 1].plot(np.array(winds), g1(theta), "o", color="tab:blue", label=r"$g_1$")
+ax[1, 1].plot(
+    np.array(winds_p),
+    g1_comsol(theta),
+    "x",
+    color="tab:orange",
+    label=r"$g_1$ (COMSOL)",
+)
+ax[1, 1].set_ylabel(r"$g_1 = \sigma_{r\theta}/\mu$")
+
+# add shared lables etc/
+for ax in ax.reshape(-1):
+    for w_m, w_p in zip(winds_m, winds_p):
+        ax.axvline(x=w_m, linestyle=":", color="lightgrey")
+        ax.axvline(x=w_p, linestyle=":", color="lightgrey")
+    ax.set_xlim([r[0], r[-1]])
+    ax.set_xlabel(r"$r$")
+fig.suptitle(r"$\theta=0$")
 plt.tight_layout()
+plt.subplots_adjust(top=0.9)
+
+
+# Plot at theta = pi ----------------------------------------------------------
+
+fig, ax = plt.subplots(2, 2)
+
+# get r, theta values
+r = []
+theta = [2 * pi * n + pi for n in list(range(N_plot))]
+for tt in theta:
+    r.append(r0 + delta * tt / 2 / pi)
+r = np.array(r)
+theta = np.array(theta)
+winds_m = [
+    r0 - hh / 2 + delta * (2 * pi * n + pi) / 2 / pi for n in list(range(N_plot))
+]
+winds = [r0 + delta * (2 * pi * n + pi) / 2 / pi for n in list(range(N_plot))]
+winds_p = [
+    r0 + hh / 2 + delta * (2 * pi * n + pi) / 2 / pi for n in list(range(N_plot))
+]
+windswinds = np.array(list(itertools.chain(*zip(winds[:-1], winds[1:]))))
+thetatheta = np.array(list(itertools.chain(*zip(theta[:-1], theta[:-1]))))
+
+# radial displacement
+ax[0, 0].plot(r, u(r, theta), "-", color="tab:blue", label="Asymptotic")
+comsol = pd.read_csv(path + f"u_pi.csv", comment="#", header=None).to_numpy()
+ax[0, 0].plot(comsol[:, 0], comsol[:, 1], "--", color="tab:orange", label="COMSOL")
+ax[0, 0].plot(np.array(winds), f2(theta), "o", color="tab:blue", label=r"$f_2$")
+ax[0, 0].plot(
+    np.array(winds_p),
+    f2_comsol(theta),
+    "x",
+    color="tab:orange",
+    label=r"$f_2$ (COMSOL)",
+)
+ax[0, 0].set_ylabel(r"$u$")
+
+# azimuthal displacement
+ax[0, 1].plot(r, v(r, theta), "-", color="tab:blue", label="Asymptotic")
+comsol = pd.read_csv(path + f"v_pi.csv", comment="#", header=None).to_numpy()
+ax[0, 1].plot(comsol[:, 0], comsol[:, 1], "--", color="tab:orange", label="COMSOL")
+ax[0, 1].plot(np.array(winds), g2(theta), "o", color="tab:blue", label=r"$g_2$")
+ax[0, 1].plot(
+    np.array(winds_p),
+    g2_comsol(theta),
+    "x",
+    color="tab:orange",
+    label=r"$g_2$ (COMSOL)",
+)
+ax[0, 1].set_ylabel(r"$v$")
+
+# normal stress
+ax[1, 0].plot(windswinds, f1(thetatheta), "-", color="tab:blue", label="Asymptotic")
+comsol = pd.read_csv(path + f"srr_pi.csv", comment="#", header=None).to_numpy()
+ax[1, 0].plot(
+    comsol[:, 0],
+    comsol[:, 1] / (lam + 2 * mu),
+    "--",
+    color="tab:orange",
+    label="COMSOL",
+)
+ax[1, 0].plot(np.array(winds), f1(theta), "o", color="tab:blue", label=r"$f_1$")
+ax[1, 0].plot(
+    np.array(winds_p), f1_comsol(theta), "x", color="tab:orange", label=r"$f_1$ COMSOL"
+)
+ax[1, 0].set_ylabel(r"$f_1=\sigma_{rr}/(\lambda+2\mu)$")
+
+# shear stress
+ax[1, 1].plot(windswinds, g1(thetatheta), "-", color="tab:blue", label="Asymptotic")
+comsol = pd.read_csv(path + f"srt_pi.csv", comment="#", header=None).to_numpy()
+ax[1, 1].plot(comsol[:, 0], comsol[:, 1] / mu, "--", color="tab:orange", label="COMSOL")
+ax[1, 1].plot(np.array(winds), g1(theta), "o", color="tab:blue", label=r"$g_1$")
+ax[1, 1].plot(
+    np.array(winds_p),
+    g1_comsol(theta),
+    "x",
+    color="tab:orange",
+    label=r"$g_1$ (COMSOL)",
+)
+ax[1, 1].set_ylabel(r"$g_1 = \sigma_{r\theta}/\mu$")
+
+# add shared lables etc/
+for ax in ax.reshape(-1):
+    for w_m, w_p in zip(winds_m, winds_p):
+        ax.axvline(x=w_m, linestyle=":", color="lightgrey")
+        ax.axvline(x=w_p, linestyle=":", color="lightgrey")
+    ax.set_xlim([r[0], r[-1]])
+    ax.set_xlabel(r"$r$")
+fig.suptitle(r"$\theta=\pi$")
+plt.tight_layout()
+plt.subplots_adjust(top=0.9)
+
+
 plt.show()
