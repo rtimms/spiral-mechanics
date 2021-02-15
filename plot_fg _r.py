@@ -4,7 +4,6 @@
 #
 import numpy as np
 from numpy import pi, exp
-from scipy import integrate
 import scipy.interpolate as interp
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -24,7 +23,7 @@ r0 = 0.5
 r1 = r0 + delta * N
 omega = np.sqrt(mu / (lam + 2 * mu))
 N_plot = 9  # number of winds to plot
-path = "data/fixed/h001/"  # path to data
+path = "data/"  # path to data
 
 # Compute the boundary layer solution -----------------------------------------
 
@@ -56,67 +55,57 @@ def g2(theta):
 
 # Load COMSOL solution --------------------------------------------------------
 
-# 0 < theta < 2*N*pi
-theta = np.linspace(0, 2 * pi * N, 360 * N)
-
-
-# COMSOL returns f(s), so we plot everything as a function of arc length
-def arc_length(theta, a=None, b=None):
-    # default spiral is r = r0 +delta*theta/2/pi
-    a = a or r0
-    b = b or delta / 2 / pi
-    integrand = np.sqrt((a + b * theta) ** 2 + b ** 2)
-    return integrate.cumtrapz(integrand, theta, initial=0)
-
-
 # f1 = sigma_rr / (lambda+2*mu)
-# In COMSOL we evaluate at r = r0+delta/2+delta*theta/2/pi
-s1 = interp.interp1d(theta, arc_length(theta, a=r0 + delta / 2))
 comsol = pd.read_csv(path + "srr3.csv", comment="#", header=None).to_numpy()
-s_data = comsol[:, 0]
+f1_r_data = comsol[:, 0]
 f1_data = comsol[:, 1] / (lam + 2 * mu)
-f1_interp = interp.interp1d(s_data, f1_data, fill_value="extrapolate")
+f1_interp = interp.interp1d(f1_r_data, f1_data, bounds_error=False)
 
 
 def f1_comsol(theta):
-    return f1_interp(s1(theta))
+    # In COMSOL we evaluate at r = r0+delta/2+delta*theta/2/pi
+    r = r0 + delta / 2 + delta * theta / 2 / pi
+
+    return f1_interp(r)
 
 
 # f2 = u(R=theta/2/pi)
-# In COMSOL we evaluate at r = r0+hh/2+delta*theta/2/pi
-s2 = interp.interp1d(theta, arc_length(theta, a=r0 + hh / 2))
 comsol = pd.read_csv(path + "u1.csv", comment="#", header=None).to_numpy()
-s_data = comsol[:, 0]
+f2_r_data = comsol[:, 0]
 f2_data = comsol[:, 1]
-f2_interp = interp.interp1d(s_data, f2_data, fill_value="extrapolate")
+f2_interp = interp.interp1d(f2_r_data, f2_data, bounds_error=False)
 
 
 def f2_comsol(theta):
-    return f2_interp(s2(theta))
+    # In COMSOL we evaluate at r = r0+hh/2+delta*theta/2/pi
+    r = r0 + hh / 2 + delta * theta / 2 / pi
+    return f2_interp(r)
 
 
 # g1 = sigma_rt/mu
-# In COMSOL we evaluate at r = r0+delta/2+delta*theta/2/pi
 comsol = pd.read_csv(path + "srt3.csv", comment="#", header=None).to_numpy()
-s_data = comsol[:, 0]
+g1_r_data = comsol[:, 0]
 g1_data = comsol[:, 1] / mu
-g1_interp = interp.interp1d(s_data, g1_data, fill_value="extrapolate")
+g1_interp = interp.interp1d(g1_r_data, g1_data, bounds_error=False)
 
 
 def g1_comsol(theta):
-    return g1_interp(s1(theta))
+    # In COMSOL we evaluate at r = r0+delta/2+delta*theta/2/pi
+    r = r0 + delta / 2 + delta * theta / 2 / pi
+    return g1_interp(r)
 
 
 # g2 = v(R=theta/2/pi)
-# In COMSOL we evaluate at r = r0+hh/2+delta*theta/2/pi
 comsol = pd.read_csv(path + "v1.csv", comment="#", header=None).to_numpy()
-s_data = comsol[:, 0]
+g2_r_data = comsol[:, 0]
 g2_data = comsol[:, 1]
-g2_interp = interp.interp1d(s_data, g2_data, fill_value="extrapolate")
+g2_interp = interp.interp1d(g2_r_data, g2_data, bounds_error=False)
 
 
 def g2_comsol(theta):
-    return g2_interp(s2(theta))
+    # In COMSOL we evaluate at r = r0+hh/2+delta*theta/2/pi
+    r = r0 + hh / 2 + delta * theta / 2 / pi
+    return g2_interp(r)
 
 
 # Plot solutions --------------------------------------------------------------
