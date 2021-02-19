@@ -3,7 +3,7 @@ from numpy import pi, exp
 import pandas as pd
 import scipy.interpolate as interp
 import matplotlib.pyplot as plt
-from matplotlib.ticker import FuncFormatter, MultipleLocator
+import os
 
 # Parameters ------------------------------------------------------------------
 alpha = 0.10  # expansion coefficient
@@ -19,7 +19,11 @@ r1 = r0 + delta * N
 omega = np.sqrt(mu / (lam + 2 * mu))
 N_plot = 9  # number of winds to plot
 path = "data/h005/"  # path to data
-
+# make directory for figures if it doesn't exist
+try:
+    os.mkdir("figs" + path[4:])
+except FileExistsError:
+    pass
 
 # Compute the boundary layer displacements and stresses -----------------------
 
@@ -181,7 +185,7 @@ for ax in ax.reshape(-1):
 fig.suptitle(r"$\theta=0$")
 plt.tight_layout()
 plt.subplots_adjust(top=0.9)
-plt.savefig("figs/slice_0.pdf", dpi=300)
+plt.savefig("figs" + path[4:] + "slice_0.pdf", dpi=300)
 
 # plot f_i(r), g_i(r)
 fig, ax = plt.subplots(2, 2)
@@ -203,7 +207,7 @@ for ax in ax.reshape(-1):
 fig.suptitle(r"$\theta=0$")
 plt.tight_layout()
 plt.subplots_adjust(top=0.9)
-plt.savefig("figs/fg_0.pdf", dpi=300)
+plt.savefig("figs" + path[4:] + "fg_0.pdf", dpi=300)
 
 # Plot at theta = pi ----------------------------------------------------------
 
@@ -268,7 +272,7 @@ for ax in ax.reshape(-1):
 fig.suptitle(r"$\theta=\pi$")
 plt.tight_layout()
 plt.subplots_adjust(top=0.9)
-plt.savefig("figs/slice_pi.pdf", dpi=300)
+plt.savefig("figs" + path[4:] + "slice_pi.pdf", dpi=300)
 
 # plot f_i(r), g_i(r)
 fig, ax = plt.subplots(2, 2)
@@ -290,7 +294,7 @@ for ax in ax.reshape(-1):
 fig.suptitle(r"$\theta=0$")
 plt.tight_layout()
 plt.subplots_adjust(top=0.9)
-plt.savefig("figs/fg_pi.pdf", dpi=300)
+plt.savefig("figs" + path[4:] + "fg_pi.pdf", dpi=300)
 
 
 plt.show()

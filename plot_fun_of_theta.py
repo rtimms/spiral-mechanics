@@ -4,7 +4,7 @@ import pandas as pd
 import scipy.interpolate as interp
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter, MultipleLocator
-
+import os
 
 # Parameters ------------------------------------------------------------------
 alpha = 0.10  # expansion coefficient
@@ -20,6 +20,11 @@ r1 = r0 + delta * N
 omega = np.sqrt(mu / (lam + 2 * mu))
 N_plot = 9  # number of winds to plot
 path = "data/h005/"  # path to data
+# make directory for figures if it doesn't exist
+try:
+    os.mkdir("figs" + path[4:])
+except FileExistsError:
+    pass
 
 # Compute the boundary layer solution -----------------------------------------
 # Note: the tension is different for the first wind
@@ -213,7 +218,7 @@ for ax in ax.reshape(-1):
     ax.set_xlim([0, N_plot * 2 * pi])
     ax.set_xlabel(r"$\theta$")
 plt.tight_layout()
-plt.savefig("figs/fg_of_theta.pdf", dpi=300)
+plt.savefig("figs" + path[4:] + "fg_of_theta.pdf", dpi=300)
 
 # displacements
 fig, ax = plt.subplots(1, 2)
@@ -237,7 +242,7 @@ for ax in ax.reshape(-1):
     ax.set_xlim([0, N_plot * 2 * pi])
     ax.set_xlabel(r"$\theta$")
 plt.tight_layout()
-plt.savefig("figs/uv_of_theta.pdf", dpi=300)
+plt.savefig("figs" + path[4:] + "uv_of_theta.pdf", dpi=300)
 
 # stresses and strains
 fig, ax = plt.subplots(2, 3)
@@ -273,7 +278,7 @@ for ax in ax.reshape(-1):
     ax.set_xlim([0, N_plot * 2 * pi])
     ax.set_xlabel(r"$\theta$")
 plt.tight_layout()
-plt.savefig("figs/stress_strain_of_theta.pdf", dpi=300)
+plt.savefig("figs" + path[4:] + "stress_strain_of_theta.pdf", dpi=300)
 
 # tension
 fig, ax = plt.subplots()
@@ -293,6 +298,8 @@ ax.xaxis.set_major_locator(MultipleLocator(base=4 * pi))
 ax.set_xlim([0, N_plot * 2 * pi])
 ax.set_xlabel(r"$\theta$")
 plt.tight_layout()
-plt.savefig("figs/T_of_theta.pdf", dpi=300)
+plt.savefig("figs" + path[4:] + "T_of_theta.pdf", dpi=300)
 
 plt.show()
+
+# %%
