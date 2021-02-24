@@ -18,7 +18,7 @@ r0 = 0.5
 r1 = r0 + delta * N
 omega = np.sqrt(mu / (lam + 2 * mu))
 N_plot = 9  # number of winds to plot
-path = "data/h005/"  # path to data
+path = "data/E1e4h005/"  # path to data
 # make directory for figures if it doesn't exist
 try:
     os.mkdir("figs" + path[4:])
@@ -56,7 +56,7 @@ def g2(theta):
 # radial displacement
 def u(r, theta):
     R = (r - r0) / delta
-    return (
+    return delta * (
         alpha * (3 * lam + 2 * mu) / (lam + 2 * mu) * (R - theta / 2 / pi)
         + f1(theta) * (R - theta / 2 / pi)
         + f2(theta)
@@ -66,7 +66,7 @@ def u(r, theta):
 # azimuthal displacement
 def v(r, theta):
     R = (r - r0) / delta
-    return g1(theta) * (R - theta / 2 / pi) + g2(theta)
+    return delta * (g1(theta) * (R - theta / 2 / pi) + g2(theta))
 
 
 # Load COMSOL solutions for f_i, g_i ------------------------------------------
@@ -84,10 +84,10 @@ def f1_comsol(theta):
     return f1_interp(r)
 
 
-# f2 = u(R=theta/2/pi)
+# f2 = u(R=theta/2/pi)/delta
 comsol = pd.read_csv(path + "u1.csv", comment="#", header=None).to_numpy()
 f2_r_data = comsol[:, 0]
-f2_data = comsol[:, 1]
+f2_data = comsol[:, 1] / delta
 f2_interp = interp.interp1d(f2_r_data, f2_data, bounds_error=False)
 
 
@@ -110,10 +110,10 @@ def g1_comsol(theta):
     return g1_interp(r)
 
 
-# g2 = v(R=theta/2/pi)
+# g2 = v(R=theta/2/pi)/delta
 comsol = pd.read_csv(path + "v1.csv", comment="#", header=None).to_numpy()
 g2_r_data = comsol[:, 0]
-g2_data = comsol[:, 1]
+g2_data = comsol[:, 1] / delta
 g2_interp = interp.interp1d(g2_r_data, g2_data, bounds_error=False)
 
 

@@ -19,7 +19,7 @@ r0 = 0.5
 r1 = r0 + delta * N
 omega = np.sqrt(mu / (lam + 2 * mu))
 N_plot = 9  # number of winds to plot
-path = "data/h005/"  # path to data
+path = "data/E1e4h005/"  # path to data
 # make directory for figures if it doesn't exist
 try:
     os.mkdir("figs" + path[4:])
@@ -48,13 +48,13 @@ g1 = (lam + 2 * mu) / mu * omega * A * exp(-omega * (theta + 2 * pi))
 g2 = D + C / omega * exp(-omega * theta)
 
 # radial displacement
-u = (
+u = delta * (
     alpha * (3 * lam + 2 * mu) / (lam + 2 * mu) * (R - theta / 2 / pi)
     + f1 * (R - theta / 2 / pi)
     + f2
 )
 # azimuthal displacement
-v = g1 * (R - theta / 2 / pi) + g2
+v = delta * (g1 * (R - theta / 2 / pi) + g2)
 
 # radial strain
 e_rr = alpha * (3 * lam + 2 * mu) / (lam + 2 * mu) + f1
@@ -87,10 +87,10 @@ f1_interp = interp.interp1d(f1_r_data, f1_data, bounds_error=False)
 r = r0 + delta / 2 + delta * theta / 2 / pi
 f1_comsol = f1_interp(r)
 
-# f2 = u(R=theta/2/pi)
+# f2 = u(R=theta/2/pi)/delta
 comsol = pd.read_csv(path + "u1.csv", comment="#", header=None).to_numpy()
 f2_r_data = comsol[:, 0]
-f2_data = comsol[:, 1]
+f2_data = comsol[:, 1] / delta
 f2_interp = interp.interp1d(f2_r_data, f2_data, bounds_error=False)
 # In COMSOL we evaluate f_2 at r = r0+hh/2+delta*theta/2/pi
 r = r0 + hh / 2 + delta * theta / 2 / pi
@@ -106,10 +106,10 @@ r = r0 + delta / 2 + delta * theta / 2 / pi
 g1_comsol = g1_interp(r)
 
 
-# g2 = v(R=theta/2/pi)
+# g2 = v(R=theta/2/pi)/delta
 comsol = pd.read_csv(path + "v1.csv", comment="#", header=None).to_numpy()
 g2_r_data = comsol[:, 0]
-g2_data = comsol[:, 1]
+g2_data = comsol[:, 1] / delta
 g2_interp = interp.interp1d(g2_r_data, g2_data, bounds_error=False)
 # In COMSOL we evaluate g_2 at r = r0+hh/2+delta*theta/2/pi
 r = r0 + hh / 2 + delta * theta / 2 / pi
