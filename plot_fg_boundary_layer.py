@@ -91,8 +91,8 @@ g2_comsol = g2_interp(r)
 # f2 and g2
 fig, ax = plt.subplots(1, 2)
 # plot COMSOL solutions
-ax[0].plot(theta, f2_comsol, linestyle="-", color="tab:orange", label="COMSOL")
-ax[1].plot(theta, g2_comsol, linestyle="-", color="tab:orange", label="COMSOL")
+ax[0].plot(theta, f2_comsol, linestyle="--", color="tab:orange", label="COMSOL")
+ax[1].plot(theta, g2_comsol, linestyle="--", color="tab:orange", label="COMSOL")
 # plot outer solutions
 ax[0].plot(theta, f2(theta), linestyle=":", color="black", label="Outer")
 ax[1].plot(theta, g2(theta), linestyle=":", color="black", label="Outer")
