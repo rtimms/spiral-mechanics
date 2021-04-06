@@ -159,21 +159,21 @@ comsol = pd.read_csv(path + f"v_0.csv", comment="#", header=None).to_numpy()
 ax[0, 1].plot(comsol[:, 0], comsol[:, 1], "--", color="tab:orange", label="COMSOL")
 ax[0, 1].set_ylabel(r"$v$")
 # normal stress
-ax[1, 0].plot(r, f1(theta), "-", color="tab:blue", label="Asymptotic")
+ax[1, 0].plot(r, f1(theta) * (lam + 2 * mu), "-", color="tab:blue", label="Asymptotic")
 comsol = pd.read_csv(path + f"srr_0.csv", comment="#", header=None).to_numpy()
 ax[1, 0].plot(
     comsol[:, 0],
-    comsol[:, 1] / (lam + 2 * mu),
+    comsol[:, 1],
     "--",
     color="tab:orange",
     label="COMSOL",
 )
-ax[1, 0].set_ylabel(r"$f_1=\sigma_{rr}/(\lambda+2\mu)$")
+ax[1, 0].set_ylabel(r"$\sigma_{rr}$")
 # shear stress
-ax[1, 1].plot(r, g1(theta), "-", color="tab:blue", label="Asymptotic")
+ax[1, 1].plot(r, g1(theta) * mu, "-", color="tab:blue", label="Asymptotic")
 comsol = pd.read_csv(path + f"srt_0.csv", comment="#", header=None).to_numpy()
-ax[1, 1].plot(comsol[:, 0], comsol[:, 1] / mu, "--", color="tab:orange", label="COMSOL")
-ax[1, 1].set_ylabel(r"$g_1 = \sigma_{r\theta}/\mu$")
+ax[1, 1].plot(comsol[:, 0], comsol[:, 1], "--", color="tab:orange", label="COMSOL")
+ax[1, 1].set_ylabel(r"$\sigma_{r\theta}$")
 
 # add shared lables etc/
 for ax in ax.reshape(-1):
@@ -246,21 +246,21 @@ comsol = pd.read_csv(path + f"v_pi.csv", comment="#", header=None).to_numpy()
 ax[0, 1].plot(comsol[:, 0], comsol[:, 1], "--", color="tab:orange", label="COMSOL")
 ax[0, 1].set_ylabel(r"$v$")
 # normal stress
-ax[1, 0].plot(r, f1(theta), "-", color="tab:blue", label="Asymptotic")
+ax[1, 0].plot(r, f1(theta) * (lam + 2 * mu), "-", color="tab:blue", label="Asymptotic")
 comsol = pd.read_csv(path + f"srr_pi.csv", comment="#", header=None).to_numpy()
 ax[1, 0].plot(
     comsol[:, 0],
-    comsol[:, 1] / (lam + 2 * mu),
+    comsol[:, 1],
     "--",
     color="tab:orange",
     label="COMSOL",
 )
-ax[1, 0].set_ylabel(r"$f_1=\sigma_{rr}/(\lambda+2\mu)$")
+ax[1, 0].set_ylabel(r"$\sigma_{rr}$")
 # shear stress
-ax[1, 1].plot(r, g1(theta), "-", color="tab:blue", label="Asymptotic")
+ax[1, 1].plot(r, g1(theta) * mu, "-", color="tab:blue", label="Asymptotic")
 comsol = pd.read_csv(path + f"srt_pi.csv", comment="#", header=None).to_numpy()
-ax[1, 1].plot(comsol[:, 0], comsol[:, 1] / mu, "--", color="tab:orange", label="COMSOL")
-ax[1, 1].set_ylabel(r"$g_1 = \sigma_{r\theta}/\mu$")
+ax[1, 1].plot(comsol[:, 0], comsol[:, 1], "--", color="tab:orange", label="COMSOL")
+ax[1, 1].set_ylabel(r"$\sigma_{r\theta}$")
 
 # add shared lables etc/
 for ax in ax.reshape(-1):
