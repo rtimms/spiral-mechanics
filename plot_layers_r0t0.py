@@ -1,10 +1,8 @@
 import numpy as np
-from numpy import pi, exp
+from numpy import pi
 import pandas as pd
-import scipy.interpolate as interp
 import matplotlib.pyplot as plt
-from matplotlib import colorbar, cm, colors
-import os
+from outer_solution import OuterSolution
 
 # Parameters ------------------------------------------------------------------
 alpha = 0.10  # expansion coefficient
@@ -27,32 +25,10 @@ path = "data/boundary_layer/"  # path to data
 # except FileExistsError:
 #    pass
 
-# Compute the boundary layer displacements ------------------------------------
-
-# constants
-A = alpha * (3 * lam + 2 * mu) / (lam + 2 * mu) * exp(2 * pi * omega)
-B = 0
-C = A / (1 - exp(2 * pi * omega))
-D = 0
-
-
-# functions of theta
-def f1(theta):
-    return -alpha * (3 * lam + 2 * mu) / (lam + 2 * mu) + A * exp(
-        -omega * (theta + 2 * pi)
-    )
-
-
-def f2(theta):
-    return B + C * exp(-omega * theta)
-
-
-def g1(theta):
-    return (lam + 2 * mu) / mu * omega * A * exp(-omega * (theta + 2 * pi))
-
-
-def g2(theta):
-    return D + C / omega * exp(-omega * theta)
+# Compute the outer solution --------------------------------------------------
+outer = OuterSolution(alpha, delta, E, nu, r0)
+# unpack
+f1, f2, g1, g2 = outer.f1, outer.f2, outer.g1, outer.g2
 
 
 # Outer solutions as a function of R ------------------------------------------

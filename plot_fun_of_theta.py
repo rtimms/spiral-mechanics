@@ -1,10 +1,11 @@
 import numpy as np
-from numpy import pi, exp
+from numpy import pi
 import pandas as pd
 import scipy.interpolate as interp
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter, MultipleLocator
 import os
+from outer_solution import OuterSolution
 
 # Parameters ------------------------------------------------------------------
 alpha = 0.10  # expansion coefficient
@@ -27,56 +28,11 @@ except FileExistsError:
     pass
 
 # Compute the boundary layer solution -----------------------------------------
-# Note: the tension is different for the first wind
-theta1 = np.linspace(0, 2 * pi, 60)
-theta2 = np.linspace(2 * pi, 2 * pi * (N - 1), 60 * (N - 2))
-theta = np.concatenate((theta1, theta2))
-
-# plot displacements at fixed R-theta/2/pi=0.5
-r = r0 + delta / 2 + delta * theta / 2 / pi
-R = (r - r0) / delta
-
-# constants
-A = alpha * (3 * lam + 2 * mu) / (lam + 2 * mu) * exp(2 * pi * omega)
-B = 0
-C = A / (1 - exp(2 * pi * omega))
-D = 0
-# functions of theta
-f1 = -alpha * (3 * lam + 2 * mu) / (lam + 2 * mu) + A * exp(-omega * (theta + 2 * pi))
-f2 = B + C * exp(-omega * theta)
-g1 = (lam + 2 * mu) / mu * omega * A * exp(-omega * (theta + 2 * pi))
-g2 = D + C / omega * exp(-omega * theta)
-
-# radial displacement
-u = delta * (
-    alpha * (3 * lam + 2 * mu) / (lam + 2 * mu) * (R - theta / 2 / pi)
-    + f1 * (R - theta / 2 / pi)
-    + f2
-)
-# azimuthal displacement
-v = delta * (g1 * (R - theta / 2 / pi) + g2)
-
-# radial strain
-e_rr = alpha * (3 * lam + 2 * mu) / (lam + 2 * mu) + f1
-# azimuthal strain
-e_tt = (delta / r0) * (np.gradient(v, theta) + u)
-# shear strain
-e_rt = g1 / 2
-
-# radial stress
-s_rr = (lam + 2 * mu) * f1
-# azimuthal stress
-s_tt = -2 * mu * alpha * (3 * lam + 2 * mu) / (lam + 2 * mu) + lam * f1
-# shear stress
-s_rt = mu * g1
-
-# tension
-T1 = -r0 * alpha * (3 * lam + 2 * mu) * (1 - exp(-omega * theta1))
-T2 = -r0 * alpha * (3 * lam + 2 * mu) * exp(-omega * theta2) * (exp(2 * pi * omega) - 1)
-T = np.concatenate((T1, T2))
+outer = OuterSolution(alpha, delta, E, nu, r0)
 
 # Load COMSOL solutions ----------------------------------------------
 # Note: COMSOL data is (r, f) so we create interpolants to get (theta, f) data
+theta = np.linspace(0, 2 * pi * N, 60 * (N - 1))
 
 # f1 = sigma_rr / (lambda+2*mu)
 comsol = pd.read_csv(path + "srr3.csv", comment="#", header=None).to_numpy()
@@ -104,7 +60,6 @@ g1_interp = interp.interp1d(g1_r_data, g1_data, bounds_error=False)
 # In COMSOL we evaluate g_1 at r = r0+delta/2+delta*theta/2/pi
 r = r0 + delta / 2 + delta * theta / 2 / pi
 g1_comsol = g1_interp(r)
-
 
 # g2 = v(R=theta/2/pi)/delta
 comsol = pd.read_csv(path + "v1.csv", comment="#", header=None).to_numpy()
@@ -189,20 +144,19 @@ T_comsol = T_interp(r)
 # Plot solution(s) ------------------------------------------------------------
 winds = [2 * pi * n for n in list(range(N_plot))]  # plot dashed line every 2*pi
 
-
 # f_i, g_i
 fig, ax = plt.subplots(2, 2)
-ax[0, 0].plot(theta, f1, "-", label="Asymptotic ")
+ax[0, 0].plot(theta, outer.f1(theta), "-", label="Asymptotic ")
 ax[0, 0].plot(theta, f1_comsol, "-", label="COMSOL")
 ax[0, 0].set_ylabel(r"$f_1$")
 ax[0, 0].legend()
-ax[0, 1].plot(theta, f2, "-", label="Asymptotic ")
+ax[0, 1].plot(theta, outer.f2(theta), "-", label="Asymptotic ")
 ax[0, 1].plot(theta, f2_comsol, "-", label="COMSOL")
 ax[0, 1].set_ylabel(r"$f_2$")
-ax[1, 0].plot(theta, g1, "-", label="Asymptotic ")
+ax[1, 0].plot(theta, outer.g1(theta), "-", label="Asymptotic ")
 ax[1, 0].plot(theta, g1_comsol, "-", label="COMSOL")
 ax[1, 0].set_ylabel(r"$g_1$")
-ax[1, 1].plot(theta, g2, "-", label="Asymptotic ")
+ax[1, 1].plot(theta, outer.g2(theta), "-", label="Asymptotic ")
 ax[1, 1].plot(theta, g2_comsol, "-", label="COMSOL")
 ax[1, 1].set_ylabel(r"$g_2$")
 # add shared labels etc.
@@ -220,13 +174,14 @@ for ax in ax.reshape(-1):
 plt.tight_layout()
 plt.savefig("figs" + path[4:] + "fg_of_theta.pdf", dpi=300)
 
-# displacements
+# displacements at r = r0 + delta / 2 + delta * theta / 2 / pi
+r = r0 + delta / 2 + delta * theta / 2 / pi
 fig, ax = plt.subplots(1, 2)
-ax[0].plot(theta, u, "-", label="Asymptotic")
+ax[0].plot(theta, outer.u(r, theta), "-", label="Asymptotic")
 ax[0].plot(theta, u_comsol, "-", label="COMSOL")
 ax[0].set_ylabel(r"$u$")
 ax[0].legend()
-ax[1].plot(theta, v, "-", label="Asymptotic")
+ax[1].plot(theta, outer.v(r, theta), "-", label="Asymptotic")
 ax[1].plot(theta, v_comsol, "-", label="COMSOL")
 ax[1].set_ylabel(r"$v$")
 # add shared labels etc.
@@ -246,23 +201,23 @@ plt.savefig("figs" + path[4:] + "uv_of_theta.pdf", dpi=300)
 
 # stresses and strains
 fig, ax = plt.subplots(2, 3)
-ax[0, 0].plot(theta, e_rr, "-", label="Asymptotic")
+ax[0, 0].plot(theta, outer.e_rr(theta), "-", label="Asymptotic")
 ax[0, 0].plot(theta, err_comsol, "-", label="COMSOL")
 ax[0, 0].set_ylabel(r"$\epsilon_{rr}$")
 ax[0, 0].legend()
-ax[0, 1].plot(theta, e_tt, "-", label="Asymptotic")
+ax[0, 1].plot(theta, outer.e_tt(theta), "-", label="Asymptotic")
 ax[0, 1].plot(theta, ett_comsol, "-", label="COMSOL")
 ax[0, 1].set_ylabel(r"$\epsilon_{\theta\theta}$")
-ax[0, 2].plot(theta, e_rt, "-", label="Asymptotic")
+ax[0, 2].plot(theta, outer.e_rt(theta), "-", label="Asymptotic")
 ax[0, 2].plot(theta, ert_comsol, "-", label="COMSOL")
 ax[0, 2].set_ylabel(r"$\epsilon_{r\theta}$")
-ax[1, 0].plot(theta, s_rr, "-", label="Asymptotic")
+ax[1, 0].plot(theta, outer.s_rr(theta), "-", label="Asymptotic")
 ax[1, 0].plot(theta, srr_comsol, "-", label="COMSOL")
 ax[1, 0].set_ylabel(r"$\sigma_{rr}$")
-ax[1, 1].plot(theta, s_tt, "-", label="Asymptotic")
+ax[1, 1].plot(theta, outer.s_tt(theta), "-", label="Asymptotic")
 ax[1, 1].plot(theta, stt_comsol, "-", label="COMSOL")
 ax[1, 1].set_ylabel(r"$\sigma_{\theta\theta}$")
-ax[1, 2].plot(theta, s_rt, "-", label="Asymptotic")
+ax[1, 2].plot(theta, outer.s_rt(theta), "-", label="Asymptotic")
 ax[1, 2].plot(theta, srt_comsol, "-", label="COMSOL")
 ax[1, 2].set_ylabel(r"$\sigma_{r\theta}$")
 # add shared labels etc.
@@ -282,7 +237,7 @@ plt.savefig("figs" + path[4:] + "stress_strain_of_theta.pdf", dpi=300)
 
 # tension
 fig, ax = plt.subplots()
-ax.plot(theta, T, "-", label="Asymptotic")
+ax.plot(theta, outer.T(theta), "-", label="Asymptotic")
 ax.plot(theta, T_comsol, "-", label="COMSOL")
 ax.set_ylabel(r"$T$")
 ax.legend()

@@ -1,11 +1,11 @@
 import numpy as np
-from numpy import pi
+from numpy import pi, exp
 import pandas as pd
 import scipy.interpolate as interp
 import matplotlib.pyplot as plt
+from matplotlib import colorbar, cm, colors
 from matplotlib.ticker import FuncFormatter, MultipleLocator
 import os
-from outer_solution import OuterSolution
 
 # Parameters ------------------------------------------------------------------
 alpha = 0.10  # expansion coefficient
@@ -28,13 +28,32 @@ try:
 except FileExistsError:
     pass
 
-# Compute the outer solution --------------------------------------------------
-outer = OuterSolution(alpha, delta, E, nu, r0)
-# unpack
-f1, f2, g1, g2 = outer.f1, outer.f2, outer.g1, outer.g2
-u, v = outer.u, outer.v
-e_rr, e_tt, e_rt = outer.e_rr, outer.e_tt, outer.e_rt
-s_rr, s_tt, s_rt = outer.s_rr, outer.s_tt, outer.s_rt
+# Compute the outer displacements ---------------------------------------------
+
+# constants
+A = alpha * (3 * lam + 2 * mu) / (lam + 2 * mu) * exp(2 * pi * omega)
+B = 0
+C = A / (1 - exp(2 * pi * omega))
+D = 0
+
+
+# functions of theta
+def f1(theta):
+    return -alpha * (3 * lam + 2 * mu) / (lam + 2 * mu) + A * exp(
+        -omega * (theta + 2 * pi)
+    )
+
+
+def f2(theta):
+    return B + C * exp(-omega * theta)
+
+
+def g1(theta):
+    return (lam + 2 * mu) / mu * omega * A * exp(-omega * (theta + 2 * pi))
+
+
+def g2(theta):
+    return D + C / omega * exp(-omega * theta)
 
 
 # Load COMSOL data ------------------------------------------------------------
@@ -94,18 +113,16 @@ g2_comsol = g2_interp(r)
 
 # Plots -----------------------------------------------------------------------
 
-# f_i and g_i
-fig, ax = plt.subplots(2, 2)
-# plot COMSOL solutions
-ax[0, 0].plot(theta, f1_comsol, linestyle="--", color="tab:orange", label="COMSOL")
-ax[0, 1].plot(theta, f2_comsol, linestyle="--", color="tab:orange", label="COMSOL")
-ax[1, 0].plot(theta, g1_comsol, linestyle="--", color="tab:orange", label="COMSOL")
-ax[1, 1].plot(theta, g2_comsol, linestyle="--", color="tab:orange", label="COMSOL")
-# plot outer solutions
-ax[0, 0].plot(theta, f1(theta), linestyle=":", color="black", label="Outer")
-ax[0, 1].plot(theta, f2(theta), linestyle=":", color="black", label="Outer")
-ax[1, 0].plot(theta, g1(theta), linestyle=":", color="black", label="Outer")
-ax[1, 1].plot(theta, g2(theta), linestyle=":", color="black", label="Outer")
+# s_rr and s_rt
+fig, ax = plt.subplots(1, 2, figsize=(8, 4))
+ax[0].plot(
+    theta,
+    f1_comsol * (lam + 2 * mu),
+    linestyle="--",
+    color="tab:orange",
+    label="COMSOL",
+)
+ax[1].plot(theta, g1_comsol * mu, linestyle="--", color="tab:orange", label="COMSOL")
 # plot inner and composite solutions
 for n in range(N):
     idx1 = int(n * 100 / N + 10)
@@ -124,71 +141,28 @@ for n in range(N):
         srt_tilde = srt_data[idx1, :]
 
     theta = delta * Theta / r0 + 2 * n * pi
-    # f1 = sigma_rr / (lambda+2*mu)
-    ax[0, 0].plot(
+    ax[0].plot(
         theta,
-        c * srr_tilde / (lam + 2 * mu) + f1(2 * n * pi),
-        linestyle="-.",
-        color="tab:green",
-        label="Inner" if n == 0 else "",
-    )
-    ax[0, 0].plot(
-        theta,
-        c * srr_tilde / (lam + 2 * mu) + f1(theta),
+        (
+            c * srr_tilde
+            + (alpha * (3 * lam + 2 * mu) + (lam + 2 * mu) * f1(theta))
+            - alpha * (3 * lam + 2 * mu)
+        ),
         linestyle="-",
         color="tab:blue",
         label="Composite" if n == 0 else "",
     )
-    # f2 = u(R=theta/2/pi)/delta
-    ax[0, 1].plot(
+    ax[1].plot(
         theta,
-        c * u_tilde + f2(2 * n * pi),
-        linestyle="-.",
-        color="tab:green",
-        label="Inner" if n == 0 else "",
-    )
-    ax[0, 1].plot(
-        theta,
-        c * u_tilde + f2(theta),
+        c * srt_tilde + g1(theta) * mu,
         linestyle="-",
         color="tab:blue",
         label="Composite" if n == 0 else "",
     )
-    # g1 = sigma_rt/mu
-    ax[1, 0].plot(
-        theta,
-        c * srt_tilde / mu + g1(2 * n * pi),
-        linestyle="-.",
-        color="tab:green",
-        label="Inner" if n == 0 else "",
-    )
-    ax[1, 0].plot(
-        theta,
-        c * srt_tilde / mu + g1(theta),
-        linestyle="-",
-        color="tab:blue",
-        label="Composite" if n == 0 else "",
-    )
-    # g2 = v(R=theta/2/pi)/delta
-    ax[1, 1].plot(
-        theta,
-        c * v_tilde + g2(2 * n * pi),
-        linestyle="-.",
-        color="tab:green",
-        label="Inner" if n == 0 else "",
-    )
-    ax[1, 1].plot(
-        theta,
-        c * v_tilde + g2(theta),
-        linestyle="-",
-        color="tab:blue",
-        label="Composite" if n == 0 else "",
-    )
-ax[0, 0].set_ylabel(r"$f_1$")
-ax[0, 1].set_ylabel(r"$f_2$")
-ax[1, 0].set_ylabel(r"$g_1$")
-ax[1, 1].set_ylabel(r"$g_2$")
-ax[0, 0].legend()
+
+ax[0].set_ylabel(r"$\sigma_{rr}$")
+ax[1].set_ylabel(r"$\sigma_{rt}$")
+ax[0].legend()
 for ax in ax.reshape(-1):
     # plot dashed line every 2*pi
     winds = [2 * pi * n for n in list(range(N))]
@@ -204,6 +178,5 @@ for ax in ax.reshape(-1):
     ax.set_xlim([0, N * 2 * pi])
     ax.set_xlabel(r"$\theta$")
 plt.tight_layout()
-plt.savefig("figs" + path[4:] + "fg_composite.pdf", dpi=300)
-
+plt.savefig("figs" + path[4:] + "srr_srt.pdf", dpi=300)
 plt.show()
