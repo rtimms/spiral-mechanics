@@ -3,7 +3,7 @@ from numpy import pi, exp
 
 
 class OuterSolution:
-    def __init__(self, alpha, delta, E, nu, r0):
+    def __init__(self, r0, delta, E, nu, alpha):
 
         # physical (dimensionless) parameters
         self.alpha = alpha

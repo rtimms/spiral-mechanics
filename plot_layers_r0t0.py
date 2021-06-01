@@ -26,7 +26,7 @@ path = "data/boundary_layer/"  # path to data
 #    pass
 
 # Compute the outer solution --------------------------------------------------
-outer = OuterSolution(alpha, delta, E, nu, r0)
+outer = OuterSolution(r0, delta, E, nu, alpha)
 # unpack
 f1, f2, g1, g2 = outer.f1, outer.f2, outer.g1, outer.g2
 
