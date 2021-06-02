@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 import os
 from outer_solution import OuterSolution
 
-# set style
-matplotlib.rc_file("_matplotlibrc_tex", use_default_template=True)
+# set style for paper
+# matplotlib.rc_file("_matplotlibrc_tex", use_default_template=True)
 
 # Parameters ------------------------------------------------------------------
 alpha = 0.10  # expansion coefficient
