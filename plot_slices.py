@@ -2,9 +2,13 @@ import numpy as np
 from numpy import pi
 import pandas as pd
 import scipy.interpolate as interp
+import matplotlib
 import matplotlib.pyplot as plt
 import os
 from outer_solution import OuterSolution
+
+# set style
+matplotlib.rc_file("_matplotlibrc_tex", use_default_template=True)
 
 # Parameters ------------------------------------------------------------------
 alpha = 0.10  # expansion coefficient
@@ -27,7 +31,7 @@ except FileExistsError:
     pass
 
 # Compute the outer solution --------------------------------------------------
-outer = OuterSolution(alpha, delta, E, nu, r0)
+outer = OuterSolution(r0, delta, E, nu, alpha)
 # unpack
 f1, f2, g1, g2 = outer.f1, outer.f2, outer.g1, outer.g2
 u, v = outer.u, outer.v
