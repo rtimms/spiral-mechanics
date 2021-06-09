@@ -1,6 +1,5 @@
 import numpy as np
 from numpy import pi
-import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter, MultipleLocator
 import os
@@ -8,6 +7,7 @@ from outer_solution import OuterSolution
 from comsol_solution import ComsolSolution
 
 # set style for paper
+# import matplotlib
 # matplotlib.rc_file("_matplotlibrc_tex", use_default_template=True)
 
 # Parameters ------------------------------------------------------------------
@@ -23,7 +23,7 @@ r0 = 0.5
 r1 = r0 + delta * N
 omega = np.sqrt(mu / (lam + 2 * mu))
 N_plot = 9  # number of winds to plot
-path = "data/E1e4h005/"  # path to data
+path = "data/single/E1e4h005/"  # path to data
 # make directory for figures if it doesn't exist
 try:
     os.mkdir("figs" + path[4:])

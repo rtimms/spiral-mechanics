@@ -1,12 +1,12 @@
 import numpy as np
 from numpy import pi
-import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter, MultipleLocator
 import os
 from comsol_double_solution import ComsolSolution
 
 # set style for paper
+# import matplotlib
 # matplotlib.rc_file("_matplotlibrc_tex", use_default_template=True)
 
 # Parameters ------------------------------------------------------------------
@@ -29,7 +29,7 @@ mu_n = E_n / 2 / (1 + nu_n)
 lam_p = E_p * nu_p / (1 + nu_p) / (1 - 2 * nu_p)
 mu_p = E_p / 2 / (1 + nu_p)
 print("lam_n: ", lam_n, " lam_p: ", lam_p)
-print("mu_n: ", lam_n, " mu_p: ", lam_p)
+print("mu_n: ", mu_n, " mu_p: ", mu_p)
 print("lam_n+2*mu_n: ", lam_n + 2 * mu_n, " lam_p+2*mu_p: ", lam_p + 2 * mu_p)
 
 N_plot = 10  # number of winds to plot

@@ -49,7 +49,7 @@ err_data, ett_data, ert_data = inner.err_data, inner.ett_data, inner.ert_data
 srr_data, stt_data, srt_data = inner.srr_data, inner.stt_data, inner.srt_data
 
 # load f_i and g_i from full simulation
-full_path = "data/E1e4h005/"
+full_path = "data/single/E1e4h005/"
 comsol = ComsolSolution(r0, delta, hh, N, E, nu, full_path)
 
 

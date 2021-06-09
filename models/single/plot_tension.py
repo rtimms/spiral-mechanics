@@ -19,7 +19,7 @@ r0 = 0.5
 r1 = r0 + delta * N
 omega = np.sqrt(mu / (lam + 2 * mu))
 N_plot = 9  # number of winds to plot
-path = f"data/E1e4h{str(hh-int(hh))[2:]}/"  # path to data
+path = f"data/single/E1e4h{str(hh-int(hh))[2:]}/"  # path to data
 # make directory for figures if it doesn't exist
 try:
     os.mkdir("figs" + path[4:])
