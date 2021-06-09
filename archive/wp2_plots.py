@@ -76,7 +76,7 @@ srt_r_data = comsol[:, 1].reshape(101, 101)
 srt_data = comsol[:, 2].reshape(101, 101)
 
 # load f_i and g_i from full simulation
-full_path = "data/E1e4h005/"
+full_path = "data/single/E1e4h005/"
 theta = np.linspace(0, 2 * N * pi, 60 * N)
 # f1 = sigma_rr / (lambda+2*mu)
 comsol = pd.read_csv(full_path + "srr3.csv", comment="#", header=None).to_numpy()
