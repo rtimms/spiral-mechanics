@@ -1,1 +1,7 @@
+# virtual environment
 env/
+
+# Python cache
+*__pycache__/
+*.cache
+.ipynb_checkpoints/
