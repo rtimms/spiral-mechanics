@@ -10,22 +10,21 @@ from comsol_solution import ComsolSolution, ComsolInnerSolution
 # set style for paper
 # matplotlib.rc_file("_matplotlibrc_tex", use_default_template=True)
 
-# Parameters (dimensionless) --------------------------------------------------
-alpha = 1  # expansion coefficient
-mu = 1  # shear modulus
-nu = 1 / 3  # Poisson ratio
-lam = 2 * mu * nu / (1 - 2 * nu)  # 1st Lame parameter
+# Parameters ------------------------------------------------------------------
+alpha = 0.10  # expansion coefficient
+delta = 0.1
+hh = 0.005  # current collector thickness
+E = 1  # active material Young's modulus
+nu = 1 / 3
+lam = E * nu / (1 + nu) / (1 - 2 * nu)
+mu = E / 2 / (1 + nu)
+N = 5
+r0 = 0.5
+r1 = r0 + delta * N
 omega = np.sqrt(mu / (lam + 2 * mu))
 c = alpha * (2 * lam + mu) * omega
-N = 10  # number of winds
-r0 = 0.25  # inner radius
-r1 = 1  # outer radius
-delta = (r1 - r0) / N
-hh = 0.01 * delta  # current collector thickness
-N_BL = 5  # number of slabs in inner solution
-N_plot = N_BL - 1  # number of winds to plot
-path = "data/boundary_layer/"  # path to inner simulation data
-full_path = "data/single/mu1lam2/"  # path to full simulation data
+N_plot = 9  # number of winds to plot
+path = "data/boundary_layer/"  # path to data
 # make directory for figures if it doesn't exist
 try:
     os.mkdir("figs" + path[4:])
@@ -33,7 +32,7 @@ except FileExistsError:
     pass
 
 # Compute the outer solution --------------------------------------------------
-outer = OuterSolution(r0, delta, mu, lam, alpha)
+outer = OuterSolution(r0, delta, E, nu, alpha)
 # unpack
 f1, f2, g1, g2 = outer.f1, outer.f2, outer.g1, outer.g2
 u, v = outer.u, outer.v
@@ -50,8 +49,8 @@ err_data, ett_data, ert_data = inner.err_data, inner.ett_data, inner.ert_data
 srr_data, stt_data, srt_data = inner.srr_data, inner.stt_data, inner.srt_data
 
 # load f_i and g_i from full simulation
-alpha_scale = 0.1
-comsol = ComsolSolution(r0, delta, hh, N, mu, lam, alpha_scale, full_path)
+full_path = "data/single/E1e4h005/"
+comsol = ComsolSolution(r0, delta, hh, N, E, nu, full_path)
 
 
 # Plots -----------------------------------------------------------------------
@@ -70,9 +69,9 @@ ax[0, 1].plot(theta, f2(theta), linestyle=":", color="black", label="Outer")
 ax[1, 0].plot(theta, g1(theta), linestyle=":", color="black", label="Outer")
 ax[1, 1].plot(theta, g2(theta), linestyle=":", color="black", label="Outer")
 # plot inner and composite solutions
-for n in range(N_BL):
-    idx1 = int(n * 100 / N_BL + 10)  # midpoint
-    idx2 = int(n * 100 / N_BL)  # inner edge
+for n in range(N):
+    idx1 = int(n * 100 / N + 10)  # midpoint
+    idx2 = int(n * 100 / N)  # inner edge
     if n == 0:
         # 0 < theta < inf
         Theta = t_data[0, 50:]
@@ -156,7 +155,7 @@ ax[1, 1].set_ylabel(r"$g_2$")
 ax[0, 0].legend()
 for ax in ax.reshape(-1):
     # plot dashed line every 2*pi
-    winds = [2 * pi * n for n in list(range(N_plot))]
+    winds = [2 * pi * n for n in list(range(N))]
     for w in winds:
         ax.axvline(x=w, linestyle=":", color="lightgrey")
     # add labels etc.
@@ -166,7 +165,7 @@ for ax in ax.reshape(-1):
         )
     )
     ax.xaxis.set_major_locator(MultipleLocator(base=4 * pi))
-    ax.set_xlim([0, N_plot * 2 * pi])
+    ax.set_xlim([0, N * 2 * pi])
     ax.set_xlabel(r"$\theta$")
 plt.tight_layout()
 plt.savefig("figs" + path[4:] + "fg_composite.pdf", dpi=300)
@@ -189,9 +188,9 @@ ax[1, 0].plot(theta, s_rr(theta), linestyle=":", color="black", label="Outer")
 ax[1, 1].plot(theta, s_tt(theta), linestyle=":", color="black", label="Outer")
 ax[1, 2].plot(theta, s_rt(theta), linestyle=":", color="black", label="Outer")
 # plot composite solutions
-for n in range(N_BL):
-    idx1 = int(n * 100 / N_BL + 10)  # midpoint
-    idx2 = int(n * 100 / N_BL)  # inner edge
+for n in range(N):
+    idx1 = int(n * 100 / N + 10)  # midpoint
+    idx2 = int(n * 100 / N)  # inner edge
     if n == 0:
         # 0 < theta < inf
         Theta = t_data[0, 50:]
@@ -327,7 +326,7 @@ for ax in ax.reshape(-1):
         )
     )
     ax.xaxis.set_major_locator(MultipleLocator(base=4 * pi))
-    ax.set_xlim([0, N_plot * 2 * pi])
+    ax.set_xlim([0, N * 2 * pi])
     ax.set_xlabel(r"$\theta$")
 plt.tight_layout()
 plt.savefig("figs" + path[4:] + "stress_strain_ocomposite.pdf", dpi=300)

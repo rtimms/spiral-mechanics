@@ -4,19 +4,19 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from outer_solution import OuterSolution
 
-# Parameters (dimensionless) --------------------------------------------------
-alpha = 1  # expansion coefficient
-mu = 1  # shear modulus
-nu = 1 / 3  # Poisson ratio
-lam = 2 * mu * nu / (1 - 2 * nu)  # 1st Lame parameter
-# E = 2 * mu * (1 + nu)
+# Parameters ------------------------------------------------------------------
+alpha = 0.10  # expansion coefficient
+delta = 0.1
+hh = 0.005  # current collector thickness
+E = 1  # active material Young's modulus
+nu = 1 / 3
+lam = E * nu / (1 + nu) / (1 - 2 * nu)
+mu = E / 2 / (1 + nu)
+N = 5
+r0 = 0.5
+r1 = r0 + delta * N
 omega = np.sqrt(mu / (lam + 2 * mu))
 c = alpha * (2 * lam + mu) * omega
-N = 10  # number of winds
-r0 = 0.25  # inner radius
-r1 = 1  # outer radius
-delta = (r1 - r0) / N
-hh = 0.01 * delta  # current collector thickness
 N_plot = 9  # number of winds to plot
 path = "data/boundary_layer/"  # path to data
 ## make directory for figures if it doesn't exist
@@ -26,7 +26,7 @@ path = "data/boundary_layer/"  # path to data
 #    pass
 
 # Compute the outer solution --------------------------------------------------
-outer = OuterSolution(r0, delta, mu, lam, alpha)
+outer = OuterSolution(r0, delta, E, nu, alpha)
 # unpack
 f1, f2, g1, g2 = outer.f1, outer.f2, outer.g1, outer.g2
 
