@@ -4,26 +4,30 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter, MultipleLocator
 import os
 from outer_solution import OuterSolution
-from comsol_solution import ComsolSolution
+from comsol_solution_2 import ComsolSolution
 
 # set style for paper
 # import matplotlib
 # matplotlib.rc_file("_matplotlibrc_tex", use_default_template=True)
 
 # Parameters ------------------------------------------------------------------
-alpha = 0.10  # expansion coefficient
-E = 1  # active material Young's modulus
-nu = 1 / 3
-lam = E * nu / (1 + nu) / (1 - 2 * nu)
-mu = E / 2 / (1 + nu)
+alpha = 1  # expansion coefficient
+#E = 1  # active material Young's modulus
+#nu = 1 / 3
+#lam = E * nu / (1 + nu) / (1 - 2 * nu)
+#mu = E / 2 / (1 + nu)
+mu=1
+nu=1/3
+lam =2*mu*nu/(1-2*nu)
+E = 2*mu*(1+nu)
 N = 10
 r0 = 0.25
 r1 = 1
 delta = (r1 - r0) / N
-hh = 0.05 * delta  # current collector thickness
+hh = 0.01 * delta  # current collector thickness
 omega = np.sqrt(mu / (lam + 2 * mu))
 N_plot = 9  # number of winds to plot
-path = "data/single/8/"  # path to data
+path = "data/single/mu1lam2/"  # path to data
 # make directory for figures if it doesn't exist
 try:
     os.mkdir("figs" + path[4:])
@@ -34,7 +38,8 @@ except FileExistsError:
 outer = OuterSolution(r0, delta, E, nu, alpha)
 
 # Load COMSOL solution --------------------------------------------------------
-comsol = ComsolSolution(r0, delta, hh, N, E, nu, path)
+alpha_1 = 0.1
+comsol = ComsolSolution(r0, delta, hh, N, E, nu, alpha_1, path)
 theta = comsol.theta
 
 # Plot solution(s) ------------------------------------------------------------
@@ -135,9 +140,9 @@ plt.savefig("figs" + path[4:] + "stress_strain_of_theta.pdf", dpi=300)
 fig, ax = plt.subplots(figsize=(6.4, 4))
 ax.plot(theta, outer.T(theta), "-", label="Asymptotic")
 ax.plot(theta, comsol.T, "-", label="COMSOL")
-# ax.plot(theta, comsol.T_a, "-", label="COMSOL (a)")
-# ax.plot(theta, comsol.T_b, "-", label="COMSOL (b)")
-# ax.plot(theta, comsol.T_c, "-", label="COMSOL (c)")
+#ax.plot(theta, comsol.T_a, "-", label="COMSOL (a)")
+#ax.plot(theta, comsol.T_b, "-", label="COMSOL (b)")
+#ax.plot(theta, comsol.T_c, "-", label="COMSOL (c)")
 ax.set_ylabel(r"$T$")
 ax.legend(loc="lower right")
 # add shared labels etc.
