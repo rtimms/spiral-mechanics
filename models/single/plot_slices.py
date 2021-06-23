@@ -8,7 +8,7 @@ import os
 from outer_solution import OuterSolution
 
 # set style for paper
-# matplotlib.rc_file("_matplotlibrc_tex", use_default_template=True)
+matplotlib.rc_file("_matplotlibrc_tex", use_default_template=True)
 
 # Parameters (dimensionless) --------------------------------------------------
 alpha = 1  # expansion coefficient
@@ -123,7 +123,7 @@ ax[0, 0].plot(
     comsol[:, 0], comsol[:, 1] / alpha_scale, "--", color="tab:orange", label="COMSOL"
 )
 ax[0, 0].set_ylabel(r"$u$")
-ax[0, 0].legend()
+ax[0, 0].legend(loc="lower right")
 # azimuthal displacement
 ax[0, 1].plot(r, v(r, theta), "-", color="tab:blue", label="Asymptotic")
 comsol = pd.read_csv(path + f"v_0.csv", comment="#", header=None).to_numpy()
@@ -216,7 +216,7 @@ ax[0, 0].plot(
     comsol[:, 0], comsol[:, 1] / alpha_scale, "--", color="tab:orange", label="COMSOL"
 )
 ax[0, 0].set_ylabel(r"$u$")
-ax[0, 0].legend()
+ax[0, 0].legend(loc="lower right")
 # azimuthal displacement
 ax[0, 1].plot(r, v(r, theta), "-", color="tab:blue", label="Asymptotic")
 comsol = pd.read_csv(path + f"v_pi.csv", comment="#", header=None).to_numpy()

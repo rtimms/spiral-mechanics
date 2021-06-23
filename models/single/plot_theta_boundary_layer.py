@@ -8,7 +8,7 @@ from outer_solution import OuterSolution
 from comsol_solution import ComsolSolution, ComsolInnerSolution
 
 # set style for paper
-# matplotlib.rc_file("_matplotlibrc_tex", use_default_template=True)
+matplotlib.rc_file("_matplotlibrc_tex", use_default_template=True)
 
 # Parameters (dimensionless) --------------------------------------------------
 alpha = 1  # expansion coefficient
@@ -153,7 +153,7 @@ ax[0, 0].set_ylabel(r"$f_1$")
 ax[0, 1].set_ylabel(r"$f_2$")
 ax[1, 0].set_ylabel(r"$g_1$")
 ax[1, 1].set_ylabel(r"$g_2$")
-ax[0, 0].legend()
+ax[0, 0].legend(loc="upper right")
 for ax in ax.reshape(-1):
     # plot dashed line every 2*pi
     winds = [2 * pi * n for n in list(range(N_plot))]
@@ -317,7 +317,7 @@ ax[0, 2].set_ylabel(r"$\varepsilon_{r\theta}$")
 ax[1, 0].set_ylabel(r"$\sigma_{rr}$")
 ax[1, 1].set_ylabel(r"$\sigma_{\theta\theta}$")
 ax[1, 2].set_ylabel(r"$\sigma_{r\theta}$")
-ax[0, 0].legend()
+ax[0, 0].legend(loc="upper right")
 for ax in ax.reshape(-1):
     for w in winds:
         ax.axvline(x=w, linestyle=":", color="lightgrey")
