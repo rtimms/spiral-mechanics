@@ -21,7 +21,8 @@ N = 10  # number of winds
 r0 = 0.25  # inner radius
 r1 = 1  # outer radius
 delta = (r1 - r0) / N
-hh = 0.01 * delta  # current collector thickness
+hs = 0.01
+hh = hs * delta  # current collector thickness
 N_plot = 9  # number of winds to plot
 alpha_scale = 0.1  # scale for COMSOL
 
@@ -29,22 +30,30 @@ alpha_scale = 0.1  # scale for COMSOL
 theta = np.linspace(0, 2 * pi * N, 60 * (N - 1))
 outer = OuterSolution(r0, delta, mu, lam, alpha)
 
-fig, ax = plt.subplots(1, 2)
+fig, ax = plt.subplots(1, 2,figsize=(8,4))
 ax[0].plot(theta, outer.e_tt(theta), "-", label="Asymptotic")
 ax[1].plot(theta, outer.T(theta), "-", label="Asymptotic")
-mu_ccs = []
-paths = []
+mu_ccs = [1e3, 5e3, 1e4, 2e4, 1e5]
+paths = ["1e3/", "5e3/", "mu1lam2/", "2e4/", "1e5/"] 
 for mu_cc, path in zip(mu_ccs, paths):
-    comsol = ComsolSolution(r0, delta, hh, N, mu, lam, alpha_scale, path)
+    if hs == 0.01:
+        pass
+    elif hs == 0.025: 
+        path = "hh025/"+path     
+    elif hs == 0.05: 
+        path = "hh05/"+path  
+    comsol = ComsolSolution(r0, delta, hh, N, mu, lam, alpha_scale, "data/single/"+path)
     theta = comsol.theta
     ax[0].plot(theta, comsol.ett, "--")
-    ax[1].plot(theta, comsol.T, "--", label=r"COMSOL ($\mu$=" + f"{mu_cc})")
+    ax[1].plot(theta, comsol.T, "--", label=r"COMSOL ($\mu$=" + f"{int(mu_cc)})")
+ax[0].set_ylim([-0.5, 1]) 
+ax[1].set_ylim([-2.5, 0.5])   
 ax[0].set_ylabel(r"$\varepsilon_{\theta\theta}$")
 ax[1].set_ylabel(r"$T$")
-ax[1].legend(loc="lower right")
-
 
 # add shared labels etc.
+ax[0].set_title(r"$h=$"+f"{hs}"+r"$\delta$")
+ax[1].legend(loc="lower right")
 winds = [2 * pi * n for n in list(range(N_plot))]  # plot dashed line every 2*pi
 for ax in ax.reshape(-1):
     for w in winds:
@@ -58,5 +67,5 @@ for ax in ax.reshape(-1):
     ax.set_xlim([0, N_plot * 2 * pi])
     ax.set_xlabel(r"$\theta$")
 plt.tight_layout()
-plt.savefig("figs/single/compare_mu_cc/ett_T.pdf", dpi=300)
+plt.savefig(f"figs/single/compare_mu_cc/ett_T_{int(hs*1000)}.pdf", dpi=300)
 plt.show()
