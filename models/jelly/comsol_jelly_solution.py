@@ -6,7 +6,7 @@ import scipy.interpolate as interp
 
 class ComsolSolution:
     def __init__(
-        self, r0, delta, l_n, l_s, l_p, hh, N, E_n, E_s, E_p, nu_n, nu_s, nu_p, path
+        self, r0, delta, l_n, l_s, l_p, hh, N, lam_n, lam_s, lam_p, mu_n, mu_s, mu_p, path
     ):
         # dict to store variables
         self._variables = {}
@@ -17,14 +17,6 @@ class ComsolSolution:
         h_n = l_n * delta - h_cn / 2
         h_p = l_p * delta - h_cp / 2
         h_s = l_s * delta
-
-        # compute lame parameters
-        lam_n = E_n * nu_n / (1 + nu_n) / (1 - 2 * nu_n)
-        mu_n = E_n / 2 / (1 + nu_n)
-        lam_s = E_s * nu_s / (1 + nu_s) / (1 - 2 * nu_s)
-        mu_s = E_s / 2 / (1 + nu_s)
-        lam_p = E_p * nu_p / (1 + nu_p) / (1 - 2 * nu_p)
-        mu_p = E_p / 2 / (1 + nu_p)
 
         # Note: COMSOL data is (r, f) so we create interpolants to get
         # (theta, f) data

@@ -10,43 +10,33 @@ from comsol_jelly_solution import ComsolSolution
 # matplotlib.rc_file("_matplotlibrc_tex", use_default_template=True)
 
 # Parameters ------------------------------------------------------------------
-r0 = 0.1
+
+#  geometry
+r0 = 0.25
 r1 = 1
 N = 10
 delta = (r1 - r0) / N
-hh = 0.05 * delta
-l_n = 0.4 / 2
-l_s = 0.2 / 2
+hh = 0.01 * delta
 l_p = 0.4 / 2
+l_s = 0.2 / 2
+l_n = 0.4 / 2
 
-alpha_n = -0.1
-alpha_p = 0.02
-E_n = 1
-E_s = 1e-2
-E_p = 10
-nu_n = 1 / 3
-nu_s = 1 / 3
-nu_p = 1 / 3
-lam_n = E_n * nu_n / (1 + nu_n) / (1 - 2 * nu_n)
-mu_n = E_n / 2 / (1 + nu_n)
-lam_s = E_s * nu_s / (1 + nu_s) / (1 - 2 * nu_s)
-mu_s = E_s / 2 / (1 + nu_s)
-lam_p = E_p * nu_p / (1 + nu_p) / (1 - 2 * nu_p)
-mu_p = E_p / 2 / (1 + nu_p)
+# material properties
+alpha_p = 1  # expansion coefficient
+mu_p = 1  # shear modulus
+nu_p = 1 / 3  # Poisson ratio
+lam_p = 2 * mu_p * nu_p / (1 - 2 * nu_p)  # 1st Lame parameter
+alpha_s = 1  # expansion coefficient
+mu_s = 1e-3  # shear modulus
+nu_s = 1 / 3  # Poisson ratio
+lam_s = 2 * mu_s * nu_s / (1 - 2 * nu_s)  # 1st Lame parameter
+alpha_s = 1  # expansion coefficient
+mu_n = 1e-1  # shear modulus
+nu_n = 1 / 3  # Poisson ratio
+lam_n = 2 * mu_n * nu_n / (1 - 2 * nu_n)  # 1st Lame parameter
 
-print("lam_n: ", lam_n, " lam_s: ", lam_s, " lam_p: ", lam_p)
-print("mu_n: ", mu_n, " mu_s: ", mu_s, " mu_p: ", mu_p)
-print(
-    "lam_n+2*mu_n: ",
-    lam_n + 2 * mu_n,
-    " lam_s+2*mu_s: ",
-    lam_s + 2 * mu_s,
-    " lam_p+2*mu_p: ",
-    lam_p + 2 * mu_p,
-)
-
-N_plot = N  # number of winds to plot
-path = "data/jelly/"  # path to data
+N_plot = N-1  # number of winds to plot
+path = "data/jelly/04/"  # path to data
 # make directory for figures if it doesn't exist
 try:
     os.mkdir("figs" + path[4:])
@@ -57,7 +47,7 @@ except FileExistsError:
 
 # Load COMSOL solution --------------------------------------------------------
 comsol = ComsolSolution(
-    r0, delta, l_n, l_s, l_p, hh, N, E_n, E_s, E_p, nu_n, nu_s, nu_p, path
+    r0, delta, l_n, l_s, l_p, hh, N, lam_n, lam_s, lam_p, mu_n, mu_s, mu_p, path
 )
 theta = comsol["theta"]
 
