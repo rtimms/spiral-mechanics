@@ -7,9 +7,9 @@ from outer_solution import OuterSolution
 from comsol_solution import ComsolSolution
 
 # set style for paper
-#import matplotlib
+# import matplotlib
 #
-#matplotlib.rc_file("_matplotlibrc_tex", use_default_template=True)
+# matplotlib.rc_file("_matplotlibrc_tex", use_default_template=True)
 
 # Parameters (dimensionless) --------------------------------------------------
 alpha = 1  # expansion coefficient
@@ -21,8 +21,8 @@ N = 10  # number of winds
 r0 = 0.25  # inner radius
 r1 = 1  # outer radius
 delta = (r1 - r0) / N
-hh = 0.01* delta  # current collector thickness
-N_plot = N-1  # number of winds to plot
+hh = 0.01 * delta  # current collector thickness
+N_plot = N - 1  # number of winds to plot
 
 
 # Compute the boundary layer solution -----------------------------------------
@@ -32,16 +32,20 @@ outer = OuterSolution(r0, delta, mu, lam, alpha)
 alpha_scale = 0.1
 comsols = {
     # hs 0.01
-    "tol 1e-3": ComsolSolution(r0, delta, hh, N, mu, lam, alpha_scale, "data/single/mu1lam2/"),
-    "tol 1e-6": ComsolSolution(r0, delta, hh, N, mu, lam, alpha_scale, "data/single/mu1lam2_tol1e-6/"),
+    "tol 1e-3": ComsolSolution(
+        r0, delta, hh, N, mu, lam, alpha_scale, "data/single/mu1lam2/"
+    ),
+    "tol 1e-6": ComsolSolution(
+        r0, delta, hh, N, mu, lam, alpha_scale, "data/single/mu1lam2_tol1e-6/"
+    ),
     # hs 0.05
-    #"linear": ComsolSolution(r0, delta, hh, N, mu, lam, alpha_scale, "data/single/hh05/mu1lam2_linear/"),
-    #"quadratic": ComsolSolution(r0, delta, hh, N, mu, lam, alpha_scale, "data/single/hh05/mu1lam2_quadratic/"),
-    #"cubic": ComsolSolution(r0, delta, hh, N, mu, lam, alpha_scale, "data/single/hh05/mu1lam2_cubic/"),
-    #"tol 1e-6": ComsolSolution(r0, delta, hh, N, mu, lam, alpha_scale, "data/single/hh05/mu1lam2_tol1e-6/"),
-    #"tol 1e-4": ComsolSolution(r0, delta, hh, N, mu, lam, alpha_scale, "data/single//hh05mu1lam2_linear_tol1e-4/"),
-    #"quad (strain)": ComsolSolution(r0, delta, hh, N, mu, lam, alpha_scale, "data/single//hh05mu1lam2_sf/"),
-    #"quad (pressure)": ComsolSolution(r0, delta, hh, N, mu, lam, alpha_scale, "data/single/hh05/mu1lam2_pf/"),
+    # "linear": ComsolSolution(r0, delta, hh, N, mu, lam, alpha_scale, "data/single/hh05/mu1lam2_linear/"),
+    # "quadratic": ComsolSolution(r0, delta, hh, N, mu, lam, alpha_scale, "data/single/hh05/mu1lam2_quadratic/"),
+    # "cubic": ComsolSolution(r0, delta, hh, N, mu, lam, alpha_scale, "data/single/hh05/mu1lam2_cubic/"),
+    # "tol 1e-6": ComsolSolution(r0, delta, hh, N, mu, lam, alpha_scale, "data/single/hh05/mu1lam2_tol1e-6/"),
+    # "tol 1e-4": ComsolSolution(r0, delta, hh, N, mu, lam, alpha_scale, "data/single//hh05mu1lam2_linear_tol1e-4/"),
+    # "quad (strain)": ComsolSolution(r0, delta, hh, N, mu, lam, alpha_scale, "data/single//hh05mu1lam2_sf/"),
+    # "quad (pressure)": ComsolSolution(r0, delta, hh, N, mu, lam, alpha_scale, "data/single/hh05/mu1lam2_pf/"),
 }
 theta = comsols[list(comsols.keys())[0]].theta
 
@@ -109,14 +113,15 @@ for ax in ax.reshape(-1):
 plt.tight_layout()
 plt.savefig("figs/single/compare_formulation/uv_of_theta.pdf", dpi=300)
 
-# stresses and strains
+# stresses and strains at r = r0 + delta / 2 + delta * theta / 2 / pi
+r = r0 + delta / 2 + delta * theta / 2 / pi
 fig, ax = plt.subplots(2, 3)
 ax[0, 0].plot(theta, outer.e_rr(theta), "-", label="Asymptotic")
 for name, sol in comsols.items():
     ax[0, 0].plot(theta, sol.err, "--", label=name)
 ax[0, 0].set_ylabel(r"$\varepsilon_{rr}$")
 ax[0, 0].legend(loc="upper right")
-ax[0, 1].plot(theta, outer.e_tt(theta), "-", label="Asymptotic")
+ax[0, 1].plot(theta, outer.e_tt(r, theta), "-", label="Asymptotic")
 for name, sol in comsols.items():
     ax[0, 1].plot(theta, sol.ett, "--", label=name)
 ax[0, 1].set_ylabel(r"$\varepsilon_{\theta\theta}$")
@@ -154,7 +159,7 @@ plt.savefig("figs/single/compare_formulation/stress_strain_of_theta.pdf", dpi=30
 # tension
 fig, ax = plt.subplots()
 ax.plot(theta, outer.T(theta), "-", label="Asymptotic")
-for name, sol in comsols.items():   
+for name, sol in comsols.items():
     ax.plot(theta, sol.T, "--", label=name)
 ax.set_ylabel(r"$T$")
 ax.legend(loc="lower right")

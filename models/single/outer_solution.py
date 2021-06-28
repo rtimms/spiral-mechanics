@@ -1,5 +1,6 @@
 import numpy as np
 from numpy import pi, exp
+from numpy.lib.financial import _ipmt_dispatcher, ipmt
 
 
 class OuterSolution:
@@ -50,13 +51,24 @@ class OuterSolution:
             * exp(-self.omega * (theta + 2 * pi))
         )
 
+    def dg1dt(self, theta):
+        return (
+            -self.omega
+            * (self.lam + 2 * self.mu)
+            / self.mu
+            * self.omega
+            * self.A
+            * exp(-self.omega * (theta + 2 * pi))
+        )
+
     def g2(self, theta):
         return self.D + self.C / self.omega * exp(-self.omega * theta)
 
+    def dg2dt(self, theta):
+        return -self.C * exp(-self.omega * theta)
+
     def u(self, r, theta):
-        """
-        Radial displacement at fixed R-theta/2/pi=0.5
-        """
+        """ Radial displacement """
         alpha = self.alpha
         delta = self.delta
         r0 = self.r0
@@ -71,9 +83,7 @@ class OuterSolution:
         return u
 
     def v(self, r, theta):
-        """
-        Azimuthal displacement at fixed R-theta/2/pi=0.5
-        """
+        """ Azimuthal displacement """
         delta = self.delta
         r0 = self.r0
         R = (r - r0) / delta
@@ -86,12 +96,18 @@ class OuterSolution:
         mu = self.mu
         return alpha * (3 * lam + 2 * mu) / (lam + 2 * mu) + self.f1(theta)
 
-    def e_tt(self, theta):
+    def e_tt(self, r, theta):
         """ Azimuthal strain """
         delta = self.delta
         r0 = self.r0
-        r = r0 + delta / 2 + delta * theta / 2 / pi
-        return (delta / r0) * (np.gradient(self.v(r, theta), theta) + self.u(r, theta))
+        R = (r - r0) / delta
+        dvdt = delta * (
+            self.dg1dt(theta) * (R - theta / 2 / pi)
+            - self.g1(theta) / 2 / pi
+            + self.dg2dt(theta)
+        )
+
+        return (1 / r0) * (dvdt + self.u(r, theta))
 
     def e_rt(self, theta):
         """ Shear strain """

@@ -7,9 +7,9 @@ from outer_solution import OuterSolution
 from comsol_solution import ComsolSolution
 
 # set style for paper
-#import matplotlib
+# import matplotlib
 #
-#matplotlib.rc_file("_matplotlibrc_tex", use_default_template=True)
+# matplotlib.rc_file("_matplotlibrc_tex", use_default_template=True)
 
 # Parameters (dimensionless) --------------------------------------------------
 alpha = 1  # expansion coefficient
@@ -21,8 +21,8 @@ N = 10  # number of winds
 r0 = 0.25  # inner radius
 r1 = 1  # outer radius
 delta = (r1 - r0) / N
-hh = 0.01* delta  # current collector thickness
-N_plot = N-1  # number of winds to plot
+hh = 0.05 * delta  # current collector thickness
+N_plot = N - 1  # number of winds to plot
 
 
 # Compute the boundary layer solution -----------------------------------------
@@ -30,8 +30,12 @@ outer = OuterSolution(r0, delta, mu, lam, alpha)
 
 # Load COMSOL solution --------------------------------------------------------
 alpha_scale = 0.1
-comsol = ComsolSolution(r0, delta, hh, N, mu, lam, alpha_scale, "data/single/mu1lam2/")
-comsol_fine = ComsolSolution(r0, delta, hh, N, mu, lam, alpha_scale, "data/single/mu1lam2_fine/")
+comsol = ComsolSolution(
+    r0, delta, hh, N, mu, lam, alpha_scale, "data/single/hh05/mu1lam2/"
+)
+comsol_fine = ComsolSolution(
+    r0, delta, hh, N, mu, lam, alpha_scale, "data/single/hh05/mu1lam2_fine/"
+)
 theta = comsol.theta
 
 # Plot solution(s) ------------------------------------------------------------
@@ -98,14 +102,15 @@ for ax in ax.reshape(-1):
 plt.tight_layout()
 plt.savefig("figs/single/compare_mesh/uv_of_theta.pdf", dpi=300)
 
-# stresses and strains
+# stresses and strains at r = r0 + delta / 2 + delta * theta / 2 / pi
+r = r0 + delta / 2 + delta * theta / 2 / pi
 fig, ax = plt.subplots(2, 3)
 ax[0, 0].plot(theta, outer.e_rr(theta), "-", label="Asymptotic")
 ax[0, 0].plot(theta, comsol.err, "--", label="COMSOL")
 ax[0, 0].plot(theta, comsol_fine.err, "--", label="COMSOL (fine)")
 ax[0, 0].set_ylabel(r"$\varepsilon_{rr}$")
 ax[0, 0].legend(loc="upper right")
-ax[0, 1].plot(theta, outer.e_tt(theta), "-", label="Asymptotic")
+ax[0, 1].plot(theta, outer.e_tt(r, theta), "-", label="Asymptotic")
 ax[0, 1].plot(theta, comsol.ett, "--", label="COMSOL")
 ax[0, 1].plot(theta, comsol_fine.ett, "--", label="COMSOL (fine)")
 ax[0, 1].set_ylabel(r"$\varepsilon_{\theta\theta}$")

@@ -7,9 +7,9 @@ from outer_solution import OuterSolution
 from comsol_solution import ComsolSolution
 
 # set style for paper
-import matplotlib
+# import matplotlib
 
-matplotlib.rc_file("_matplotlibrc_tex", use_default_template=True)
+# matplotlib.rc_file("_matplotlibrc_tex", use_default_template=True)
 
 # Parameters (dimensionless) --------------------------------------------------
 alpha = 1  # expansion coefficient
@@ -96,13 +96,14 @@ for ax in ax.reshape(-1):
 plt.tight_layout()
 plt.savefig("figs" + path[4:] + "uv_of_theta.pdf", dpi=300)
 
-# stresses and strains
+# stresses and strains at r = r0 + delta / 2 + delta * theta / 2 / pi
+r = r0 + delta / 2 + delta * theta / 2 / pi
 fig, ax = plt.subplots(2, 3)
 ax[0, 0].plot(theta, outer.e_rr(theta), "-", label="Asymptotic")
 ax[0, 0].plot(theta, comsol.err, "--", label="COMSOL")
 ax[0, 0].set_ylabel(r"$\varepsilon_{rr}$")
 ax[0, 0].legend(loc="upper right")
-ax[0, 1].plot(theta, outer.e_tt(theta), "-", label="Asymptotic")
+ax[0, 1].plot(theta, outer.e_tt(r, theta), "-", label="Asymptotic")
 ax[0, 1].plot(theta, comsol.ett, "--", label="COMSOL")
 ax[0, 1].set_ylabel(r"$\varepsilon_{\theta\theta}$")
 ax[0, 2].plot(theta, outer.e_rt(theta), "-", label="Asymptotic")

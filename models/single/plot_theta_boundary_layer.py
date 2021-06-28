@@ -171,10 +171,11 @@ for ax in ax.reshape(-1):
 plt.tight_layout()
 plt.savefig("figs" + path[4:] + "fg_composite.pdf", dpi=300)
 
-# stresses and strains
+# stresses and strains at r = r0 + delta / 2 + delta * theta / 2 / pi
 fig, ax = plt.subplots(2, 3)
 # plot COMSOL solutions
 theta = comsol.theta
+r = r0 + delta / 2 + delta * theta / 2 / pi
 ax[0, 0].plot(theta, comsol.err, linestyle="--", color="tab:orange", label="COMSOL")
 ax[0, 1].plot(theta, comsol.ett, linestyle="--", color="tab:orange", label="COMSOL")
 ax[0, 2].plot(theta, comsol.ert, linestyle="--", color="tab:orange", label="COMSOL")
@@ -183,7 +184,7 @@ ax[1, 1].plot(theta, comsol.stt, linestyle="--", color="tab:orange", label="COMS
 ax[1, 2].plot(theta, comsol.srt, linestyle="--", color="tab:orange", label="COMSOL")
 # plot outer solutions
 ax[0, 0].plot(theta, e_rr(theta), linestyle=":", color="black", label="Outer")
-ax[0, 1].plot(theta, e_tt(theta), linestyle=":", color="black", label="Outer")
+ax[0, 1].plot(theta, e_tt(r, theta), linestyle=":", color="black", label="Outer")
 ax[0, 2].plot(theta, e_rt(theta), linestyle=":", color="black", label="Outer")
 ax[1, 0].plot(theta, s_rr(theta), linestyle=":", color="black", label="Outer")
 ax[1, 1].plot(theta, s_tt(theta), linestyle=":", color="black", label="Outer")
@@ -241,7 +242,7 @@ for n in range(N_BL):
     )
     ax[0, 1].plot(
         theta,
-        c * ett_tilde + e_tt(theta),
+        c * ett_tilde + e_tt(r0 + delta / 2 + delta * theta / 2 / pi, theta),
         linestyle="-",
         color="tab:blue",
         label="Composite" if n == 0 else "",
