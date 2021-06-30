@@ -6,8 +6,13 @@ import scipy.interpolate as interp
 
 class ComsolSolution:
     def __init__(
-        self, r0, delta, l_n, l_s, l_p, hh, N, lam_n, lam_s, lam_p, mu_n, mu_s, mu_p, path
+        self, r0, delta, l_n, l_s, l_p, hh, N, lam_n, lam_s, lam_p, mu_n, mu_s, mu_p, alpha_scale, path
     ):
+        """
+        Loads the COMSOL solution. The variables are stored as a dict. 
+        Note that we rescale the displacements, strains and stresses
+        by alpha_scale since COMSOL didn't like having alpha=1.
+        """    
         # dict to store variables
         self._variables = {}
 
@@ -58,7 +63,7 @@ class ComsolSolution:
                     path + f"srr_{num[0]}.csv", comment="#", header=None
                 ).to_numpy()
                 f1_r_data = comsol[:, 0]
-                f1_data = comsol[:, 1] / (lam + 2 * mu)
+                f1_data = comsol[:, 1]/alpha_scale / (lam + 2 * mu)
                 f1_interp = interp.interp1d(f1_r_data, f1_data, bounds_error=False)
                 self._variables["f_" + num] = f1_interp(r_eval)
 
@@ -67,7 +72,7 @@ class ComsolSolution:
                     path + f"srt_{num[0]}.csv", comment="#", header=None
                 ).to_numpy()
                 g1_r_data = comsol[:, 0]
-                g1_data = comsol[:, 1] / mu
+                g1_data = comsol[:, 1]/alpha_scale / mu
                 g1_interp = interp.interp1d(g1_r_data, g1_data, bounds_error=False)
                 self._variables["g_" + num] = g1_interp(r_eval)
 
@@ -78,7 +83,7 @@ class ComsolSolution:
                     path + f"u_{num[0]}.csv", comment="#", header=None
                 ).to_numpy()
                 f2_r_data = comsol[:, 0]
-                f2_data = comsol[:, 1] / delta
+                f2_data = comsol[:, 1]/alpha_scale / delta
                 f2_interp = interp.interp1d(f2_r_data, f2_data, bounds_error=False)
                 self._variables["f_" + num] = f2_interp(r_eval)
 
@@ -87,7 +92,7 @@ class ComsolSolution:
                     path + f"v_{num[0]}.csv", comment="#", header=None
                 ).to_numpy()
                 g2_r_data = comsol[:, 0]
-                g2_data = comsol[:, 1] / delta
+                g2_data = comsol[:, 1]/alpha_scale / delta
                 g2_interp = interp.interp1d(g2_r_data, g2_data, bounds_error=False)
                 self._variables["g_" + num] = g2_interp(r_eval)
 
@@ -124,7 +129,7 @@ class ComsolSolution:
                     path + f"{T}_{label}.csv", comment="#", header=None
                 ).to_numpy()
                 T_r_data = comsol[:, 0]
-                T_data = comsol[:, 1]
+                T_data = comsol[:, 1]/alpha_scale
                 T_interp = interp.interp1d(T_r_data, T_data, bounds_error=False)
                 self._variables[f"{T} {label}"] = T_interp(r)
 

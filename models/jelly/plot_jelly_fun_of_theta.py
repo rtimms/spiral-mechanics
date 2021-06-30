@@ -26,11 +26,11 @@ alpha_p = 1  # expansion coefficient
 mu_p = 1  # shear modulus
 nu_p = 1 / 3  # Poisson ratio
 lam_p = 2 * mu_p * nu_p / (1 - 2 * nu_p)  # 1st Lame parameter
-alpha_s = 1  # expansion coefficient
+alpha_s = 0  # expansion coefficient
 mu_s = 1e-3  # shear modulus
 nu_s = 1 / 3  # Poisson ratio
 lam_s = 2 * mu_s * nu_s / (1 - 2 * nu_s)  # 1st Lame parameter
-alpha_s = 1  # expansion coefficient
+alpha_n = 1  # expansion coefficient
 mu_n = 1e-1  # shear modulus
 nu_n = 1 / 3  # Poisson ratio
 lam_n = 2 * mu_n * nu_n / (1 - 2 * nu_n)  # 1st Lame parameter
@@ -46,8 +46,9 @@ except FileExistsError:
 # Compute the boundary layer solution -----------------------------------------
 
 # Load COMSOL solution --------------------------------------------------------
+alpha_scale = 0.1
 comsol = ComsolSolution(
-    r0, delta, l_n, l_s, l_p, hh, N, lam_n, lam_s, lam_p, mu_n, mu_s, mu_p, path
+    r0, delta, l_n, l_s, l_p, hh, N, lam_n, lam_s, lam_p, mu_n, mu_s, mu_p, alpha_scale, path
 )
 theta = comsol["theta"]
 
