@@ -57,7 +57,7 @@ comsol = ComsolSolution(r0, delta, hh, N, mu, lam, alpha_scale, full_path)
 # Plots -----------------------------------------------------------------------
 
 # f_i and g_i
-fig, ax = plt.subplots(2, 2)
+fig, ax = plt.subplots(2, 2, figsize=(6.4, 4))
 # plot COMSOL solutions
 theta = comsol.theta
 ax[0, 0].plot(theta, comsol.f1, linestyle="--", color="tab:orange", label="COMSOL")
@@ -153,7 +153,15 @@ ax[0, 0].set_ylabel(r"$f_1$")
 ax[0, 1].set_ylabel(r"$f_2$")
 ax[1, 0].set_ylabel(r"$g_1$")
 ax[1, 1].set_ylabel(r"$g_2$")
-ax[0, 0].legend(loc="upper right")
+fig.subplots_adjust(
+    left=0.1, bottom=0.25, right=0.98, top=0.98, wspace=0.33, hspace=0.4
+)
+ax[1, 0].legend(
+    loc="upper center",
+    bbox_to_anchor=(1.1, -0.4),
+    borderaxespad=0.0,
+    ncol=4,
+)
 for ax in ax.reshape(-1):
     # plot dashed line every 2*pi
     winds = [2 * pi * n for n in list(range(N_plot))]
@@ -168,11 +176,10 @@ for ax in ax.reshape(-1):
     ax.xaxis.set_major_locator(MultipleLocator(base=4 * pi))
     ax.set_xlim([0, N_plot * 2 * pi])
     ax.set_xlabel(r"$\theta$")
-plt.tight_layout()
 plt.savefig("figs" + path[4:] + "fg_composite.pdf", dpi=300)
 
 # stresses and strains at r = r0 + delta / 2 + delta * theta / 2 / pi
-fig, ax = plt.subplots(2, 3)
+fig, ax = plt.subplots(2, 3, figsize=(6.4, 4))
 # plot COMSOL solutions
 theta = comsol.theta
 r = r0 + delta / 2 + delta * theta / 2 / pi
@@ -318,7 +325,15 @@ ax[0, 2].set_ylabel(r"$\varepsilon_{r\theta}$")
 ax[1, 0].set_ylabel(r"$\sigma_{rr}$")
 ax[1, 1].set_ylabel(r"$\sigma_{\theta\theta}$")
 ax[1, 2].set_ylabel(r"$\sigma_{r\theta}$")
-ax[0, 0].legend(loc="upper right")
+fig.subplots_adjust(
+    left=0.1, bottom=0.25, right=0.98, top=0.98, wspace=0.33, hspace=0.4
+)
+ax[1, 1].legend(
+    loc="upper center",
+    bbox_to_anchor=(0.5, -0.4),
+    borderaxespad=0.0,
+    ncol=4,
+)
 for ax in ax.reshape(-1):
     for w in winds:
         ax.axvline(x=w, linestyle=":", color="lightgrey")
@@ -330,7 +345,6 @@ for ax in ax.reshape(-1):
     ax.xaxis.set_major_locator(MultipleLocator(base=4 * pi))
     ax.set_xlim([0, N_plot * 2 * pi])
     ax.set_xlabel(r"$\theta$")
-plt.tight_layout()
-plt.savefig("figs" + path[4:] + "stress_strain_ocomposite.pdf", dpi=300)
+plt.savefig("figs" + path[4:] + "stress_strain_composite.pdf", dpi=300)
 
 plt.show()

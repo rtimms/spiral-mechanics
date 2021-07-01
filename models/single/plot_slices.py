@@ -123,7 +123,6 @@ ax[0, 0].plot(
     comsol[:, 0], comsol[:, 1] / alpha_scale, "--", color="tab:orange", label="COMSOL"
 )
 ax[0, 0].set_ylabel(r"$u$")
-ax[0, 0].legend(loc="lower right")
 # azimuthal displacement
 ax[0, 1].plot(r, v(r, theta), "-", color="tab:blue", label="Asymptotic")
 comsol = pd.read_csv(path + f"v_0.csv", comment="#", header=None).to_numpy()
@@ -149,8 +148,8 @@ ax[1, 1].plot(
     comsol[:, 0], comsol[:, 1] / alpha_scale, "--", color="tab:orange", label="COMSOL"
 )
 ax[1, 1].set_ylabel(r"$\sigma_{r\theta}$")
-
-# add shared lables etc/
+# add shared labels etc
+ax[0, 0].legend(loc="lower right")
 for ax in ax.reshape(-1):
     for w_m, w_p in zip(winds_m, winds_p):
         ax.axvline(x=w_m, linestyle=":", color="lightgrey")
@@ -172,7 +171,7 @@ ax[1, 0].plot(r, g1(theta), "-", color="tab:blue", label="Asymptotic")
 ax[1, 0].set_ylabel(r"$g_1$")
 ax[1, 1].plot(r, g2(theta), "-", color="tab:blue", label="Asymptotic")
 ax[1, 1].set_ylabel(r"$g_2$")
-# add shared lables etc/
+# add shared labels etc/
 for ax in ax.reshape(-1):
     for w_m, w_p in zip(winds_m, winds_p):
         ax.axvline(x=w_m, linestyle=":", color="lightgrey")
@@ -216,7 +215,6 @@ ax[0, 0].plot(
     comsol[:, 0], comsol[:, 1] / alpha_scale, "--", color="tab:orange", label="COMSOL"
 )
 ax[0, 0].set_ylabel(r"$u$")
-ax[0, 0].legend(loc="lower right")
 # azimuthal displacement
 ax[0, 1].plot(r, v(r, theta), "-", color="tab:blue", label="Asymptotic")
 comsol = pd.read_csv(path + f"v_pi.csv", comment="#", header=None).to_numpy()
@@ -242,8 +240,8 @@ ax[1, 1].plot(
     comsol[:, 0], comsol[:, 1] / alpha_scale, "--", color="tab:orange", label="COMSOL"
 )
 ax[1, 1].set_ylabel(r"$\sigma_{r\theta}$")
-
-# add shared lables etc/
+# add shared labels etc
+ax[0, 0].legend(loc="lower right")
 for ax in ax.reshape(-1):
     for w_m, w_p in zip(winds_m, winds_p):
         ax.axvline(x=w_m, linestyle=":", color="lightgrey")
@@ -265,7 +263,7 @@ ax[1, 0].plot(r, g1(theta), "-", color="tab:blue", label="Asymptotic")
 ax[1, 0].set_ylabel(r"$g_1$")
 ax[1, 1].plot(r, g2(theta), "-", color="tab:blue", label="Asymptotic")
 ax[1, 1].set_ylabel(r"$g_2$")
-# add shared lables etc/
+# add shared labels etc/
 for ax in ax.reshape(-1):
     for w_m, w_p in zip(winds_m, winds_p):
         ax.axvline(x=w_m, linestyle=":", color="lightgrey")
@@ -276,6 +274,5 @@ fig.suptitle(r"$\theta=0$")
 plt.tight_layout()
 plt.subplots_adjust(top=0.9)
 plt.savefig("figs" + path[4:] + "fg_pi.pdf", dpi=300)
-
 
 plt.show()
