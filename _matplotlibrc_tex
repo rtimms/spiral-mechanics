@@ -16,13 +16,13 @@ ytick.labelsize: 10
 legend.fontsize: 12
 
 # Set lines and ticks
-lines.linewidth: 1.2
+lines.linewidth: 1.5
 lines.markersize: 3.6
 
 # Set legend properties
-legend.markerscale: 0.75
+legend.markerscale: 1.0
 legend.framealpha: 1.0
-legend.handlelength: 0.75
+legend.handlelength: 1.5
 
 ## Set legend properties
 #legend.markerscale: 1.0
