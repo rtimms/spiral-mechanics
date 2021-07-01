@@ -35,8 +35,11 @@ fig, ax = plt.subplots(1, 2, figsize=(8, 4))
 r = r0 + delta / 2 + delta * theta / 2 / pi
 ax[0].plot(theta, outer.e_tt(r, theta), "-", label="Asymptotic")
 ax[1].plot(theta, outer.T(theta), "-", label="Asymptotic")
-mu_ccs = [1e3, 5e3, 1e4, 2e4, 1e5]
-paths = ["1e3/", "5e3/", "mu1lam2/", "2e4/", "1e5/"]
+#mu_ccs = [1e3, 5e3, 1e4, 2e4, 1e5]
+mu_ccs = [1e3, 1e4, 1e5]
+#paths = ["1e3/", "5e3/", "mu1lam2/", "2e4/", "1e5/"]
+paths = ["1e3/", "1e4/", "1e5/"]
+paths = ["nu45/"+path for path in paths]
 for mu_cc, path in zip(mu_ccs, paths):
     if hs == 0.01:
         pass
