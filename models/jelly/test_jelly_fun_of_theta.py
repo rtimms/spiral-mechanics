@@ -24,7 +24,7 @@ params.r0 = 0.25
 params.r1 = 1
 params.N = 10
 params.delta = (params.r1 - params.r0) / params.N
-params.hh = 0.01 * params.delta
+params.hh = 0.005 * params.delta
 params.l_p = 0.4 / 2
 params.l_s = 0.2 / 2
 params.l_n = 0.4 / 2
@@ -38,26 +38,23 @@ params.lam_p = (
 )  # 1st Lame parameter
 
 # separator electrode material properties
-params.alpha_s = 0  # expansion coefficient
-K_s = 0.1
-mu_s = 1e-2  # shear modulus
-nu_s = (3 * K_s - 2 * mu_s) / 2 / (3 * K_s + mu_s)  # Poisson ratio
-params.mu_s = mu_s  # shear modulus
-params.nu_s = nu_s  # Poisson ratio
+params.alpha_s = 1  # expansion coefficient
+params.mu_s = 1  # shear modulus
+params.nu_s = 1 / 3  # Poisson ratio
 params.lam_s = (
     2 * params.mu_s * params.nu_s / (1 - 2 * params.nu_s)
 )  # 1st Lame parameter
 
 # negative electrode material properties
 params.alpha_n = 1  # expansion coefficient
-params.mu_n = 0.1  # shear modulus
+params.mu_n = 1  # shear modulus
 params.nu_n = 1 / 3  # Poisson ratio
 params.lam_n = (
     2 * params.mu_n * params.nu_n / (1 - 2 * params.nu_n)
 )  # 1st Lame parameter
 
 N_plot = params.N - 1  # number of winds to plot
-path = "data/jelly/Ks1e-1_mus1e-2/"  # path to data
+path = "data/jelly/test/"  # path to data
 # make directory for figures if it doesn't exist
 try:
     os.mkdir("figs" + path[4:])

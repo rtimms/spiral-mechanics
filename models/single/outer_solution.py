@@ -1,6 +1,5 @@
 import numpy as np
 from numpy import pi, exp
-from numpy.lib.financial import _ipmt_dispatcher, ipmt
 
 
 class OuterSolution:
