@@ -5,8 +5,8 @@ from numpy import pi, exp
 class OuterSolution:
     def __init__(self, r0, delta, mu, lam, alpha):
         """
-        Computes the 'outer solution' near r=r0. The solutions are stored
-        as attributes of the class.
+        Computes the 'outer solution' near r=r0. The paramaters and solutions
+        are stored as attributes of the class.
         """
 
         # physical (dimensionless) selfeters

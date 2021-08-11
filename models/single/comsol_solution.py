@@ -7,9 +7,9 @@ import scipy.interpolate as interp
 class ComsolSolution:
     def __init__(self, r0, delta, hh, N, mu, lam, alpha_scale, path):
         """
-        Loads the COMSOL solution. The variables are stored as attributes of
-        the class. Note that we rescale the displacements, strains and stresses
-        by alpha_scale since COMSOL didn't like having alpha=1.
+        Loads the COMSOL solution. The parameters and variables are stored as
+        attributes of the class. Note that we rescale the displacements, strains
+        and stresses by alpha_scale since COMSOL didn't like having alpha=1.
         """
 
         # Note: COMSOL data is (r, f) so we create interpolants to get

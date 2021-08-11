@@ -14,9 +14,6 @@ class ComsolSolution:
         # Unpack parameters
         r0, delta, hh, N = params.r0, params.delta, params.hh, params.N
         l_n, l_s, l_p = params.l_n, params.l_s, params.l_p
-        # lam_n, lam_s, lam_p = params.lam_n, params.lam_s, params.lam_p
-        # mu_n, mu_s, mu_p = params.mu_n, params.mu_s, params.mu_p
-        mu_p = params.mu_p
 
         # Compute numerical thicknesses
         h_cn = hh
