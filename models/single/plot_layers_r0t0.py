@@ -36,14 +36,14 @@ def u_outer(R):
     n = np.floor(R)
     return (
         alpha * (3 * lam + 2 * mu) / (lam + 2 * mu) * (R - n)
-        + f1(2 * n * pi) * (R - n)
+        + f1(2 * n * pi) / (lam + 2 * mu) * (R - n)
         + f2(2 * n * pi)
     )
 
 
 def v_outer(R):
     n = np.floor(R)
-    return g1(2 * n * pi) * (R - n) + g2(2 * n * pi)
+    return g1(2 * n * pi) / mu * (R - n) + g2(2 * n * pi)
 
 
 # Load COMSOL data ------------------------------------------------------------
