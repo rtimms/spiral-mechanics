@@ -76,12 +76,12 @@ class ComsolSolution:
         f4_interp = interp.interp1d(f4_r_data, f4_data, bounds_error=False)
         self.f4 = f4_interp(r_evals["2- in"])
 
-        # g_1 = sigma_rt/mu
+        # g_1 = sigma_rt
         # we choose to evaluate sigma_rt in the positive electrode in active
         # region 1
         comsol = pd.read_csv(path + "srt_1.csv", comment="#", header=None).to_numpy()
         g1_r_data = comsol[:, 0]
-        g1_data = comsol[:, 1] / mu_p / alpha_scale
+        g1_data = comsol[:, 1] / alpha_scale
         g1_interp = interp.interp1d(g1_r_data, g1_data, bounds_error=False)
         self.g1 = g1_interp(r_evals["1+ mid"])
         self.g3 = self.g1  # g_1 = g_3

@@ -7,8 +7,9 @@ from outer_solution import OuterSolution
 from comsol_jelly_solution import ComsolSolution
 
 # set style for paper
-# import matplotlib
-# matplotlib.rc_file("_matplotlibrc_tex", use_default_template=True)
+import matplotlib
+
+matplotlib.rc_file("_matplotlibrc_tex", use_default_template=True)
 
 
 # Parameters ------------------------------------------------------------------
@@ -115,18 +116,19 @@ for ax in ax.reshape(-1):
     ax.xaxis.set_major_locator(MultipleLocator(base=4 * pi))
     ax.set_xlim([0, N_plot * 2 * pi])
     ax.set_xlabel(r"$\theta$")
-plt.tight_layout()
-plt.savefig("figs" + path[4:] + "fg_of_theta.pdf", dpi=300)
+plt.savefig("figs" + path[4:] + "fg_of_theta_jelly_test.pdf", dpi=300)
 
 # tension
-fig, ax = plt.subplots(1, 2, figsize=(6.4, 4))
+fig, ax = plt.subplots(2, 1, figsize=(6.4, 4))
 ax[0].plot(theta, outer.Tp(theta), "-", label="Asymptotic")
 ax[0].plot(theta, comsol.Tp, "--", label="COMSOL")
-ax[0].set_ylabel(r"$T_p$")
+ax[0].set_ylabel(r"$T_+$")
 ax[1].plot(theta, outer.Tn(theta), "-", label="Asymptotic")
 ax[1].plot(theta, comsol.Tn, "--", label="COMSOL")
-ax[1].set_ylabel(r"$T_n$")
+ax[1].set_ylabel(r"$T_-$")
 ax[1].legend(loc="lower right")
+# ax[0].set_ylim([-2, 0.05])
+# ax[1].set_ylim([-2, 0.05])
 # add shared labels etc.
 for ax in ax.reshape(-1):
     for w in winds:
@@ -140,6 +142,6 @@ for ax in ax.reshape(-1):
     ax.set_xlim([0, N_plot * 2 * pi])
     ax.set_xlabel(r"$\theta$")
 plt.tight_layout()
-plt.savefig("figs" + path[4:] + "T_of_theta.pdf", dpi=300)
+plt.savefig("figs" + path[4:] + "T_of_theta_jelly_test.pdf", dpi=300)
 
 plt.show()

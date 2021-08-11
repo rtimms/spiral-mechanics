@@ -36,14 +36,18 @@ class OuterSolution:
             + param.l_p / (param.lam_p + 2 * param.mu_p)
         )
 
-        param.omega_p = np.sqrt(2 * param.mu_p * param.S_2)
+        param.S_3 = (
+            param.l_n / param.mu_n + param.l_s / param.mu_s + param.l_p / param.mu_p
+        )
+
+        param.omega = np.sqrt(param.S_2 / param.S_3)
 
         param.A = 0
-        param.B = param.S_1 * exp(2 * pi * param.omega_p)
-        param.C = -param.B * exp(-2 * pi * param.omega_p)
+        param.B = param.S_1 * exp(2 * pi * param.omega)
+        param.C = -param.B * exp(-2 * pi * param.omega)
         param.D = param.B - param.C
         param.E = 0
-        param.F = param.D / (1 - exp(2 * pi * param.omega_p))
+        param.F = param.D / (1 - exp(2 * pi * param.omega))
         param.G = 0
         param.H = 0
 
@@ -52,41 +56,33 @@ class OuterSolution:
 
     def f1(self, theta):
         param = self.param
-        return (
-            -param.S_1 + param.B * exp(-param.omega_p * (theta + 2 * pi))
-        ) / param.S_2
+        return (-param.S_1 + param.B * exp(-param.omega * (theta + 2 * pi))) / param.S_2
 
     def f2(self, theta):
         param = self.param
-        return param.E + (param.C + param.F) * exp(-param.omega_p * theta)
+        return param.E + (param.C + param.F) * exp(-param.omega * theta)
 
     def f3(self, theta):
         return self.f1(theta)
 
     def f4(self, theta):
         param = self.param
-        return param.E + param.F * exp(-param.omega_p * theta)
+        return param.E + param.F * exp(-param.omega * theta)
 
     def g1(self, theta):
         param = self.param
-        return (
-            -(param.omega_p * param.C)
-            / (param.mu_p * param.S_2)
-            * exp(-param.omega_p * theta)
-        )
+        return -(param.omega * param.C / param.S_2) * exp(-param.omega * theta)
 
     def g2(self, theta):
         param = self.param
-        return param.G + (
-            (param.C + param.F) / param.omega_p * exp(-param.omega_p * theta)
-        )
+        return param.G + ((param.C + param.F) / param.omega * exp(-param.omega * theta))
 
     def g3(self, theta):
         return self.g1(theta)
 
     def g4(self, theta):
         param = self.param
-        return param.H + (param.F / param.omega_p) * exp(-param.omega_p * theta)
+        return param.H + (param.F / param.omega) * exp(-param.omega * theta)
 
     def Tp(self, theta):
         """
