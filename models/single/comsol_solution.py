@@ -7,9 +7,9 @@ import scipy.interpolate as interp
 class ComsolSolution:
     def __init__(self, r0, delta, hh, N, mu, lam, alpha_scale, path):
         """
-        Loads the COMSOL solution. The variables are stored as attributes of
-        the class. Note that we rescale the displacements, strains and stresses
-        by alpha_scale since COMSOL didn't like having alpha=1.
+        Loads the COMSOL solution. The parameters and variables are stored as
+        attributes of the class. Note that we rescale the displacements, strains
+        and stresses by alpha_scale since COMSOL didn't like having alpha=1.
         """
 
         # Note: COMSOL data is (r, f) so we create interpolants to get
@@ -17,10 +17,10 @@ class ComsolSolution:
         theta = np.linspace(0, 2 * pi * N, 60 * (N - 1))
         self.theta = theta
 
-        # f1 = sigma_rr / (lambda+2*mu)
+        # f1 = sigma_rr
         comsol = pd.read_csv(path + "srr3.csv", comment="#", header=None).to_numpy()
         f1_r_data = comsol[:, 0]
-        f1_data = comsol[:, 1] / (lam + 2 * mu) / alpha_scale
+        f1_data = comsol[:, 1] / alpha_scale
         f1_interp = interp.interp1d(f1_r_data, f1_data, bounds_error=False)
         # In COMSOL we evaluate f_1 at r = r0+delta/2+delta*theta/2/pi
         r = r0 + delta / 2 + delta * theta / 2 / pi
@@ -35,10 +35,10 @@ class ComsolSolution:
         r = r0 + hh / 2 + delta * theta / 2 / pi
         self.f2 = f2_interp(r)
 
-        # g1 = sigma_rt/mu
+        # g1 = sigma_rt
         comsol = pd.read_csv(path + "srt3.csv", comment="#", header=None).to_numpy()
         g1_r_data = comsol[:, 0]
-        g1_data = comsol[:, 1] / mu / alpha_scale
+        g1_data = comsol[:, 1] / alpha_scale
         g1_interp = interp.interp1d(g1_r_data, g1_data, bounds_error=False)
         # In COMSOL we evaluate g_1 at r = r0+delta/2+delta*theta/2/pi
         r = r0 + delta / 2 + delta * theta / 2 / pi

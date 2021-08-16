@@ -16,7 +16,6 @@ alpha = 1  # expansion coefficient
 mu = 1  # shear modulus
 nu = 1 / 3  # Poisson ratio
 lam = 2 * mu * nu / (1 - 2 * nu)  # 1st Lame parameter
-omega = np.sqrt(mu / (lam + 2 * mu))
 N = 10  # number of winds
 r0 = 0.25  # inner radius
 r1 = 1  # outer radius
@@ -66,7 +65,7 @@ ax[1, 1].plot(
     theta, comsol_u0srt0.g2, "--", label=r"COMSOL ($u=0$, $\sigma_{{r\theta}}=0$)"
 )
 ax[1, 1].set_ylabel(r"$g_2$")
-ax[0, 0].set_ylim([-2.5, 0])
+ax[0, 0].set_ylim([-9, 0])
 ax[0, 1].set_ylim([-2.5, 1.5])
 ax[1, 0].set_ylim([-0.5, 4.5])
 ax[1, 1].set_ylim([-4.5, 0.5])

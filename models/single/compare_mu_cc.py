@@ -16,7 +16,6 @@ alpha = 1  # expansion coefficient
 mu = 1  # shear modulus
 nu = 1 / 3  # Poisson ratio
 lam = 2 * mu * nu / (1 - 2 * nu)  # 1st Lame parameter
-omega = np.sqrt(mu / (lam + 2 * mu))
 N = 10  # number of winds
 r0 = 0.25  # inner radius
 r1 = 1  # outer radius
@@ -35,11 +34,11 @@ fig, ax = plt.subplots(1, 2, figsize=(8, 4))
 r = r0 + delta / 2 + delta * theta / 2 / pi
 ax[0].plot(theta, outer.e_tt(r, theta), "-", label="Asymptotic")
 ax[1].plot(theta, outer.T(theta), "-", label="Asymptotic")
-#mu_ccs = [1e3, 5e3, 1e4, 2e4, 1e5]
+# mu_ccs = [1e3, 5e3, 1e4, 2e4, 1e5]
 mu_ccs = [1e3, 1e4, 1e5]
-#paths = ["1e3/", "5e3/", "mu1lam2/", "2e4/", "1e5/"]
+# paths = ["1e3/", "5e3/", "mu1lam2/", "2e4/", "1e5/"]
 paths = ["1e3/", "1e4/", "1e5/"]
-paths = ["nu45/"+path for path in paths]
+paths = ["nu45/" + path for path in paths]
 for mu_cc, path in zip(mu_ccs, paths):
     if hs == 0.01:
         pass

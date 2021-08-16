@@ -89,10 +89,10 @@ for n in range(N_BL):
         srt_tilde = srt_data[idx1, :]
 
     theta = delta * Theta / r0 + 2 * n * pi
-    # f1 = sigma_rr / (lambda+2*mu)
+    # f1 = sigma_rr
     ax[0, 0].plot(
         theta,
-        c * srr_tilde / (lam + 2 * mu) + f1(2 * n * pi),
+        c * srr_tilde + f1(2 * n * pi),
         linestyle="-.",
         color="tab:green",
         label="Inner" if n == 0 else "",
@@ -119,10 +119,10 @@ for n in range(N_BL):
         color="tab:blue",
         label="Composite" if n == 0 else "",
     )
-    # g1 = sigma_rt/mu
+    # g1 = sigma_rt
     ax[1, 0].plot(
         theta,
-        c * srt_tilde / mu + g1(2 * n * pi),
+        c * srt_tilde + g1(2 * n * pi),
         linestyle="-.",
         color="tab:green",
         label="Inner" if n == 0 else "",
@@ -227,14 +227,18 @@ for n in range(N_BL):
     # e_rr
     ax[0, 0].plot(
         theta,
-        c * err_tilde + alpha * (3 * lam + 2 * mu) / (lam + 2 * mu) + f1(2 * n * pi),
+        c * err_tilde
+        + alpha * (3 * lam + 2 * mu) / (lam + 2 * mu)
+        + f1(2 * n * pi) / (lam + 2 * mu),
         linestyle="-.",
         color="tab:green",
         label="Inner" if n == 0 else "",
     )
     ax[0, 0].plot(
         theta,
-        c * err_tilde + alpha * (3 * lam + 2 * mu) / (lam + 2 * mu) + f1(theta),
+        c * err_tilde
+        + alpha * (3 * lam + 2 * mu) / (lam + 2 * mu)
+        + f1(theta) / (lam + 2 * mu),
         linestyle="-",
         color="tab:blue",
         label="Composite" if n == 0 else "",
@@ -257,14 +261,14 @@ for n in range(N_BL):
     # e_rt
     ax[0, 2].plot(
         theta,
-        c * ert_tilde + g1(2 * n * pi) / 2,
+        c * ert_tilde + g1(2 * n * pi) / mu / 2,
         linestyle="-.",
         color="tab:green",
         label="Inner" if n == 0 else "",
     )
     ax[0, 2].plot(
         theta,
-        c * ert_tilde + g1(theta) / 2,
+        c * ert_tilde + g1(theta) / mu / 2,
         linestyle="-",
         color="tab:blue",
         label="Composite" if n == 0 else "",
@@ -272,14 +276,14 @@ for n in range(N_BL):
     # s_rr
     ax[1, 0].plot(
         theta,
-        c * srr_tilde + (lam + 2 * mu) * f1(2 * n * pi),
+        c * srr_tilde + f1(2 * n * pi),
         linestyle="-.",
         color="tab:green",
         label="Inner" if n == 0 else "",
     )
     ax[1, 0].plot(
         theta,
-        c * srr_tilde + (lam + 2 * mu) * f1(theta),
+        c * srr_tilde + f1(theta),
         linestyle="-",
         color="tab:blue",
         label="Composite" if n == 0 else "",
@@ -289,7 +293,7 @@ for n in range(N_BL):
         theta,
         c * stt_tilde
         - 2 * mu * alpha * (3 * lam + 2 * mu) / (lam + 2 * mu)
-        + lam * f1(2 * n * pi),
+        + lam / (lam + 2 * mu) * f1(2 * n * pi),
         linestyle="-.",
         color="tab:green",
         label="Inner" if n == 0 else "",
@@ -298,7 +302,7 @@ for n in range(N_BL):
         theta,
         c * stt_tilde
         - 2 * mu * alpha * (3 * lam + 2 * mu) / (lam + 2 * mu)
-        + lam * f1(theta),
+        + lam / (lam + 2 * mu) * f1(theta),
         linestyle="-",
         color="tab:blue",
         label="Composite" if n == 0 else "",
@@ -306,14 +310,14 @@ for n in range(N_BL):
     # s_rt
     ax[1, 2].plot(
         theta,
-        c * srt_tilde + mu * g1(2 * n * pi),
+        c * srt_tilde + g1(2 * n * pi),
         linestyle="-.",
         color="tab:green",
         label="Inner" if n == 0 else "",
     )
     ax[1, 2].plot(
         theta,
-        c * srt_tilde + mu * g1(theta),
+        c * srt_tilde + g1(theta),
         linestyle="-",
         color="tab:blue",
         label="Composite" if n == 0 else "",

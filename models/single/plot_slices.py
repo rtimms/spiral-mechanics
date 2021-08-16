@@ -40,10 +40,10 @@ u, v = outer.u, outer.v
 # since COMSOL didn't like having alpha=1.
 alpha_scale = 0.1
 
-# f1 = sigma_rr / (lambda+2*mu)
+# f1 = sigma_rr
 comsol = pd.read_csv(path + "srr3.csv", comment="#", header=None).to_numpy()
 f1_r_data = comsol[:, 0]
-f1_data = comsol[:, 1] / alpha_scale / (lam + 2 * mu)
+f1_data = comsol[:, 1] / alpha_scale
 f1_interp = interp.interp1d(f1_r_data, f1_data, bounds_error=False)
 
 
@@ -66,10 +66,10 @@ def f2_comsol(theta):
     return f2_interp(r)
 
 
-# g1 = sigma_rt/mu
+# g1 = sigma_rt
 comsol = pd.read_csv(path + "srt3.csv", comment="#", header=None).to_numpy()
 g1_r_data = comsol[:, 0]
-g1_data = comsol[:, 1] / alpha_scale / mu
+g1_data = comsol[:, 1] / alpha_scale
 g1_interp = interp.interp1d(g1_r_data, g1_data, bounds_error=False)
 
 
@@ -131,7 +131,7 @@ ax[0, 1].plot(
 )
 ax[0, 1].set_ylabel(r"$v$")
 # normal stress
-ax[1, 0].plot(r, f1(theta) * (lam + 2 * mu), "-", color="tab:blue", label="Asymptotic")
+ax[1, 0].plot(r, f1(theta), "-", color="tab:blue", label="Asymptotic")
 comsol = pd.read_csv(path + f"srr_0.csv", comment="#", header=None).to_numpy()
 ax[1, 0].plot(
     comsol[:, 0],
@@ -142,7 +142,7 @@ ax[1, 0].plot(
 )
 ax[1, 0].set_ylabel(r"$\sigma_{rr}$")
 # shear stress
-ax[1, 1].plot(r, g1(theta) * mu, "-", color="tab:blue", label="Asymptotic")
+ax[1, 1].plot(r, g1(theta), "-", color="tab:blue", label="Asymptotic")
 comsol = pd.read_csv(path + f"srt_0.csv", comment="#", header=None).to_numpy()
 ax[1, 1].plot(
     comsol[:, 0], comsol[:, 1] / alpha_scale, "--", color="tab:orange", label="COMSOL"
@@ -223,7 +223,7 @@ ax[0, 1].plot(
 )
 ax[0, 1].set_ylabel(r"$v$")
 # normal stress
-ax[1, 0].plot(r, f1(theta) * (lam + 2 * mu), "-", color="tab:blue", label="Asymptotic")
+ax[1, 0].plot(r, f1(theta), "-", color="tab:blue", label="Asymptotic")
 comsol = pd.read_csv(path + f"srr_pi.csv", comment="#", header=None).to_numpy()
 ax[1, 0].plot(
     comsol[:, 0],
@@ -234,7 +234,7 @@ ax[1, 0].plot(
 )
 ax[1, 0].set_ylabel(r"$\sigma_{rr}$")
 # shear stress
-ax[1, 1].plot(r, g1(theta) * mu, "-", color="tab:blue", label="Asymptotic")
+ax[1, 1].plot(r, g1(theta), "-", color="tab:blue", label="Asymptotic")
 comsol = pd.read_csv(path + f"srt_pi.csv", comment="#", header=None).to_numpy()
 ax[1, 1].plot(
     comsol[:, 0], comsol[:, 1] / alpha_scale, "--", color="tab:orange", label="COMSOL"
