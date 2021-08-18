@@ -10,6 +10,26 @@ from comsol_jelly_solution import ComsolSolution
 # import matplotlib
 # matplotlib.rc_file("_matplotlibrc_tex", use_default_template=True)
 
+# Dimensional material properties ---------------------------------------------
+E_n = 6.9 * 1e9
+E_s = 0.1 * 1e9
+E_p = 40 * 1e9
+nu_n = 0.3
+nu_s = 0.3
+nu_p = 0.2
+mu_n = E_n / 2 / (1 + nu_n)
+mu_s = E_s / 2 / (1 + nu_s)
+mu_p = E_p / 2 / (1 + nu_p)
+
+# estimates of expansion due to lithiation during charge from Willenberg (2020)
+alpha_n = 0.1
+alpha_p = -0.02
+
+# reference values
+E_ref = E_n
+mu_ref = mu_n
+alpha_ref = alpha_n
+
 
 # Dimensionless parameters ----------------------------------------------------
 class Parameters:
@@ -30,28 +50,25 @@ params.l_s = 0.2 / 2
 params.l_n = 0.4 / 2
 
 # positive electrode material properties
-params.alpha_p = -0.2  # expansion coefficient
-params.E_p = 40/6.9 # Young's modulus
-params.nu_p = 0.2  # Poisson ratio
-params.mu_p =  params.E_p / 2 / (1 + params.nu_p)  # shear modulus
+params.alpha_p = alpha_p / alpha_ref  # expansion coefficient
+params.mu_p = mu_p / mu_ref  # shear modulus
+params.nu_p = nu_p  # Poisson ratio
 params.lam_p = (
     2 * params.mu_p * params.nu_p / (1 - 2 * params.nu_p)
 )  # 1st Lame parameter
 
 # separator electrode material properties
 params.alpha_s = 0  # expansion coefficient
-params.E_s = 0.1/6.9 # Young's modulus
-params.nu_s = 0.3  # Poisson ratio
-params.mu_s =  params.E_s / 2 / (1 + params.nu_s)  # shear modulus
+params.mu_s = mu_s / mu_ref  # shear modulus
+params.nu_s = nu_s  # Poisson ratio
 params.lam_s = (
     2 * params.mu_s * params.nu_s / (1 - 2 * params.nu_s)
 )  # 1st Lame parameter
 
 # negative electrode material properties
-params.alpha_n = 1  # expansion coefficient
-params.E_n = 1 # Young's modulus
-params.nu_n = 0.3  # Poisson ratio
-params.mu_n =  params.E_n / 2 / (1 + params.nu_n)  # shear modulus
+params.alpha_n = alpha_n / alpha_ref  # expansion coefficient
+params.mu_n = mu_n / mu_ref  # shear modulus
+params.nu_n = nu_n  # Poisson ratio
 params.lam_n = (
     2 * params.mu_n * params.nu_n / (1 - 2 * params.nu_n)
 )  # 1st Lame parameter
