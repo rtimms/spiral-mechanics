@@ -10,6 +10,8 @@ class OuterSolution:
         """
 
         # constants
+
+        # S_1 = alpha_hat
         param.S_1 = (
             (
                 param.l_n
@@ -30,15 +32,23 @@ class OuterSolution:
                 / (param.lam_p + 2 * param.mu_p)
             )
         )
+
+        # S_2 = 1/M_hat
         param.S_2 = (
             param.l_n / (param.lam_n + 2 * param.mu_n)
             + param.l_s / (param.lam_s + 2 * param.mu_s)
             + param.l_p / (param.lam_p + 2 * param.mu_p)
         )
 
+        # S_3 = 1/mu_hat
         param.S_3 = (
             param.l_n / param.mu_n + param.l_s / param.mu_s + param.l_p / param.mu_p
         )
+
+        print(f"delta = {param.delta}")
+        print(f"alpha_hat = {param.S_1}")
+        print(f"M_hat = {1/param.S_2}")
+        print(f"mu_hat = {1/param.S_3}")
 
         param.omega = np.sqrt(param.S_2 / param.S_3)
 
