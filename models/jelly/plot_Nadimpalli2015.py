@@ -1,4 +1,7 @@
+import numpy as np
+from numpy import pi
 import matplotlib.pyplot as plt
+from matplotlib.ticker import FuncFormatter, MultipleLocator
 import os
 from outer_solution import OuterSolution
 from comsol_jelly_solution import ComsolSolution
@@ -107,5 +110,31 @@ plot_fg(outer, comsol, N_plot, path)
 
 # tension
 plot_tension(outer, comsol, N_plot, path)
+
+# Compute and plot strain in positive current collector -----------------------
+h_cp = 15 * 1e-6  # positive cc thickness [m]
+E_cp = 70 * 1e9  # positive cc Young's modulus [Pa]
+
+theta = comsol.theta
+T_p_dim = outer.Tp(theta) * mu_ref * alpha_ref * L
+sigma_p_dim = T_p_dim / h_cp
+eps_p_dim = sigma_p_dim / E_cp
+
+fig, ax = plt.subplots(1, 1, figsize=(6.4, 4))
+ax.plot(theta, eps_p_dim, "-")
+ax.set_ylabel(r"$\varepsilon_+$")
+winds = [2 * pi * n for n in list(range(N_plot))]  # plot dashed line every 2*pi
+for w in winds:
+    ax.axvline(x=w, linestyle=":", color="lightgrey")
+ax.xaxis.set_major_formatter(
+    FuncFormatter(
+        lambda val, pos: r"${}\pi$".format(int(val / np.pi)) if val != 0 else "0"
+    )
+)
+ax.xaxis.set_major_locator(MultipleLocator(base=4 * pi))
+ax.set_xlim([0, N_plot * 2 * pi])
+ax.set_xlabel(r"$\theta$")
+plt.tight_layout()
+plt.savefig("figs" + path[4:] + "eps_of_theta_jelly.pdf", dpi=300)
 
 plt.show()
