@@ -1,4 +1,7 @@
+import numpy as np
+from numpy import pi
 import matplotlib.pyplot as plt
+from matplotlib.ticker import FuncFormatter, MultipleLocator
 import os
 from outer_solution import OuterSolution
 from comsol_jelly_solution import ComsolSolution
@@ -8,13 +11,24 @@ from shared_plots import plot_fg, plot_tension
 # import matplotlib
 # matplotlib.rc_file("_matplotlibrc_tex", use_default_template=True)
 
-# Dimensional material properties ---------------------------------------------
-E_n = 6.9 * 1e9
-E_s = 0.1 * 1e9
-E_p = 40 * 1e9
+
+# Dimensional parameters ------------------------------------------------------
+# Gupta and Gudmundson (2021)
+h_n = 66 * 1e-6
+h_s = 20 * 1e-6
+h_p = 69 * 1e-6
+h = 2 * (h_n + h_s + h_p)
+L = 9 * 1e-3
+N = 20
+L_0 = L - h * N
+E_n = 2.5 * 1e9
+E_s = 0.4 * 1e9
+E_p = 2 * 1e9
 nu_n = 0.3
 nu_s = 0.3
-nu_p = 0.2
+nu_p = 0.3
+
+# compute shear moduli
 mu_n = E_n / 2 / (1 + nu_n)
 mu_s = E_s / 2 / (1 + nu_s)
 mu_p = E_p / 2 / (1 + nu_p)
@@ -22,10 +36,6 @@ mu_p = E_p / 2 / (1 + nu_p)
 # estimates of expansion due to lithiation during charge from Willenberg (2020)
 alpha_n = 0.1
 alpha_p = -0.02
-
-# reference values
-mu_ref = mu_n
-alpha_ref = alpha_n
 
 
 # Dimensionless parameters ----------------------------------------------------
@@ -36,15 +46,19 @@ class Parameters:
 
 params = Parameters()
 
+# reference values
+mu_ref = mu_n
+alpha_ref = alpha_n
+
 #  geometry
-params.r0 = 0.25
+params.r0 = L_0 / L
 params.r1 = 1
-params.N = 10
+params.N = N
 params.delta = (params.r1 - params.r0) / params.N
 params.hh = 0.005 * params.delta
-params.l_p = 0.4 / 2
-params.l_s = 0.2 / 2
-params.l_n = 0.4 / 2
+params.l_p = h_p / h
+params.l_s = h_s / h
+params.l_n = h_n / h
 
 # positive electrode material properties
 params.alpha_p = alpha_p / alpha_ref  # expansion coefficient
@@ -71,7 +85,7 @@ params.lam_n = (
 )  # 1st Lame parameter
 
 N_plot = 6  # number of winds to plot
-path = "data/jelly/GraphiteNMC/"  # path to data
+path = "data/jelly/Gupta2021_nu_s/"  # path to data
 # make directory for figures if it doesn't exist
 try:
     os.mkdir("figs" + path[4:])
@@ -96,5 +110,34 @@ plot_fg(outer, comsol, N_plot, path)
 
 # tension
 plot_tension(outer, comsol, N_plot, path)
+
+# Compute and plot strain in positive current collector -----------------------
+h_cp = 10 * 1e-6  # positive cc thickness [m]
+E_cp = 70 * 1e9  # positive cc Young's modulus [Pa]
+
+theta = np.linspace(0, 2 * pi * N, 60 * (N - 1))
+T_p_dim = outer.Tp(theta) * mu_ref * alpha_ref * L
+sigma_p_dim = T_p_dim / h_cp
+eps_p_dim = sigma_p_dim / E_cp
+
+fig, ax = plt.subplots(2, 1, figsize=(6.4, 4))
+ax[0].plot(theta, outer.Tp(theta), "-")
+ax[0].set_ylabel(r"$T_+$")
+ax[1].plot(theta, eps_p_dim, "-")
+ax[1].set_ylabel(r"$\varepsilon_+$")
+winds = [2 * pi * n for n in list(range(N_plot))]  # plot dashed line every 2*pi
+for ax in ax.reshape(-1):
+    for w in winds:
+        ax.axvline(x=w, linestyle=":", color="lightgrey")
+    ax.xaxis.set_major_formatter(
+        FuncFormatter(
+            lambda val, pos: r"${}\pi$".format(int(val / np.pi)) if val != 0 else "0"
+        )
+    )
+    ax.xaxis.set_major_locator(MultipleLocator(base=4 * pi))
+    ax.set_xlim([0, N_plot * 2 * pi])
+    ax.set_xlabel(r"$\theta$")
+plt.tight_layout()
+plt.savefig("figs" + path[4:] + "eps_of_theta_jelly.pdf", dpi=300)
 
 plt.show()
