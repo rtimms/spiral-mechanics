@@ -24,7 +24,7 @@ delta = (r1 - r0) / N
 hh = 0.01 * delta  # current collector thickness
 N_BL = 5  # number of slabs in inner solution
 N_plot = N_BL - 1  # number of winds to plot
-path = "data/boundary_layer/"  # path to inner simulation data
+path = "data/single/boundary_layer/"  # path to inner simulation data
 full_path = "data/single/mu1lam2/"  # path to full simulation data
 # make directory for figures if it doesn't exist
 try:

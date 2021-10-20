@@ -16,12 +16,7 @@ r0 = 0.25  # inner radius
 r1 = 1  # outer radius
 delta = (r1 - r0) / N
 N_plot = 5  # number of winds to plot
-path = "data/single/vary_alpha_M_mu/"  # path to data
-# make directory for figures if it doesn't exist
-try:
-    os.mkdir("figs" + path[4:])
-except FileExistsError:
-    pass
+path = "/single/vary_alpha_M_mu/"  # path to data
 
 # Plot tension ----------------------------------------------------------------
 theta = np.linspace(0, 2 * pi * N, 120 * (N - 1))
@@ -80,6 +75,6 @@ for ax in ax.reshape(-1):
     ax.set_xlim([0, N_plot * 2 * pi])
     ax.set_xlabel(r"$\theta$")
 plt.tight_layout()
-plt.savefig("figs" + path[4:] + "T_vary_params.pdf", dpi=300)
+plt.savefig("figs" + path + "T_vary_params.pdf", dpi=300)
 
 plt.show()
