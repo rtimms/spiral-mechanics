@@ -4,8 +4,7 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter, MultipleLocator
 import os
 from outer_solution import OuterSolution
-from comsol_jelly_solution import ComsolSolution
-from shared_plots import plot_fg, plot_tension
+import pandas as pd
 
 # set style for paper
 import matplotlib
@@ -186,9 +185,21 @@ for N in list(range(N_plot)):
     ax[1].plot(r_p2, sigma_rt * np.ones(nr), "-", color="tab:blue")
     ax[2].plot(r_p2, sigma_tt_p * np.ones(nr), "-", color="tab:blue")
 
+comsol = pd.read_csv(path + f"srr_t0.csv", comment="#", header=None).to_numpy()
+ax[0].plot(
+    comsol[:, 0], comsol[:, 1] / alpha_ref, "--", color="tab:orange", label="COMSOL"
+)
+comsol = pd.read_csv(path + f"srt_t0.csv", comment="#", header=None).to_numpy()
+ax[1].plot(
+    comsol[:, 0], comsol[:, 1] / alpha_ref, "--", color="tab:orange", label="COMSOL"
+)
+comsol = pd.read_csv(path + f"stt_t0.csv", comment="#", header=None).to_numpy()
+ax[2].plot(
+    comsol[:, 0], comsol[:, 1] / alpha_ref, "--", color="tab:orange", label="COMSOL"
+)
 ax[0].set_ylabel(r"$\sigma_{rr}$")
-ax[1].set_ylabel(r"$\sigma_{r\theta}$")
-ax[2].set_ylabel(r"$\sigma_{\theta\theta}$")
+ax[1].set_ylabel(r"$\sigma_{\theta\theta}$")
+ax[2].set_ylabel(r"$\sigma_{r\theta}$")
 # add shared labels etc.
 fig.subplots_adjust(left=0.1, bottom=0.25, right=0.98, top=0.98, wspace=0.4, hspace=0.4)
 ax[1].legend(
