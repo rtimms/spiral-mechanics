@@ -99,7 +99,7 @@ outer = OuterSolution(params)
 
 # Plot slice through theta=theta_f --------------------------------------------
 
-theta_f = 0
+theta_f = pi
 r0 = params.r0
 delta = params.delta
 l_p, l_s, l_n = params.l_p, params.l_s, params.l_n
@@ -200,21 +200,21 @@ def remove_cc(r, s):
     return np.delete(r, idx), np.delete(s, idx)
 
 
-comsol = pd.read_csv(path + f"srr_t0.csv", comment="#", header=None).to_numpy()
+comsol = pd.read_csv(path + f"srr_tpi.csv", comment="#", header=None).to_numpy()
 r, s_rr = remove_cc(comsol[:, 0], comsol[:, 1] / alpha_ref)
 ax[0].plot(r, s_rr, "--", color="tab:orange", label="COMSOL")
 
-comsol = pd.read_csv(path + f"stt_t0.csv", comment="#", header=None).to_numpy()
+comsol = pd.read_csv(path + f"stt_tpi.csv", comment="#", header=None).to_numpy()
 r, s_tt = remove_cc(comsol[:, 0], comsol[:, 1] / alpha_ref)
 ax[1].plot(r, s_tt, "--", color="tab:orange", label="COMSOL")
 
-comsol = pd.read_csv(path + f"srt_t0.csv", comment="#", header=None).to_numpy()
+comsol = pd.read_csv(path + f"srt_tpi.csv", comment="#", header=None).to_numpy()
 r, s_rt = remove_cc(comsol[:, 0], comsol[:, 1] / alpha_ref)
 ax[2].plot(r, s_rt, "--", color="tab:orange", label="COMSOL")
 
-ax[0].set_ylim([-30, 25])
+ax[0].set_ylim([-6, -3])
 ax[1].set_ylim([-25, 5])
-ax[2].set_ylim([-15, 15])
+ax[2].set_ylim([-0.75, 0.75])
 ax[0].set_ylabel(r"$\sigma_{rr}$")
 ax[1].set_ylabel(r"$\sigma_{\theta\theta}$")
 ax[2].set_ylabel(r"$\sigma_{r\theta}$")
@@ -227,18 +227,20 @@ ax[1].legend(
     ncol=2,
 )
 for ax in ax.reshape(-1):
-    for winds in [winds_p, winds_n]:
-        for w in winds:
-            ax.axvline(x=w, linestyle=":", color="lightgrey")
-        ax.xaxis.set_major_formatter(
-            FuncFormatter(
-                lambda val, pos: r"${}\pi$".format(int(val / np.pi))
-                if val != 0
-                else "0"
-            )
+    for w in winds_p:
+        ax.axvline(x=w, linestyle=":", color="lightgrey")
+    ax.xaxis.set_major_formatter(
+        FuncFormatter(
+            lambda val, pos: r"${}\pi$".format(int(val / np.pi)) if val != 0 else "0"
         )
+    )
     ax.xaxis.set_major_locator(MultipleLocator(base=4 * pi))
-    ax.set_xlim([r0, r0 + N_plot * delta])
+    ax.set_xlim(
+        [
+            r0 + delta * theta_f / 2 / pi,
+            r0 + delta * (2 * pi * N_plot + theta_f) / 2 / pi,
+        ]
+    )
     ax.set_xlabel(r"$r$")
 plt.savefig("figs" + path[4:] + "stress_of_r.pdf", dpi=300)
 plt.show()
