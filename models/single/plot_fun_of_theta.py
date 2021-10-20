@@ -145,7 +145,7 @@ for ax in ax.reshape(-1):
 plt.savefig("figs" + path[4:] + "stress_strain_of_theta.pdf", dpi=300)
 
 # tension
-fig, ax = plt.subplots(figsize=(6.4, 4))
+fig, ax = plt.subplots(figsize=(6.4, 2))
 ax.plot(theta, outer.T(theta), "-", label="Asymptotic")
 ax.plot(theta, comsol.T, "--", label="COMSOL")
 # ax.plot(theta, comsol.T_a, "-", label="COMSOL (a)")

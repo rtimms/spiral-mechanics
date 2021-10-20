@@ -65,10 +65,10 @@ ax[0, 1].plot(theta, comsol.f2, linestyle="--", color="tab:orange", label="COMSO
 ax[1, 0].plot(theta, comsol.g1, linestyle="--", color="tab:orange", label="COMSOL")
 ax[1, 1].plot(theta, comsol.g2, linestyle="--", color="tab:orange", label="COMSOL")
 # plot outer solutions
-ax[0, 0].plot(theta, f1(theta), linestyle=":", color="black", label="Outer")
-ax[0, 1].plot(theta, f2(theta), linestyle=":", color="black", label="Outer")
-ax[1, 0].plot(theta, g1(theta), linestyle=":", color="black", label="Outer")
-ax[1, 1].plot(theta, g2(theta), linestyle=":", color="black", label="Outer")
+ax[0, 0].plot(theta, f1(theta), linestyle=":", color="black", label="B.L. I")
+ax[0, 1].plot(theta, f2(theta), linestyle=":", color="black", label="B.L. I")
+ax[1, 0].plot(theta, g1(theta), linestyle=":", color="black", label="B.L. I")
+ax[1, 1].plot(theta, g2(theta), linestyle=":", color="black", label="B.L. I")
 # plot inner and composite solutions
 for n in range(N_BL):
     idx1 = int(n * 100 / N_BL + 10)  # midpoint
@@ -95,7 +95,7 @@ for n in range(N_BL):
         c * srr_tilde + f1(2 * n * pi),
         linestyle="-.",
         color="tab:green",
-        label="Inner" if n == 0 else "",
+        label="B.L. II" if n == 0 else "",
     )
     ax[0, 0].plot(
         theta,
@@ -110,7 +110,7 @@ for n in range(N_BL):
         c * u_tilde + f2(2 * n * pi),
         linestyle="-.",
         color="tab:green",
-        label="Inner" if n == 0 else "",
+        label="B.L. II" if n == 0 else "",
     )
     ax[0, 1].plot(
         theta,
@@ -125,7 +125,7 @@ for n in range(N_BL):
         c * srt_tilde + g1(2 * n * pi),
         linestyle="-.",
         color="tab:green",
-        label="Inner" if n == 0 else "",
+        label="B.L. II" if n == 0 else "",
     )
     ax[1, 0].plot(
         theta,
@@ -140,7 +140,7 @@ for n in range(N_BL):
         c * v_tilde + g2(2 * n * pi),
         linestyle="-.",
         color="tab:green",
-        label="Inner" if n == 0 else "",
+        label="B.L. II" if n == 0 else "",
     )
     ax[1, 1].plot(
         theta,
@@ -190,12 +190,12 @@ ax[1, 0].plot(theta, comsol.srr, linestyle="--", color="tab:orange", label="COMS
 ax[1, 1].plot(theta, comsol.stt, linestyle="--", color="tab:orange", label="COMSOL")
 ax[1, 2].plot(theta, comsol.srt, linestyle="--", color="tab:orange", label="COMSOL")
 # plot outer solutions
-ax[0, 0].plot(theta, e_rr(theta), linestyle=":", color="black", label="Outer")
-ax[0, 1].plot(theta, e_tt(r, theta), linestyle=":", color="black", label="Outer")
-ax[0, 2].plot(theta, e_rt(theta), linestyle=":", color="black", label="Outer")
-ax[1, 0].plot(theta, s_rr(theta), linestyle=":", color="black", label="Outer")
-ax[1, 1].plot(theta, s_tt(theta), linestyle=":", color="black", label="Outer")
-ax[1, 2].plot(theta, s_rt(theta), linestyle=":", color="black", label="Outer")
+ax[0, 0].plot(theta, e_rr(theta), linestyle=":", color="black", label="B.L. I")
+ax[0, 1].plot(theta, e_tt(r, theta), linestyle=":", color="black", label="B.L. I")
+ax[0, 2].plot(theta, e_rt(theta), linestyle=":", color="black", label="B.L. I")
+ax[1, 0].plot(theta, s_rr(theta), linestyle=":", color="black", label="B.L. I")
+ax[1, 1].plot(theta, s_tt(theta), linestyle=":", color="black", label="B.L. I")
+ax[1, 2].plot(theta, s_rt(theta), linestyle=":", color="black", label="B.L. I")
 # plot composite solutions
 for n in range(N_BL):
     idx1 = int(n * 100 / N_BL + 10)  # midpoint
@@ -232,7 +232,7 @@ for n in range(N_BL):
         + f1(2 * n * pi) / (lam + 2 * mu),
         linestyle="-.",
         color="tab:green",
-        label="Inner" if n == 0 else "",
+        label="B.L. II" if n == 0 else "",
     )
     ax[0, 0].plot(
         theta,
@@ -249,7 +249,7 @@ for n in range(N_BL):
         c * ett_tilde,
         linestyle="-.",
         color="tab:green",
-        label="Inner" if n == 0 else "",
+        label="B.L. II" if n == 0 else "",
     )
     ax[0, 1].plot(
         theta,
@@ -264,7 +264,7 @@ for n in range(N_BL):
         c * ert_tilde + g1(2 * n * pi) / mu / 2,
         linestyle="-.",
         color="tab:green",
-        label="Inner" if n == 0 else "",
+        label="B.L. II" if n == 0 else "",
     )
     ax[0, 2].plot(
         theta,
@@ -279,7 +279,7 @@ for n in range(N_BL):
         c * srr_tilde + f1(2 * n * pi),
         linestyle="-.",
         color="tab:green",
-        label="Inner" if n == 0 else "",
+        label="B.L. II" if n == 0 else "",
     )
     ax[1, 0].plot(
         theta,
@@ -296,7 +296,7 @@ for n in range(N_BL):
         + lam / (lam + 2 * mu) * f1(2 * n * pi),
         linestyle="-.",
         color="tab:green",
-        label="Inner" if n == 0 else "",
+        label="B.L. II" if n == 0 else "",
     )
     ax[1, 1].plot(
         theta,
@@ -313,7 +313,7 @@ for n in range(N_BL):
         c * srt_tilde + g1(2 * n * pi),
         linestyle="-.",
         color="tab:green",
-        label="Inner" if n == 0 else "",
+        label="B.L. II" if n == 0 else "",
     )
     ax[1, 2].plot(
         theta,

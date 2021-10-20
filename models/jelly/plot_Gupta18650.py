@@ -88,7 +88,7 @@ params.lam_n = (
 )  # 1st Lame parameter
 
 N_plot = 6  # number of winds to plot
-path = "data/jelly/Gupta18650_new/"  # path to data
+path = "data/jelly/Gupta18650/"  # path to data
 # make directory for figures if it doesn't exist
 try:
     os.mkdir("figs" + path[4:])
@@ -113,7 +113,7 @@ theta = comsol.theta
 plot_fg(outer, comsol, N_plot, path)
 
 # tension
-fig, ax = plt.subplots(3, 1, figsize=(6.4, 4))
+fig, ax = plt.subplots(3, 1, figsize=(6.4, 6))
 ax[0].plot(theta, outer.Tp(theta), "-", label="Asymptotic")
 ax[0].plot(theta, comsol.Tp, "--", label="COMSOL")
 ax[0].set_ylabel(r"$T_+$")
@@ -123,8 +123,14 @@ ax[1].set_ylabel(r"$T_-$")
 ax[2].plot(theta, outer.Tn(theta) + outer.Tp(theta), "-", label="Asymptotic")
 ax[2].plot(theta, comsol.Tn + comsol.Tp, "--", label="COMSOL")
 ax[2].set_ylabel(r"$T_-+T_+$")
-ax[2].legend(loc="lower right")
 # add shared labels etc.
+fig.subplots_adjust(left=0.1, bottom=0.25, right=0.98, top=0.98, wspace=0.4, hspace=0.4)
+ax[2].legend(
+    loc="upper center",
+    bbox_to_anchor=(0.5, -0.4),
+    borderaxespad=0.0,
+    ncol=2,
+)
 winds = [2 * pi * n for n in list(range(N_plot))]  # plot dashed line every 2*pi
 for ax in ax.reshape(-1):
     for w in winds:
@@ -139,7 +145,7 @@ for ax in ax.reshape(-1):
     ax.set_ylim([-0.55, 0.15])
     ax.set_xlabel(r"$\theta$")
 plt.tight_layout()
-plt.savefig("figs" + path[4:] + "T_of_theta_jelly.pdf", dpi=300)
+plt.savefig("figs" + path[4:] + "T_of_theta_18650.pdf", dpi=300)
 
 # Compute and plot strain in positive current collector -----------------------
 h_cp = 10 * 1e-6  # positive cc thickness [m]
@@ -149,24 +155,21 @@ T_p_dim = outer.Tp(theta) * mu_ref * alpha_ref * L
 sigma_p_dim = T_p_dim / h_cp
 eps_p_dim = sigma_p_dim / E_cp
 
-fig, ax = plt.subplots(2, 1, figsize=(6.4, 4))
-ax[0].plot(theta, outer.Tp(theta), "-")
-ax[0].set_ylabel(r"$T_+$")
-ax[1].plot(theta, eps_p_dim, "-")
-ax[1].set_ylabel(r"$\varepsilon_+$")
+fig, ax = plt.subplots(1, 1, figsize=(6.4, 2))
+ax.plot(theta, eps_p_dim, "-")
+ax.set_ylabel(r"$\varepsilon_+^*$")
 winds = [2 * pi * n for n in list(range(N_plot))]  # plot dashed line every 2*pi
-for ax in ax.reshape(-1):
-    for w in winds:
-        ax.axvline(x=w, linestyle=":", color="lightgrey")
-    ax.xaxis.set_major_formatter(
-        FuncFormatter(
-            lambda val, pos: r"${}\pi$".format(int(val / np.pi)) if val != 0 else "0"
-        )
+for w in winds:
+    ax.axvline(x=w, linestyle=":", color="lightgrey")
+ax.xaxis.set_major_formatter(
+    FuncFormatter(
+        lambda val, pos: r"${}\pi$".format(int(val / np.pi)) if val != 0 else "0"
     )
-    ax.xaxis.set_major_locator(MultipleLocator(base=4 * pi))
-    ax.set_xlim([0, N_plot * 2 * pi])
-    ax.set_xlabel(r"$\theta$")
+)
+ax.xaxis.set_major_locator(MultipleLocator(base=4 * pi))
+ax.set_xlim([0, N_plot * 2 * pi])
+ax.set_xlabel(r"$\theta$")
 plt.tight_layout()
-plt.savefig("figs" + path[4:] + "eps_of_theta_jelly.pdf", dpi=300)
+plt.savefig("figs" + path[4:] + "eps_of_theta_18650.pdf", dpi=300)
 
 plt.show()
