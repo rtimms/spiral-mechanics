@@ -56,7 +56,7 @@ ax[1, 1].plot(theta, comsol.g2, "--", label="COMSOL")
 ax[1, 1].set_ylabel(r"$g_2$")
 # add shared labels etc.
 fig.subplots_adjust(
-    left=0.1, bottom=0.25, right=0.98, top=0.98, wspace=0.33, hspace=0.4
+    left=0.1, bottom=0.25, right=0.98, top=0.98, wspace=0.45, hspace=0.45
 )
 ax[1, 0].legend(
     loc="upper center",
@@ -124,7 +124,9 @@ ax[1, 2].plot(theta, outer.s_rt(theta), "-", label="Asymptotic")
 ax[1, 2].plot(theta, comsol.srt, "--", label="COMSOL")
 ax[1, 2].set_ylabel(r"$\sigma_{r\theta}$")
 # add shared labels etc.
-fig.subplots_adjust(left=0.1, bottom=0.25, right=0.98, top=0.98, wspace=0.4, hspace=0.4)
+fig.subplots_adjust(
+    left=0.1, bottom=0.25, right=0.98, top=0.98, wspace=0.45, hspace=0.45
+)
 ax[1, 1].legend(
     loc="upper center",
     bbox_to_anchor=(0.5, -0.4),

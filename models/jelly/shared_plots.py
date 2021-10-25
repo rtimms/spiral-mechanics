@@ -28,7 +28,7 @@ def plot_fg(outer, comsol, N_plot, path):
     ax[1, 2].set_ylabel(r"$g_4$")
     # add shared labels etc.
     fig.subplots_adjust(
-        left=0.1, bottom=0.25, right=0.98, top=0.98, wspace=0.4, hspace=0.4
+        left=0.1, bottom=0.25, right=0.98, top=0.98, wspace=0.45, hspace=0.45
     )
     ax[1, 1].legend(
         loc="upper center",

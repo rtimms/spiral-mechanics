@@ -154,7 +154,7 @@ ax[0, 1].set_ylabel(r"$f_2$")
 ax[1, 0].set_ylabel(r"$g_1$")
 ax[1, 1].set_ylabel(r"$g_2$")
 fig.subplots_adjust(
-    left=0.1, bottom=0.25, right=0.98, top=0.98, wspace=0.33, hspace=0.4
+    left=0.1, bottom=0.25, right=0.98, top=0.98, wspace=0.45, hspace=0.45
 )
 ax[1, 0].legend(
     loc="upper center",
@@ -330,7 +330,7 @@ ax[1, 0].set_ylabel(r"$\sigma_{rr}$")
 ax[1, 1].set_ylabel(r"$\sigma_{\theta\theta}$")
 ax[1, 2].set_ylabel(r"$\sigma_{r\theta}$")
 fig.subplots_adjust(
-    left=0.1, bottom=0.25, right=0.98, top=0.98, wspace=0.33, hspace=0.4
+    left=0.1, bottom=0.25, right=0.98, top=0.98, wspace=0.45, hspace=0.45
 )
 ax[1, 1].legend(
     loc="upper center",

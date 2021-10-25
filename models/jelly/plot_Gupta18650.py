@@ -124,7 +124,9 @@ ax[2].plot(theta, outer.Tn(theta) + outer.Tp(theta), "-", label="Asymptotic")
 ax[2].plot(theta, comsol.Tn + comsol.Tp, "--", label="COMSOL")
 ax[2].set_ylabel(r"$T_-+T_+$")
 # add shared labels etc.
-fig.subplots_adjust(left=0.1, bottom=0.25, right=0.98, top=0.98, wspace=0.4, hspace=0.4)
+fig.subplots_adjust(
+    left=0.1, bottom=0.25, right=0.98, top=0.98, wspace=0.45, hspace=0.45
+)
 ax[2].legend(
     loc="upper center",
     bbox_to_anchor=(0.5, -0.4),

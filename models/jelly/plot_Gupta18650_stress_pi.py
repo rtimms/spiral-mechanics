@@ -107,13 +107,19 @@ mu_p, mu_s, mu_n = params.mu_p, params.mu_s, params.mu_n
 lam_p, lam_s, lam_n = params.lam_p, params.lam_s, params.lam_n
 alpha_p, alpha_s, alpha_n = params.alpha_p, params.alpha_s, params.alpha_n
 
-fig, ax = plt.subplots(1, 3, figsize=(6.4, 2))
+# 2x2 fig with double width bottom panel
+fig, ax = plt.subplots(2, 2, figsize=(6.4, 4))
+gs = ax[1, 0].get_gridspec()
+for a in ax[1, :]:
+    a.remove()
+axbig = fig.add_subplot(gs[1, :])
 
 winds_p = [r0 + delta * (2 * pi * n + theta_f) / 2 / pi for n in list(range(N_plot))]
 winds_n = [
     r0 + delta / 2 + delta * (2 * pi * n + theta_f) / 2 / pi
     for n in list(range(N_plot))
 ]
+
 
 nr = 3
 for N in list(range(N_plot)):
@@ -134,21 +140,21 @@ for N in list(range(N_plot)):
 
     # positive electrode
     r_p1 = np.linspace(ri, ri + l_p * delta, nr)
-    ax[0].plot(
+    ax[0, 0].plot(
         r_p1,
         sigma_rr * np.ones(nr),
         "-",
         color="tab:blue",
         label="Asymptotic" if N == 0 else "",
     )
-    ax[1].plot(
+    axbig.plot(
         r_p1,
         sigma_tt_p * np.ones(nr),
         "-",
         color="tab:blue",
         label="Asymptotic" if N == 0 else "",
     )
-    ax[2].plot(
+    ax[0, 1].plot(
         r_p1,
         sigma_rt * np.ones(nr),
         "-",
@@ -157,37 +163,37 @@ for N in list(range(N_plot)):
     )
     # separator
     r_s1 = np.linspace(ri + l_p * delta, ri + (l_p + l_s) * delta, nr)
-    ax[0].plot(r_s1, sigma_rr * np.ones(nr), "-", color="tab:blue")
-    ax[1].plot(r_s1, sigma_tt_s * np.ones(nr), "-", color="tab:blue")
-    ax[2].plot(r_s1, sigma_rt * np.ones(nr), "-", color="tab:blue")
+    ax[0, 0].plot(r_s1, sigma_rr * np.ones(nr), "-", color="tab:blue")
+    axbig.plot(r_s1, sigma_tt_s * np.ones(nr), "-", color="tab:blue")
+    ax[0, 1].plot(r_s1, sigma_rt * np.ones(nr), "-", color="tab:blue")
     # negative electrode
     r_n1 = np.linspace(ri + (l_p + l_s) * delta, ri + (l_p + l_s + l_n) * delta, nr)
-    ax[0].plot(r_n1, sigma_rr * np.ones(nr), "-", color="tab:blue")
-    ax[1].plot(r_n1, sigma_tt_n * np.ones(nr), "-", color="tab:blue")
-    ax[2].plot(r_n1, sigma_rt * np.ones(nr), "-", color="tab:blue")
+    ax[0, 0].plot(r_n1, sigma_rr * np.ones(nr), "-", color="tab:blue")
+    axbig.plot(r_n1, sigma_tt_n * np.ones(nr), "-", color="tab:blue")
+    ax[0, 1].plot(r_n1, sigma_rt * np.ones(nr), "-", color="tab:blue")
     # negative electrode
     r_n2 = np.linspace(
         ri + (l_p + l_s + l_n) * delta, ri + (l_p + l_s + 2 * l_n) * delta, nr
     )
-    ax[0].plot(r_n2, sigma_rr * np.ones(nr), "-", color="tab:blue")
-    ax[1].plot(r_n2, sigma_tt_n * np.ones(nr), "-", color="tab:blue")
-    ax[2].plot(r_n2, sigma_rt * np.ones(nr), "-", color="tab:blue")
+    ax[0, 0].plot(r_n2, sigma_rr * np.ones(nr), "-", color="tab:blue")
+    axbig.plot(r_n2, sigma_tt_n * np.ones(nr), "-", color="tab:blue")
+    ax[0, 1].plot(r_n2, sigma_rt * np.ones(nr), "-", color="tab:blue")
     # separator
     r_s2 = np.linspace(
         ri + (l_p + l_s + 2 * l_n) * delta, ri + (l_p + 2 * l_s + 2 * l_n) * delta, nr
     )
-    ax[0].plot(r_s2, sigma_rr * np.ones(nr), "-", color="tab:blue")
-    ax[1].plot(r_s2, sigma_tt_s * np.ones(nr), "-", color="tab:blue")
-    ax[2].plot(r_s2, sigma_rt * np.ones(nr), "-", color="tab:blue")
+    ax[0, 0].plot(r_s2, sigma_rr * np.ones(nr), "-", color="tab:blue")
+    axbig.plot(r_s2, sigma_tt_s * np.ones(nr), "-", color="tab:blue")
+    ax[0, 1].plot(r_s2, sigma_rt * np.ones(nr), "-", color="tab:blue")
     # positive electrode
     r_p2 = np.linspace(
         ri + (l_p + 2 * l_s + 2 * l_n) * delta,
         ri + (2 * l_p + 2 * l_s + 2 * l_n) * delta,
         nr,
     )
-    ax[0].plot(r_p2, sigma_rr * np.ones(nr), "-", color="tab:blue")
-    ax[1].plot(r_p2, sigma_tt_p * np.ones(nr), "-", color="tab:blue")
-    ax[2].plot(r_p2, sigma_rt * np.ones(nr), "-", color="tab:blue")
+    ax[0, 0].plot(r_p2, sigma_rr * np.ones(nr), "-", color="tab:blue")
+    axbig.plot(r_p2, sigma_tt_p * np.ones(nr), "-", color="tab:blue")
+    ax[0, 1].plot(r_p2, sigma_rt * np.ones(nr), "-", color="tab:blue")
 
 
 def remove_cc(r, s):
@@ -202,39 +208,33 @@ def remove_cc(r, s):
 
 comsol = pd.read_csv(path + f"srr_tpi.csv", comment="#", header=None).to_numpy()
 r, s_rr = remove_cc(comsol[:, 0], comsol[:, 1] / alpha_ref)
-ax[0].plot(r, s_rr, "--", color="tab:orange", label="COMSOL")
+ax[0, 0].plot(r, s_rr, "--", color="tab:orange", label="COMSOL")
 
 comsol = pd.read_csv(path + f"stt_tpi.csv", comment="#", header=None).to_numpy()
 r, s_tt = remove_cc(comsol[:, 0], comsol[:, 1] / alpha_ref)
-ax[1].plot(r, s_tt, "--", color="tab:orange", label="COMSOL")
+axbig.plot(r, s_tt, "--", color="tab:orange", label="COMSOL")
 
 comsol = pd.read_csv(path + f"srt_tpi.csv", comment="#", header=None).to_numpy()
 r, s_rt = remove_cc(comsol[:, 0], comsol[:, 1] / alpha_ref)
-ax[2].plot(r, s_rt, "--", color="tab:orange", label="COMSOL")
+ax[0, 1].plot(r, s_rt, "--", color="tab:orange", label="COMSOL")
 
-ax[0].set_ylim([-6, -3])
-ax[1].set_ylim([-25, 5])
-ax[2].set_ylim([-0.75, 0.75])
-ax[0].set_ylabel(r"$\sigma_{rr}$")
-ax[1].set_ylabel(r"$\sigma_{\theta\theta}$")
-ax[2].set_ylabel(r"$\sigma_{r\theta}$")
+ax[0, 0].set_ylim([-6, -3])
+axbig.set_ylim([-25, 5])
+ax[0, 1].set_ylim([-0.75, 0.75])
+ax[0, 0].set_ylabel(r"$\sigma_{rr}$")
+axbig.set_ylabel(r"$\sigma_{\theta\theta}$")
+ax[0, 1].set_ylabel(r"$\sigma_{r\theta}$")
 # add shared labels etc.
-fig.subplots_adjust(left=0.1, bottom=0.3, right=0.98, top=0.98, wspace=0.4, hspace=0.4)
-ax[1].legend(
+fig.subplots_adjust(left=0.1, bottom=0.3, right=0.98, top=0.98, wspace=0.45, hspace=0.5)
+axbig.legend(
     loc="upper center",
-    bbox_to_anchor=(0.5, -0.2),
+    bbox_to_anchor=(0.5, -0.5),
     borderaxespad=0.0,
     ncol=2,
 )
-for ax in ax.reshape(-1):
+for ax in [ax[0, 0], ax[0, 1], axbig]:
     for w in winds_p:
         ax.axvline(x=w, linestyle=":", color="lightgrey")
-    ax.xaxis.set_major_formatter(
-        FuncFormatter(
-            lambda val, pos: r"${}\pi$".format(int(val / np.pi)) if val != 0 else "0"
-        )
-    )
-    ax.xaxis.set_major_locator(MultipleLocator(base=4 * pi))
     ax.set_xlim(
         [
             r0 + delta * theta_f / 2 / pi,

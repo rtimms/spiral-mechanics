@@ -41,7 +41,8 @@ for i, alpha_M_hat in enumerate(alpha_M_hats):
     )
 ax[0].set_title(r"$\hat{\mu}/\hat{M} = $" + f"{mu_over_M_hat_ref}")
 ax[0].set_ylabel(r"$T$")
-ax[0].legend(loc="lower right")
+ax[0].legend(loc="right")
+
 
 # vary \hat{\alpha}\hat{M}, fix \hat{mu}/\hat{M}
 mu = 1
@@ -60,7 +61,7 @@ for i, mu_over_M_hat in enumerate(mu_over_M_hats):
     )
 ax[1].set_title(r"$\hat{\alpha}\hat{M} = $" + f"{alpha_M_hat_ref}")
 ax[1].set_ylabel(r"$T$")
-ax[1].legend(loc="lower right")
+ax[1].legend(loc="right")
 
 # add shared labels etc.
 for ax in ax.reshape(-1):
