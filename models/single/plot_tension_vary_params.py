@@ -25,7 +25,8 @@ except FileExistsError:
 
 # Plot tension ----------------------------------------------------------------
 theta = np.linspace(0, 2 * pi * N, 120 * (N - 1))
-winds = [2 * pi * n for n in list(range(N_plot))]  # plot dashed line every 2*pi
+# plot dashed line every 2*pi
+winds = [2 * pi * n for n in list(range(N_plot))]
 fig, ax = plt.subplots(2, 1, figsize=(6.4, 4))
 linestyles = [":", "-.", "--", "-"]
 
@@ -35,9 +36,10 @@ nu = 1 / 3
 lam = 2 * mu * nu / (1 - 2 * nu)
 mu_over_M_hat_ref = 1 / (2 + 2 * 1)  # mu=1, lam=2
 alpha_M_hats = [0.1, 1, 10]
+alpha_cc = 0
 for i, alpha_M_hat in enumerate(alpha_M_hats):
     alpha = alpha_M_hat / (3 * lam + 2 * mu)
-    outer = OuterSolution(r0, delta, mu, lam, alpha)
+    outer = OuterSolution(r0, delta, mu, lam, alpha, alpha_cc)
     ax[0].plot(
         theta,
         outer.T(theta),
@@ -53,10 +55,11 @@ mu = 1
 nu = 1 / 3
 alpha_M_hat_ref = 1 * (3 * 2 + 2 * 1)  # alpha=1, mu=1, lam=2
 mu_over_M_hats = [0.1, 1, 10]
+alpha_cc = 0
 for i, mu_over_M_hat in enumerate(mu_over_M_hats):
     lam = 1 / mu_over_M_hat - 2
     alpha = alpha_M_hat_ref / (3 * lam + 2 * mu)
-    outer = OuterSolution(r0, delta, mu, lam, alpha)
+    outer = OuterSolution(r0, delta, mu, lam, alpha, alpha_cc)
     ax[1].plot(
         theta,
         outer.T(theta),
@@ -73,7 +76,8 @@ for ax in ax.reshape(-1):
         ax.axvline(x=w, linestyle=":", color="lightgrey")
     ax.xaxis.set_major_formatter(
         FuncFormatter(
-            lambda val, pos: "{}$\pi$".format(int(val / np.pi)) if val != 0 else "0"
+            lambda val, pos: "{}$\pi$".format(
+                int(val / np.pi)) if val != 0 else "0"
         )
     )
     ax.xaxis.set_major_locator(MultipleLocator(base=4 * pi))

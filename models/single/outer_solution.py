@@ -3,21 +3,27 @@ from numpy import pi, exp
 
 
 class OuterSolution:
-    def __init__(self, r0, delta, mu, lam, alpha):
+    def __init__(self, r0, delta, mu, lam, alpha, alpha_cc):
         """
         Computes the 'outer solution' near r=r0. The paramaters and solutions
         are stored as attributes of the class.
         """
 
-        # physical (dimensionless) selfeters
+        # physical (dimensionless) parameters
         self.r0 = r0
         self.delta = delta
         self.mu = mu
         self.lam = lam
         self.alpha = alpha
+        self.alpha_cc = alpha_cc
 
         # constants
-        self.S_1 = self.alpha * (3 * self.lam + 2 * self.mu) / (self.lam + 2 * self.mu)
+        # S_1 = alpha_hat
+        # S_2 = 1 / M_hat
+        # S_3 = 1 / mu_hat
+        self.S_1 = (
+            self.alpha * (3 * self.lam + 2 * self.mu) - 2 * self.lam * self.alpha_cc
+        ) / (self.lam + 2 * self.mu)
         self.S_2 = 1 / (self.lam + 2 * self.mu)
         self.S_3 = 1 / self.mu
 
@@ -51,22 +57,25 @@ class OuterSolution:
         return -self.C * exp(-self.omega * theta)
 
     def u(self, r, theta):
-        """ Radial displacement """
+        """Radial displacement"""
         alpha = self.alpha
+        alpha_cc = self.alpha_cc
         delta = self.delta
         r0 = self.r0
         lam = self.lam
         mu = self.mu
         R = (r - r0) / delta
         u = delta * (
-            alpha * (3 * lam + 2 * mu) / (lam + 2 * mu) * (R - theta / 2 / pi)
+            (alpha * (3 * lam + 2 * mu) - 2 * lam * alpha_cc)
+            / (lam + 2 * mu)
+            * (R - theta / 2 / pi)
             + self.f1(theta) / (lam + 2 * mu) * (R - theta / 2 / pi)
             + self.f2(theta)
         )
         return u
 
     def v(self, r, theta):
-        """ Azimuthal displacement """
+        """Azimuthal displacement"""
         delta = self.delta
         r0 = self.r0
         mu = self.mu
@@ -74,16 +83,17 @@ class OuterSolution:
         return delta * (self.g1(theta) / mu * (R - theta / 2 / pi) + self.g2(theta))
 
     def e_rr(self, theta):
-        """ Radial strain """
+        """Radial strain"""
         alpha = self.alpha
+        alpha_cc = self.alpha_cc
         lam = self.lam
         mu = self.mu
-        return alpha * (3 * lam + 2 * mu) / (lam + 2 * mu) + self.f1(theta) / (
+        return (alpha * (3 * lam + 2 * mu) - 2 * lam * alpha_cc) / (
             lam + 2 * mu
-        )
+        ) + self.f1(theta) / (lam + 2 * mu)
 
     def e_tt(self, r, theta):
-        """ Azimuthal strain """
+        """Azimuthal strain"""
         delta = self.delta
         r0 = self.r0
         mu = self.mu
@@ -97,25 +107,28 @@ class OuterSolution:
         return (1 / r0) * (dvdt + self.u(r, theta))
 
     def e_rt(self, theta):
-        """ Shear strain """
+        """Shear strain"""
         mu = self.mu
         return self.g1(theta) / mu / 2
 
     def s_rr(self, theta):
-        """ Radial stress """
+        """Radial stress"""
         return self.f1(theta)
 
     def s_tt(self, theta):
-        """ Azimuthal stress """
+        """Azimuthal stress"""
         alpha = self.alpha
+        alpha_cc = self.alpha_cc
         lam = self.lam
         mu = self.mu
-        return -2 * mu * alpha * (3 * lam + 2 * mu) / (lam + 2 * mu) + lam / (
-            lam + 2 * mu
-        ) * self.f1(theta)
+        return (
+            2 * (lam + 2 * mu) * alpha_cc
+            - 2 * mu * alpha * (3 * lam + 2 * mu) / (lam + 2 * mu)
+            + lam / (lam + 2 * mu) * self.f1(theta)
+        )
 
     def s_rt(self, theta):
-        """ Shear stress """
+        """Shear stress"""
         return self.g1(theta)
 
     def T(self, theta):
