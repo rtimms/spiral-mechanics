@@ -65,7 +65,7 @@ class OuterSolution:
         lam = self.lam
         mu = self.mu
         R = (r - r0) / delta
-        u = delta * (
+        u = 2 * alpha_cc * r0 + delta * (
             (alpha * (3 * lam + 2 * mu) - 2 * lam * alpha_cc)
             / (lam + 2 * mu)
             * (R - theta / 2 / pi)
@@ -94,6 +94,7 @@ class OuterSolution:
 
     def e_tt(self, r, theta):
         """Azimuthal strain"""
+        alpha_cc = self.alpha_cc
         delta = self.delta
         r0 = self.r0
         mu = self.mu
@@ -104,7 +105,7 @@ class OuterSolution:
             + self.dg2dt(theta)
         )
 
-        return (1 / r0) * (dvdt + self.u(r, theta))
+        return 2 * alpha_cc + (1 / r0) * (dvdt + self.u(r, theta))
 
     def e_rt(self, theta):
         """Shear strain"""

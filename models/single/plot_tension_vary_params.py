@@ -76,8 +76,7 @@ for ax in ax.reshape(-1):
         ax.axvline(x=w, linestyle=":", color="lightgrey")
     ax.xaxis.set_major_formatter(
         FuncFormatter(
-            lambda val, pos: "{}$\pi$".format(
-                int(val / np.pi)) if val != 0 else "0"
+            lambda val, pos: "{}$\pi$".format(int(val / np.pi)) if val != 0 else "0"
         )
     )
     ax.xaxis.set_major_locator(MultipleLocator(base=4 * pi))
