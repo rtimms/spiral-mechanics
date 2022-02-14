@@ -133,13 +133,15 @@ ax[2].legend(
     borderaxespad=0.0,
     ncol=2,
 )
-winds = [2 * pi * n for n in list(range(N_plot))]  # plot dashed line every 2*pi
+# plot dashed line every 2*pi
+winds = [2 * pi * n for n in list(range(N_plot))]
 for ax in ax.reshape(-1):
     for w in winds:
         ax.axvline(x=w, linestyle=":", color="lightgrey")
     ax.xaxis.set_major_formatter(
         FuncFormatter(
-            lambda val, pos: r"${}\pi$".format(int(val / np.pi)) if val != 0 else "0"
+            lambda val, pos: r"${}\pi$".format(
+                int(val / np.pi)) if val != 0 else "0"
         )
     )
     ax.xaxis.set_major_locator(MultipleLocator(base=4 * pi))
@@ -160,12 +162,14 @@ eps_p_dim = sigma_p_dim / E_cp
 fig, ax = plt.subplots(1, 1, figsize=(6.4, 2))
 ax.plot(theta, eps_p_dim, "-")
 ax.set_ylabel(r"$\varepsilon_+^*$")
-winds = [2 * pi * n for n in list(range(N_plot))]  # plot dashed line every 2*pi
+# plot dashed line every 2*pi
+winds = [2 * pi * n for n in list(range(N_plot))]
 for w in winds:
     ax.axvline(x=w, linestyle=":", color="lightgrey")
 ax.xaxis.set_major_formatter(
     FuncFormatter(
-        lambda val, pos: r"${}\pi$".format(int(val / np.pi)) if val != 0 else "0"
+        lambda val, pos: r"${}\pi$".format(
+            int(val / np.pi)) if val != 0 else "0"
     )
 )
 ax.xaxis.set_major_locator(MultipleLocator(base=4 * pi))
