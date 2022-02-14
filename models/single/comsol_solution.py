@@ -31,7 +31,7 @@ class ComsolSolution:
         comsol = pd.read_csv(path + "u1.csv", comment="#",
                              header=None).to_numpy()
         f2_r_data = comsol[:, 0]
-        f2_data = (comsol[:, 1] - 2 * alpha_cc * r0) / delta / alpha_scale
+        f2_data = (comsol[:, 1] / alpha_scale - 2 * alpha_cc * r0) / delta
         f2_interp = interp.interp1d(f2_r_data, f2_data, bounds_error=False)
         # In COMSOL we evaluate f_2 at r = r0+hh/2+delta*theta/2/pi
         r = r0 + hh / 2 + delta * theta / 2 / pi
