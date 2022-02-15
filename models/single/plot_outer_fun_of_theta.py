@@ -7,13 +7,13 @@ from outer_solution import OuterSolution
 from comsol_solution import ComsolSolution
 
 # set style for paper
-import matplotlib
+#import matplotlib
 
-matplotlib.rc_file("_matplotlibrc_tex", use_default_template=True)
+#matplotlib.rc_file("_matplotlibrc_tex", use_default_template=True)
 
 # Parameters (dimensionless) --------------------------------------------------
 alpha = 1  # expansion coefficient
-alpha_cc = 0  # expansion coefficient
+alpha_cc = 0.1  # expansion coefficient
 mu = 1  # shear modulus
 nu = 1 / 3  # Poisson ratio
 lam = 2 * mu * nu / (1 - 2 * nu)  # 1st Lame parameter
@@ -23,7 +23,7 @@ r1 = 1  # outer radius
 delta = (r1 - r0) / N
 hh = 0.01 * delta  # current collector thickness
 N_plot = 9  # number of winds to plot
-path = "data/spiral/"  # path to data
+path = "data/spiral/new/"  # path to data
 # make directory for figures if it doesn't exist
 try:
     os.mkdir("figs" + path[4:])
