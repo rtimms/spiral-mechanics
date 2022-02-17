@@ -22,7 +22,7 @@ class ComsolSolution:
                              header=None).to_numpy()
         f1_r_data = comsol[:, 0]
         f1_data = comsol[:, 1] / alpha_scale
-        f1_interp = interp.interp1d(f1_r_data, f1_data, bounds_error=False)
+        f1_interp = interp.interp1d(f1_r_data, f1_data, bounds_error=False, kind="cubic")
         # In COMSOL we evaluate f_1 at r = r0+delta/2+delta*theta/2/pi
         r = r0 + delta / 2 + delta * theta / 2 / pi
         self.f1 = f1_interp(r)
@@ -32,7 +32,7 @@ class ComsolSolution:
                              header=None).to_numpy()
         f2_r_data = comsol[:, 0]
         f2_data = (comsol[:, 1] / alpha_scale - 2 * alpha_cc * r0) / delta
-        f2_interp = interp.interp1d(f2_r_data, f2_data, bounds_error=False)
+        f2_interp = interp.interp1d(f2_r_data, f2_data, bounds_error=False, kind="cubic")
         # In COMSOL we evaluate f_2 at r = r0+hh/2+delta*theta/2/pi
         r = r0 + hh / 2 + delta * theta / 2 / pi
         self.f2 = f2_interp(r)
@@ -42,7 +42,7 @@ class ComsolSolution:
                              header=None).to_numpy()
         g1_r_data = comsol[:, 0]
         g1_data = comsol[:, 1] / alpha_scale
-        g1_interp = interp.interp1d(g1_r_data, g1_data, bounds_error=False)
+        g1_interp = interp.interp1d(g1_r_data, g1_data, bounds_error=False, kind="cubic")
         # In COMSOL we evaluate g_1 at r = r0+delta/2+delta*theta/2/pi
         r = r0 + delta / 2 + delta * theta / 2 / pi
         self.g1 = g1_interp(r)
@@ -52,7 +52,7 @@ class ComsolSolution:
                              header=None).to_numpy()
         g2_r_data = comsol[:, 0]
         g2_data = comsol[:, 1] / delta / alpha_scale
-        g2_interp = interp.interp1d(g2_r_data, g2_data, bounds_error=False)
+        g2_interp = interp.interp1d(g2_r_data, g2_data, bounds_error=False, kind="cubic")
         # In COMSOL we evaluate g_2 at r = r0+hh/2+delta*theta/2/pi
         r = r0 + hh / 2 + delta * theta / 2 / pi
         self.g2 = g2_interp(r)
@@ -66,7 +66,7 @@ class ComsolSolution:
                              header=None).to_numpy()
         u_r_data = comsol[:, 0]
         u_data = comsol[:, 1] / alpha_scale
-        u_interp = interp.interp1d(u_r_data, u_data, bounds_error=False)
+        u_interp = interp.interp1d(u_r_data, u_data, bounds_error=False, kind="cubic")
         self.u = u_interp(r)
 
         # azimuthal displacement
@@ -74,7 +74,7 @@ class ComsolSolution:
                              header=None).to_numpy()
         v_r_data = comsol[:, 0]
         v_data = comsol[:, 1] / alpha_scale
-        v_interp = interp.interp1d(v_r_data, v_data, bounds_error=False)
+        v_interp = interp.interp1d(v_r_data, v_data, bounds_error=False, kind="cubic")
         self.v = v_interp(r)
 
         # radial strain
@@ -82,7 +82,7 @@ class ComsolSolution:
                              header=None).to_numpy()
         err_r_data = comsol[:, 0]
         err_data = comsol[:, 1] / alpha_scale
-        err_interp = interp.interp1d(err_r_data, err_data, bounds_error=False)
+        err_interp = interp.interp1d(err_r_data, err_data, bounds_error=False, kind="cubic")
         self.err = err_interp(r)
 
         # azimuthal strain
@@ -90,7 +90,7 @@ class ComsolSolution:
                              header=None).to_numpy()
         ett_r_data = comsol[:, 0]
         ett_data = comsol[:, 1] / alpha_scale
-        ett_interp = interp.interp1d(ett_r_data, ett_data, bounds_error=False)
+        ett_interp = interp.interp1d(ett_r_data, ett_data, bounds_error=False, kind="cubic")
         self.ett = ett_interp(r)
 
         # shear strain
@@ -98,7 +98,7 @@ class ComsolSolution:
                              header=None).to_numpy()
         ert_r_data = comsol[:, 0]
         ert_data = comsol[:, 1] / alpha_scale
-        ert_interp = interp.interp1d(ert_r_data, ert_data, bounds_error=False)
+        ert_interp = interp.interp1d(ert_r_data, ert_data, bounds_error=False, kind="cubic")
         self.ert = ert_interp(r)
 
         # radial stress
@@ -106,7 +106,7 @@ class ComsolSolution:
                              header=None).to_numpy()
         srr_r_data = comsol[:, 0]
         srr_data = comsol[:, 1] / alpha_scale
-        srr_interp = interp.interp1d(srr_r_data, srr_data, bounds_error=False)
+        srr_interp = interp.interp1d(srr_r_data, srr_data, bounds_error=False, kind="cubic")
         self.srr = srr_interp(r)
 
         # azimuthal stress
@@ -114,7 +114,7 @@ class ComsolSolution:
                              header=None).to_numpy()
         stt_r_data = comsol[:, 0]
         stt_data = comsol[:, 1] / alpha_scale
-        stt_interp = interp.interp1d(stt_r_data, stt_data, bounds_error=False)
+        stt_interp = interp.interp1d(stt_r_data, stt_data, bounds_error=False, kind="cubic")
         self.stt = stt_interp(r)
 
         # shear stress
@@ -122,7 +122,7 @@ class ComsolSolution:
                              header=None).to_numpy()
         srt_r_data = comsol[:, 0]
         srt_data = comsol[:, 1] / alpha_scale
-        srt_interp = interp.interp1d(srt_r_data, srt_data, bounds_error=False)
+        srt_interp = interp.interp1d(srt_r_data, srt_data, bounds_error=False, kind="cubic")
         self.srt = srt_interp(r)
 
         # In COMSOL we evaluate the tension at three points:
@@ -137,21 +137,21 @@ class ComsolSolution:
                               header=None).to_numpy()
         T_r_dataa = comsola[:, 0]
         T_dataa = comsola[:, 1] / alpha_scale
-        T_interpa = interp.interp1d(T_r_dataa, T_dataa, bounds_error=False)
+        T_interpa = interp.interp1d(T_r_dataa, T_dataa, bounds_error=False, kind="cubic")
         self.T_a = T_interpa(ra)
 
         comsolb = pd.read_csv(path + "T3.csv", comment="#",
                               header=None).to_numpy()
         T_r_datab = comsolb[:, 0]
         T_datab = comsolb[:, 1] / alpha_scale
-        T_interpb = interp.interp1d(T_r_datab, T_datab, bounds_error=False)
+        T_interpb = interp.interp1d(T_r_datab, T_datab, bounds_error=False, kind="cubic")
         self.T_b = T_interpb(rb)
 
         comsolc = pd.read_csv(path + "T5.csv", comment="#",
                               header=None).to_numpy()
         T_r_datac = comsolc[:, 0]
         T_datac = comsolc[:, 1] / alpha_scale
-        T_interpc = interp.interp1d(T_r_datac, T_datac, bounds_error=False)
+        T_interpc = interp.interp1d(T_r_datac, T_datac, bounds_error=False, kind="cubic")
         self.T_c = T_interpc(rc)
 
         # compute tension using simpsons rule
