@@ -14,7 +14,7 @@ class ComsolSolution:
 
         # Note: COMSOL data is (r, f) so we create interpolants to get
         # (theta, f) data
-        theta = np.linspace(0, 2 * pi * N, 60 * (N - 1))
+        theta = np.linspace(0, 2 * pi * N, 30 * (N - 1))
         self.theta = theta
 
         # f1 = sigma_rr

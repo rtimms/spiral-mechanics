@@ -26,7 +26,7 @@ hh = 0.01 * delta  # current collector thickness
 N_BL = 5  # number of slabs in inner solution
 N_plot = N_BL - 1  # number of winds to plot
 path = "data/boundary_layer/"  # path to inner simulation data
-full_path = "data/spiral/"  # path to full simulation data
+full_path = "data/mu1lam2/"  # path to full simulation data
 # make directory for figures if it doesn't exist
 try:
     os.mkdir("figs" + path[4:])
@@ -106,7 +106,7 @@ fig.subplots_adjust(
 )
 ax[1].legend(
     loc="upper center",
-    bbox_to_anchor=(0.5, -0.4),
+    bbox_to_anchor=(0.5, -0.5),
     borderaxespad=0.0,
     ncol=3,
 )
@@ -126,23 +126,17 @@ for ax in ax.reshape(-1):
 plt.savefig("figs" + path[4:] + "uv_composite.pdf", dpi=300)
 
 # stresses and strains at r = r0 + delta / 2 + delta * theta / 2 / pi
-fig, ax = plt.subplots(2, 3, figsize=(6.4, 4))
-# plot COMSOL solutions
+fig, ax = plt.subplots(3, 2, figsize=(6.4, 6))
+
+# plot leading (outer) solutions
 theta = comsol.theta
 r = r0 + delta / 2 + delta * theta / 2 / pi
-ax[0, 0].plot(theta, comsol.err, linestyle="--", color="tab:orange", label="COMSOL")
-ax[0, 1].plot(theta, comsol.ett, linestyle="--", color="tab:orange", label="COMSOL")
-ax[0, 2].plot(theta, comsol.ert, linestyle="--", color="tab:orange", label="COMSOL")
-ax[1, 0].plot(theta, comsol.srr, linestyle="--", color="tab:orange", label="COMSOL")
-ax[1, 1].plot(theta, comsol.stt, linestyle="--", color="tab:orange", label="COMSOL")
-ax[1, 2].plot(theta, comsol.srt, linestyle="--", color="tab:orange", label="COMSOL")
-# plot leading (outer) solutions
 ax[0, 0].plot(theta, e_rr(theta), linestyle=":", color="black", label="Leading")
-ax[0, 1].plot(theta, e_tt(r, theta), linestyle=":", color="black", label="Leading")
-ax[0, 2].plot(theta, e_rt(theta), linestyle=":", color="black", label="Leading")
-ax[1, 0].plot(theta, s_rr(theta), linestyle=":", color="black", label="Leading")
+ax[0, 1].plot(theta, s_rr(theta), linestyle=":", color="black", label="Leading")
+ax[1, 0].plot(theta, e_tt(r, theta), linestyle=":", color="black", label="Leading")
 ax[1, 1].plot(theta, s_tt(theta), linestyle=":", color="black", label="Leading")
-ax[1, 2].plot(theta, s_rt(theta), linestyle=":", color="black", label="Leading")
+ax[2, 0].plot(theta, e_rt(theta), linestyle=":", color="black", label="Leading")
+ax[2, 1].plot(theta, s_rt(theta), linestyle=":", color="black", label="Leading")
 # plot composite solutions
 for n in range(N_BL):
     idx1 = int(n * 100 / N_BL + 10)  # midpoint
@@ -182,7 +176,7 @@ for n in range(N_BL):
         label="Composite" if n == 0 else "",
     )
     # e_tt
-    ax[0, 1].plot(
+    ax[1, 0].plot(
         theta,
         c * ett_tilde + e_tt(r0 + delta / 2 + delta * theta / 2 / pi, theta),
         linestyle="-",
@@ -190,7 +184,7 @@ for n in range(N_BL):
         label="Composite" if n == 0 else "",
     )
     # e_rt
-    ax[0, 2].plot(
+    ax[2, 0].plot(
         theta,
         c * ert_tilde + g1(theta) / mu / 2,
         linestyle="-",
@@ -198,7 +192,7 @@ for n in range(N_BL):
         label="Composite" if n == 0 else "",
     )
     # s_rr
-    ax[1, 0].plot(
+    ax[0, 1].plot(
         theta,
         c * srr_tilde + f1(theta),
         linestyle="-",
@@ -216,28 +210,38 @@ for n in range(N_BL):
         label="Composite" if n == 0 else "",
     )
     # s_rt
-    ax[1, 2].plot(
+    ax[2, 1].plot(
         theta,
         c * srt_tilde + g1(theta),
         linestyle="-",
         color="tab:blue",
         label="Composite" if n == 0 else "",
     )
+
+# plot COMSOL solutions
+theta = comsol.theta
+r = r0 + delta / 2 + delta * theta / 2 / pi
+ax[0, 0].plot(theta, comsol.err, linestyle="--", color="tab:orange", label="COMSOL")
+ax[1, 0].plot(theta, comsol.ett, linestyle="--", color="tab:orange", label="COMSOL")
+ax[2, 0].plot(theta, comsol.ert, linestyle="--", color="tab:orange", label="COMSOL")
+ax[0, 1].plot(theta, comsol.srr, linestyle="--", color="tab:orange", label="COMSOL")
+ax[1, 1].plot(theta, comsol.stt, linestyle="--", color="tab:orange", label="COMSOL")
+ax[2, 1].plot(theta, comsol.srt, linestyle="--", color="tab:orange", label="COMSOL")    
 # add shared labels etc.
 ax[0, 0].set_ylabel(r"$\varepsilon_{rr}$")
-ax[0, 1].set_ylabel(r"$\varepsilon_{\theta\theta}$")
-ax[0, 2].set_ylabel(r"$\varepsilon_{r\theta}$")
-ax[1, 0].set_ylabel(r"$\sigma_{rr}$")
+ax[1, 0].set_ylabel(r"$\varepsilon_{\theta\theta}$")
+ax[2, 0].set_ylabel(r"$\varepsilon_{r\theta}$")
+ax[0, 1].set_ylabel(r"$\sigma_{rr}$")
 ax[1, 1].set_ylabel(r"$\sigma_{\theta\theta}$")
-ax[1, 2].set_ylabel(r"$\sigma_{r\theta}$")
+ax[2, 1].set_ylabel(r"$\sigma_{r\theta}$")
 fig.subplots_adjust(
     left=0.1, bottom=0.25, right=0.98, top=0.98, wspace=0.33, hspace=0.4
 )
-ax[1, 1].legend(
+ax[2, 0].legend(
     loc="upper center",
-    bbox_to_anchor=(0.5, -0.4),
+    bbox_to_anchor=(1.1, -0.5),
     borderaxespad=0.0,
-    ncol=4,
+    ncol=3,
 )
 for ax in ax.reshape(-1):
     for w in winds:
@@ -250,6 +254,6 @@ for ax in ax.reshape(-1):
     ax.xaxis.set_major_locator(MultipleLocator(base=4 * pi))
     ax.set_xlim([0, N_plot * 2 * pi])
     ax.set_xlabel(r"$\theta$")
-plt.savefig("figs" + path[4:] + "stress_strain_composite.pdf", dpi=300)
+plt.savefig("figs" + path[4:] + "eps_sigma_composite.pdf", dpi=300)
 
 plt.show()
