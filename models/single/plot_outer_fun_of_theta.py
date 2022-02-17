@@ -13,7 +13,7 @@ from comsol_solution import ComsolSolution
 
 # Parameters (dimensionless) --------------------------------------------------
 alpha = 1  # expansion coefficient
-alpha_cc = 0.1  # expansion coefficient
+alpha_cc = 0.1 / 2 # expansion coefficient
 mu = 1  # shear modulus
 nu = 1 / 3  # Poisson ratio
 lam = 2 * mu * nu / (1 - 2 * nu)  # 1st Lame parameter
@@ -22,8 +22,8 @@ r0 = 0.25  # inner radius
 r1 = 1  # outer radius
 delta = (r1 - r0) / N
 hh = 0.01 * delta  # current collector thickness
-N_plot = 9  # number of winds to plot
-path = "data/spiral/new/"  # path to data
+N_plot = 4  # number of winds to plot
+path = "data/"  # path to data
 # make directory for figures if it doesn't exist
 try:
     os.mkdir("figs" + path[4:])

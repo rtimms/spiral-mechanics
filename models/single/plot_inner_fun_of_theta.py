@@ -52,8 +52,7 @@ srr_data, stt_data, srt_data = inner.srr_data, inner.stt_data, inner.srt_data
 
 # load f_i and g_i from full simulation
 alpha_scale = 0.1
-comsol = ComsolSolution(r0, delta, hh, N, mu, lam, alpha_scale, full_path)
-
+comsol = ComsolSolution(r0, delta, hh, N, mu, lam, alpha, alpha_cc, alpha_scale, full_path)
 
 # Plots -----------------------------------------------------------------------
 

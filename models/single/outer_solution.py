@@ -94,7 +94,6 @@ class OuterSolution:
 
     def e_tt(self, r, theta):
         """Azimuthal strain"""
-        alpha_cc = self.alpha_cc
         delta = self.delta
         r0 = self.r0
         mu = self.mu
@@ -105,7 +104,7 @@ class OuterSolution:
             + self.dg2dt(theta)
         )
 
-        return 2 * alpha_cc + (1 / r0) * (dvdt + self.u(r, theta))
+        return (1 / r0) * (dvdt + self.u(r, theta))
 
     def e_rt(self, theta):
         """Shear strain"""
