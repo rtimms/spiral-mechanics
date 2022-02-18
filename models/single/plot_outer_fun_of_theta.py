@@ -13,7 +13,7 @@ from comsol_solution import ComsolSolution
 
 # Parameters (dimensionless) --------------------------------------------------
 alpha = 1  # expansion coefficient
-alpha_cc = 0.1 / 2 # expansion coefficient
+alpha_cc = 0.1  # expansion coefficient
 mu = 1  # shear modulus
 nu = 1 / 3  # Poisson ratio
 lam = 2 * mu * nu / (1 - 2 * nu)  # 1st Lame parameter
@@ -35,7 +35,8 @@ outer = OuterSolution(r0, delta, mu, lam, alpha, alpha_cc)
 
 # Load COMSOL solution --------------------------------------------------------
 alpha_scale = 0.1
-comsol = ComsolSolution(r0, delta, hh, N, mu, lam, alpha, alpha_cc, alpha_scale, path)
+comsol = ComsolSolution(r0, delta, hh, N, mu, lam,
+                        alpha, alpha_cc, alpha_scale, path)
 theta = comsol.theta
 
 # Plot solution(s) ------------------------------------------------------------
@@ -71,7 +72,8 @@ for ax in ax.reshape(-1):
         ax.axvline(x=w, linestyle=":", color="lightgrey")
     ax.xaxis.set_major_formatter(
         FuncFormatter(
-            lambda val, pos: r"${}\pi$".format(int(val / np.pi)) if val != 0 else "0"
+            lambda val, pos: r"${}\pi$".format(
+                int(val / np.pi)) if val != 0 else "0"
         )
     )
     ax.xaxis.set_major_locator(MultipleLocator(base=4 * pi))
@@ -95,7 +97,8 @@ for ax in ax.reshape(-1):
         ax.axvline(x=w, linestyle=":", color="lightgrey")
     ax.xaxis.set_major_formatter(
         FuncFormatter(
-            lambda val, pos: r"${}\pi$".format(int(val / np.pi)) if val != 0 else "0"
+            lambda val, pos: r"${}\pi$".format(
+                int(val / np.pi)) if val != 0 else "0"
         )
     )
     ax.xaxis.set_major_locator(MultipleLocator(base=4 * pi))
@@ -126,7 +129,8 @@ ax[1, 2].plot(theta, outer.s_rt(theta), "-", label="Asymptotic")
 ax[1, 2].plot(theta, comsol.srt, "--", label="COMSOL")
 ax[1, 2].set_ylabel(r"$\sigma_{r\theta}$")
 # add shared labels etc.
-fig.subplots_adjust(left=0.1, bottom=0.25, right=0.98, top=0.98, wspace=0.4, hspace=0.4)
+fig.subplots_adjust(left=0.1, bottom=0.25, right=0.98,
+                    top=0.98, wspace=0.4, hspace=0.4)
 ax[1, 1].legend(
     loc="upper center",
     bbox_to_anchor=(0.5, -0.4),
@@ -138,7 +142,8 @@ for ax in ax.reshape(-1):
         ax.axvline(x=w, linestyle=":", color="lightgrey")
     ax.xaxis.set_major_formatter(
         FuncFormatter(
-            lambda val, pos: r"${}\pi$".format(int(val / np.pi)) if val != 0 else "0"
+            lambda val, pos: r"${}\pi$".format(
+                int(val / np.pi)) if val != 0 else "0"
         )
     )
     ax.xaxis.set_major_locator(MultipleLocator(base=4 * pi))
@@ -160,7 +165,8 @@ for w in winds:
     ax.axvline(x=w, linestyle=":", color="lightgrey")
 ax.xaxis.set_major_formatter(
     FuncFormatter(
-        lambda val, pos: r"${}\pi$".format(int(val / np.pi)) if val != 0 else "0"
+        lambda val, pos: r"${}\pi$".format(
+            int(val / np.pi)) if val != 0 else "0"
     )
 )
 ax.xaxis.set_major_locator(MultipleLocator(base=4 * pi))
