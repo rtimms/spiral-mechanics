@@ -52,7 +52,8 @@ srr_data, stt_data, srt_data = inner.srr_data, inner.stt_data, inner.srt_data
 
 # outer (full simulation)
 alpha_scale = 0.1
-comsol = ComsolSolution(r0, delta, hh, N, mu, lam, alpha, alpha_cc, alpha_scale, full_path)
+comsol = ComsolSolution(r0, delta, hh, N, mu, lam, alpha,
+                        alpha_cc, alpha_scale, full_path)
 
 # Plots -----------------------------------------------------------------------
 
@@ -95,8 +96,10 @@ for n in range(N_BL):
     )
 # plot COMSOL solutions
 theta = comsol.theta
-ax[0].plot(theta, comsol.f2, linestyle="--", color="tab:orange", label="COMSOL")
-ax[1].plot(theta, comsol.g2, linestyle="--", color="tab:orange", label="COMSOL")
+ax[0].plot(theta, comsol.f2, linestyle="--",
+           color="tab:orange", label="COMSOL")
+ax[1].plot(theta, comsol.g2, linestyle="--",
+           color="tab:orange", label="COMSOL")
 ax[0].set_ylabel(r"$u/\delta$")
 ax[1].set_ylabel(r"$v/\delta$")
 ax[0].set_xlabel(r"$\theta$")
@@ -118,7 +121,8 @@ for ax in ax.reshape(-1):
     # add labels etc.
     ax.xaxis.set_major_formatter(
         FuncFormatter(
-            lambda val, pos: r"${}\pi$".format(int(val / np.pi)) if val != 0 else "0"
+            lambda val, pos: r"${}\pi$".format(
+                int(val / np.pi)) if val != 0 else "0"
         )
     )
     ax.xaxis.set_major_locator(MultipleLocator(base=4 * pi))
@@ -131,12 +135,18 @@ fig, ax = plt.subplots(3, 2, figsize=(6.4, 6))
 # plot leading (outer) solutions
 theta = comsol.theta
 r = r0 + delta / 2 + delta * theta / 2 / pi
-ax[0, 0].plot(theta, e_rr(theta), linestyle=":", color="black", label="Leading")
-ax[0, 1].plot(theta, s_rr(theta), linestyle=":", color="black", label="Leading")
-ax[1, 0].plot(theta, e_tt(r, theta), linestyle=":", color="black", label="Leading")
-ax[1, 1].plot(theta, s_tt(theta), linestyle=":", color="black", label="Leading")
-ax[2, 0].plot(theta, e_rt(theta), linestyle=":", color="black", label="Leading")
-ax[2, 1].plot(theta, s_rt(theta), linestyle=":", color="black", label="Leading")
+ax[0, 0].plot(theta, e_rr(theta), linestyle=":",
+              color="black", label="Leading")
+ax[0, 1].plot(theta, s_rr(theta), linestyle=":",
+              color="black", label="Leading")
+ax[1, 0].plot(theta, e_tt(r, theta), linestyle=":",
+              color="black", label="Leading")
+ax[1, 1].plot(theta, s_tt(theta), linestyle=":",
+              color="black", label="Leading")
+ax[2, 0].plot(theta, e_rt(theta), linestyle=":",
+              color="black", label="Leading")
+ax[2, 1].plot(theta, s_rt(theta), linestyle=":",
+              color="black", label="Leading")
 # plot composite solutions
 for n in range(N_BL):
     idx1 = int(n * 100 / N_BL + 10)  # midpoint
@@ -221,12 +231,18 @@ for n in range(N_BL):
 # plot COMSOL solutions
 theta = comsol.theta
 r = r0 + delta / 2 + delta * theta / 2 / pi
-ax[0, 0].plot(theta, comsol.err, linestyle="--", color="tab:orange", label="COMSOL")
-ax[1, 0].plot(theta, comsol.ett, linestyle="--", color="tab:orange", label="COMSOL")
-ax[2, 0].plot(theta, comsol.ert, linestyle="--", color="tab:orange", label="COMSOL")
-ax[0, 1].plot(theta, comsol.srr, linestyle="--", color="tab:orange", label="COMSOL")
-ax[1, 1].plot(theta, comsol.stt, linestyle="--", color="tab:orange", label="COMSOL")
-ax[2, 1].plot(theta, comsol.srt, linestyle="--", color="tab:orange", label="COMSOL")    
+ax[0, 0].plot(theta, comsol.err, linestyle="--",
+              color="tab:orange", label="COMSOL")
+ax[1, 0].plot(theta, comsol.ett, linestyle="--",
+              color="tab:orange", label="COMSOL")
+ax[2, 0].plot(theta, comsol.ert, linestyle="--",
+              color="tab:orange", label="COMSOL")
+ax[0, 1].plot(theta, comsol.srr, linestyle="--",
+              color="tab:orange", label="COMSOL")
+ax[1, 1].plot(theta, comsol.stt, linestyle="--",
+              color="tab:orange", label="COMSOL")
+ax[2, 1].plot(theta, comsol.srt, linestyle="--",
+              color="tab:orange", label="COMSOL")
 # add shared labels etc.
 ax[0, 0].set_ylabel(r"$\varepsilon_{rr}$")
 ax[1, 0].set_ylabel(r"$\varepsilon_{\theta\theta}$")
@@ -235,7 +251,7 @@ ax[0, 1].set_ylabel(r"$\sigma_{rr}$")
 ax[1, 1].set_ylabel(r"$\sigma_{\theta\theta}$")
 ax[2, 1].set_ylabel(r"$\sigma_{r\theta}$")
 fig.subplots_adjust(
-    left=0.1, bottom=0.25, right=0.98, top=0.98, wspace=0.33, hspace=0.4
+    left=0.1, bottom=0.18, right=0.98, top=0.98, wspace=0.25, hspace=0.4
 )
 ax[2, 0].legend(
     loc="upper center",
@@ -248,12 +264,35 @@ for ax in ax.reshape(-1):
         ax.axvline(x=w, linestyle=":", color="lightgrey")
     ax.xaxis.set_major_formatter(
         FuncFormatter(
-            lambda val, pos: r"${}\pi$".format(int(val / np.pi)) if val != 0 else "0"
+            lambda val, pos: r"${}\pi$".format(
+                int(val / np.pi)) if val != 0 else "0"
         )
     )
     ax.xaxis.set_major_locator(MultipleLocator(base=4 * pi))
     ax.set_xlim([0, N_plot * 2 * pi])
     ax.set_xlabel(r"$\theta$")
 plt.savefig("figs" + path[4:] + "eps_sigma_composite.pdf", dpi=300)
+
+
+# tension
+fig, ax = plt.subplots(figsize=(6.4, 2))
+ax.plot(theta, outer.T(theta), "-", label="Asymptotic")
+ax.plot(theta, comsol.T, "--", label="COMSOL")
+ax.set_ylabel(r"$T$")
+ax.legend(loc="lower right")
+# add shared labels etc.
+for w in winds:
+    ax.axvline(x=w, linestyle=":", color="lightgrey")
+ax.xaxis.set_major_formatter(
+    FuncFormatter(
+        lambda val, pos: r"${}\pi$".format(
+            int(val / np.pi)) if val != 0 else "0"
+    )
+)
+ax.xaxis.set_major_locator(MultipleLocator(base=4 * pi))
+ax.set_xlim([0, N_plot * 2 * pi])
+ax.set_xlabel(r"$\theta$")
+plt.tight_layout()
+plt.savefig("figs" + path[4:] + "T_of_theta.pdf", dpi=300)
 
 plt.show()
