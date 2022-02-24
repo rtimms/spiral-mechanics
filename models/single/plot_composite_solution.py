@@ -17,6 +17,7 @@ mu = 1  # shear modulus
 nu = 1 / 3  # Poisson ratio
 lam = 2 * mu * nu / (1 - 2 * nu)  # 1st Lame parameter
 omega = np.sqrt(mu / (lam + 2 * mu))
+c = alpha * (2 * lam + mu) * omega
 N = 10  # number of winds
 r0 = 0.25  # inner radius
 r1 = 1  # outer radius
@@ -80,7 +81,7 @@ for n in range(N_BL):
     # u(R=theta/2/pi)/delta
     ax[0].plot(
         theta,
-        u_tilde + f2(theta),
+        c * u_tilde + f2(theta),
         linestyle="-",
         color="tab:blue",
         label="Composite" if n == 0 else "",
@@ -88,7 +89,7 @@ for n in range(N_BL):
     # v(R=theta/2/pi)/delta
     ax[1].plot(
         theta,
-        v_tilde + g2(theta),
+        c * v_tilde + g2(theta),
         linestyle="-",
         color="tab:blue",
         label="Composite" if n == 0 else "",
@@ -177,8 +178,8 @@ for n in range(N_BL):
     # e_rr
     ax[0, 0].plot(
         theta,
-        err_tilde
-        + (alpha * (3 * lam + 2 * mu) - alpha_cc*lam) / (lam + 2 * mu)
+        c * err_tilde
+        + alpha * (3 * lam + 2 * mu) / (lam + 2 * mu)
         + f1(theta) / (lam + 2 * mu),
         linestyle="-",
         color="tab:blue",
@@ -187,7 +188,7 @@ for n in range(N_BL):
     # e_tt
     ax[1, 0].plot(
         theta,
-        ett_tilde + e_tt(r0 + delta / 2 + delta * theta / 2 / pi, theta),
+        c * ett_tilde + e_tt(r0 + delta / 2 + delta * theta / 2 / pi, theta),
         linestyle="-",
         color="tab:blue",
         label="Composite" if n == 0 else "",
@@ -195,7 +196,7 @@ for n in range(N_BL):
     # e_rt
     ax[2, 0].plot(
         theta,
-        ert_tilde + g1(theta) / mu / 2,
+        c * ert_tilde + g1(theta) / mu / 2,
         linestyle="-",
         color="tab:blue",
         label="Composite" if n == 0 else "",
@@ -203,7 +204,7 @@ for n in range(N_BL):
     # s_rr
     ax[0, 1].plot(
         theta,
-        srr_tilde + f1(theta),
+        c * srr_tilde + f1(theta),
         linestyle="-",
         color="tab:blue",
         label="Composite" if n == 0 else "",
@@ -211,10 +212,9 @@ for n in range(N_BL):
     # s_tt
     ax[1, 1].plot(
         theta,
-        stt_tilde
+        c * stt_tilde
         - 2 * mu * alpha * (3 * lam + 2 * mu) / (lam + 2 * mu)
-        + lam / (lam + 2 * mu) * f1(theta)
-        + alpha_cc*(lam+2*mu),
+        + lam / (lam + 2 * mu) * f1(theta),
         linestyle="-",
         color="tab:blue",
         label="Composite" if n == 0 else "",
@@ -222,7 +222,7 @@ for n in range(N_BL):
     # s_rt
     ax[2, 1].plot(
         theta,
-        srt_tilde + g1(theta),
+        c * srt_tilde + g1(theta),
         linestyle="-",
         color="tab:blue",
         label="Composite" if n == 0 else "",
