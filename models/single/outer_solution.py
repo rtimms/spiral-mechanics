@@ -5,8 +5,8 @@ from numpy import pi, exp
 class OuterSolution:
     def __init__(self, r0, delta, mu, lam, alpha, alpha_cc):
         """
-        Computes the 'outer solution' near r=r0. The paramaters and solutions
-        are stored as attributes of the class.
+        Computes the composite of the bulk solution and the 'outer solution' near r=r0. 
+        The paramaters and solutions are stored as attributes of the class.
         """
 
         # physical (dimensionless) parameters
@@ -66,7 +66,7 @@ class OuterSolution:
         lam = self.lam
         mu = self.mu
         R = (r - r0) / delta
-        u = 2 * alpha_cc * r0 + delta * (
+        u = alpha_cc * r + delta * (
             (alpha * (3 * lam + 2 * mu) - lam * alpha_cc)
             / (lam + 2 * mu)
             * (R - theta / 2 / pi)
@@ -105,7 +105,7 @@ class OuterSolution:
             + self.dg2dt(theta)
         )
 
-        return (1 / r0) * (dvdt + self.u(r, theta))
+        return (1 / r) * (dvdt + self.u(r, theta))
 
     def e_rt(self, theta):
         """Shear strain"""
