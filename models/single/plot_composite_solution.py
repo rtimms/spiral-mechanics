@@ -178,7 +178,7 @@ for n in range(N_BL):
     ax[0, 0].plot(
         theta,
         err_tilde
-        + (alpha * (3 * lam + 2 * mu) - alpha_cc*lam)/ (lam + 2 * mu)
+        + (alpha * (3 * lam + 2 * mu) - alpha_cc*lam) / (lam + 2 * mu)
         + f1(theta) / (lam + 2 * mu),
         linestyle="-",
         color="tab:blue",
@@ -214,7 +214,7 @@ for n in range(N_BL):
         stt_tilde
         - 2 * mu * alpha * (3 * lam + 2 * mu) / (lam + 2 * mu)
         + lam / (lam + 2 * mu) * f1(theta)
-        +alpha_cc*(lam+2*mu),
+        + alpha_cc*(lam+2*mu),
         linestyle="-",
         color="tab:blue",
         label="Composite" if n == 0 else "",

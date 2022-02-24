@@ -23,7 +23,7 @@ r1 = 1  # outer radius
 delta = (r1 - r0) / N
 hh = 0.01 * delta  # current collector thickness
 N_plot = 4  # number of winds to plot
-path = "data/"  # path to data
+path = "data/a1al01/"  # path to data
 # make directory for figures if it doesn't exist
 try:
     os.mkdir("figs" + path[4:])
