@@ -62,7 +62,8 @@ fig, ax = plt.subplots(2, 1, figsize=(6.4, 4), sharex=False)
 # plot leading (outer) solutions
 theta = comsol.theta
 r = r0 + delta * theta / 2 / pi
-ax[0].plot(theta, alpha_cc*r + delta* f2(theta), linestyle=":", color="black", label="Leading")
+ax[0].plot(theta, alpha_cc*r + delta * f2(theta),
+           linestyle=":", color="black", label="Leading")
 ax[1].plot(theta, g2(theta), linestyle=":", color="black", label="Leading")
 # plot composite solutions
 for n in range(N_BL):
@@ -98,7 +99,7 @@ for n in range(N_BL):
     )
 # plot COMSOL solutions
 theta = comsol.theta
-ax[0].plot(theta, comsol.f2 * delta +alpha_cc*r0, linestyle="--",
+ax[0].plot(theta, comsol.f2 * delta + alpha_cc*r0, linestyle="--",
            color="tab:orange", label="COMSOL")
 ax[1].plot(theta, comsol.g2, linestyle="--",
            color="tab:orange", label="COMSOL")
@@ -106,6 +107,7 @@ ax[0].set_ylabel(r"$u$")
 ax[1].set_ylabel(r"$v/\delta$")
 ax[0].set_xlabel(r"$\theta$")
 ax[1].set_xlabel(r"$\theta$")
+ax[1].set_ylim([-4.5, 0.5])
 fig.subplots_adjust(
     left=0.1, bottom=0.25, right=0.98, top=0.98, wspace=0.33, hspace=0.4
 )
@@ -181,7 +183,7 @@ for n in range(N_BL):
     ax[0, 0].plot(
         theta,
         c * err_tilde
-        + (alpha * (3 * lam + 2 * mu)- lam * alpha_cc) / (lam + 2 * mu)
+        + (alpha * (3 * lam + 2 * mu) - lam * alpha_cc) / (lam + 2 * mu)
         + f1(theta) / (lam + 2 * mu),
         linestyle="-",
         color="tab:blue",
@@ -293,6 +295,7 @@ ax.xaxis.set_major_formatter(
 )
 ax.xaxis.set_major_locator(MultipleLocator(base=4 * pi))
 ax.set_xlim([0, N_plot * 2 * pi])
+ax.set_ylim([-2, 0.2])
 ax.set_xlabel(r"$\theta$")
 plt.tight_layout()
 plt.savefig("figs" + path[4:] + "T_of_theta.pdf", dpi=300)
