@@ -27,11 +27,11 @@ class ComsolSolution:
         r = r0 + delta / 2 + delta * theta / 2 / pi
         self.f1 = f1_interp(r)
 
-        # f2 = (u(R=theta/2/pi) - 2*alpha_cc*r0)/delta
+        # f2 = (u(R=theta/2/pi) - alpha_cc*r0)/delta
         comsol = pd.read_csv(path + "u1.csv", comment="#",
                              header=None).to_numpy()
         f2_r_data = comsol[:, 0]
-        f2_data = (comsol[:, 1] / alpha_scale - 2 * alpha_cc * r0) / delta
+        f2_data = (comsol[:, 1] / alpha_scale - alpha_cc * r0) / delta
         f2_interp = interp.interp1d(f2_r_data, f2_data, bounds_error=False, kind="cubic")
         # In COMSOL we evaluate f_2 at r = r0+hh/2+delta*theta/2/pi
         r = r0 + hh / 2 + delta * theta / 2 / pi
