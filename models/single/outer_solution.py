@@ -123,7 +123,7 @@ class OuterSolution:
         lam = self.lam
         mu = self.mu
         return (
-            (lam + 2 * mu) * alpha_cc
+            4*mu*(lam + mu) * alpha_cc / (lam+2*mu)
             - 2 * mu * alpha * (3 * lam + 2 * mu) / (lam + 2 * mu)
             + lam / (lam + 2 * mu) * self.f1(theta)
         )
