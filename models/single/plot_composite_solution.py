@@ -52,8 +52,9 @@ srr_data, stt_data, srt_data = inner.srr_data, inner.stt_data, inner.srt_data
 
 # outer (full simulation)
 alpha_scale = 0.1
-comsol = ComsolSolution(r0, delta, hh, N, mu, lam, alpha,
-                        alpha_cc, alpha_scale, full_path)
+comsol = ComsolSolution(
+    r0, delta, hh, N, mu, lam, alpha, alpha_cc, alpha_scale, full_path
+)
 
 # Plots -----------------------------------------------------------------------
 
@@ -62,8 +63,13 @@ fig, ax = plt.subplots(2, 1, figsize=(6.4, 4), sharex=False)
 # plot leading (outer) solutions
 theta = comsol.theta
 r = r0 + delta * theta / 2 / pi
-ax[0].plot(theta, alpha_cc*r + delta * f2(theta),
-           linestyle=":", color="black", label="Leading")
+ax[0].plot(
+    theta,
+    alpha_cc * r + delta * f2(theta),
+    linestyle=":",
+    color="black",
+    label="Leading",
+)
 ax[1].plot(theta, g2(theta), linestyle=":", color="black", label="Leading")
 # plot composite solutions
 for n in range(N_BL):
@@ -84,7 +90,7 @@ for n in range(N_BL):
     # u(R=theta/2/pi)/delta
     ax[0].plot(
         theta,
-        alpha_cc * r + delta*(c * u_tilde + f2(theta)),
+        alpha_cc * r + delta * (c * u_tilde + f2(theta)),
         linestyle="-",
         color="tab:blue",
         label="Composite" if n == 0 else "",
@@ -99,10 +105,14 @@ for n in range(N_BL):
     )
 # plot COMSOL solutions
 theta = comsol.theta
-ax[0].plot(theta, comsol.f2 * delta + alpha_cc*r0, linestyle="--",
-           color="tab:orange", label="COMSOL")
-ax[1].plot(theta, comsol.g2, linestyle="--",
-           color="tab:orange", label="COMSOL")
+ax[0].plot(
+    theta,
+    comsol.f2 * delta + alpha_cc * r0,
+    linestyle="--",
+    color="tab:orange",
+    label="COMSOL",
+)
+ax[1].plot(theta, comsol.g2, linestyle="--", color="tab:orange", label="COMSOL")
 ax[0].set_ylabel(r"$u$")
 ax[1].set_ylabel(r"$v/\delta$")
 ax[0].set_xlabel(r"$\theta$")
@@ -125,8 +135,7 @@ for ax in ax.reshape(-1):
     # add labels etc.
     ax.xaxis.set_major_formatter(
         FuncFormatter(
-            lambda val, pos: r"${}\pi$".format(
-                int(val / np.pi)) if val != 0 else "0"
+            lambda val, pos: r"${}\pi$".format(int(val / np.pi)) if val != 0 else "0"
         )
     )
     ax.xaxis.set_major_locator(MultipleLocator(base=4 * pi))
@@ -139,18 +148,12 @@ fig, ax = plt.subplots(3, 2, figsize=(6.4, 6))
 # plot leading (outer) solutions
 theta = comsol.theta
 r = r0 + delta / 2 + delta * theta / 2 / pi
-ax[0, 0].plot(theta, e_rr(theta), linestyle=":",
-              color="black", label="Leading")
-ax[0, 1].plot(theta, s_rr(theta), linestyle=":",
-              color="black", label="Leading")
-ax[1, 0].plot(theta, e_tt(r, theta), linestyle=":",
-              color="black", label="Leading")
-ax[1, 1].plot(theta, s_tt(theta), linestyle=":",
-              color="black", label="Leading")
-ax[2, 0].plot(theta, e_rt(theta), linestyle=":",
-              color="black", label="Leading")
-ax[2, 1].plot(theta, s_rt(theta), linestyle=":",
-              color="black", label="Leading")
+ax[0, 0].plot(theta, e_rr(theta), linestyle=":", color="black", label="Leading")
+ax[0, 1].plot(theta, s_rr(theta), linestyle=":", color="black", label="Leading")
+ax[1, 0].plot(theta, e_tt(r, theta), linestyle=":", color="black", label="Leading")
+ax[1, 1].plot(theta, s_tt(theta), linestyle=":", color="black", label="Leading")
+ax[2, 0].plot(theta, e_rt(theta), linestyle=":", color="black", label="Leading")
+ax[2, 1].plot(theta, s_rt(theta), linestyle=":", color="black", label="Leading")
 # plot composite solutions
 for n in range(N_BL):
     idx1 = int(n * 100 / N_BL + 10)  # midpoint
@@ -216,7 +219,8 @@ for n in range(N_BL):
     # s_tt
     ax[1, 1].plot(
         theta,
-        c * stt_tilde+(lam + 2 * mu) * alpha_cc
+        c * stt_tilde
+        + (lam + 2 * mu) * alpha_cc
         - 2 * mu * alpha * (3 * lam + 2 * mu) / (lam + 2 * mu)
         + lam / (lam + 2 * mu) * f1(theta),
         linestyle="-",
@@ -235,18 +239,12 @@ for n in range(N_BL):
 # plot COMSOL solutions
 theta = comsol.theta
 r = r0 + delta / 2 + delta * theta / 2 / pi
-ax[0, 0].plot(theta, comsol.err, linestyle="--",
-              color="tab:orange", label="COMSOL")
-ax[1, 0].plot(theta, comsol.ett, linestyle="--",
-              color="tab:orange", label="COMSOL")
-ax[2, 0].plot(theta, comsol.ert, linestyle="--",
-              color="tab:orange", label="COMSOL")
-ax[0, 1].plot(theta, comsol.srr, linestyle="--",
-              color="tab:orange", label="COMSOL")
-ax[1, 1].plot(theta, comsol.stt, linestyle="--",
-              color="tab:orange", label="COMSOL")
-ax[2, 1].plot(theta, comsol.srt, linestyle="--",
-              color="tab:orange", label="COMSOL")
+ax[0, 0].plot(theta, comsol.err, linestyle="--", color="tab:orange", label="COMSOL")
+ax[1, 0].plot(theta, comsol.ett, linestyle="--", color="tab:orange", label="COMSOL")
+ax[2, 0].plot(theta, comsol.ert, linestyle="--", color="tab:orange", label="COMSOL")
+ax[0, 1].plot(theta, comsol.srr, linestyle="--", color="tab:orange", label="COMSOL")
+ax[1, 1].plot(theta, comsol.stt, linestyle="--", color="tab:orange", label="COMSOL")
+ax[2, 1].plot(theta, comsol.srt, linestyle="--", color="tab:orange", label="COMSOL")
 # add shared labels etc.
 ax[0, 0].set_ylabel(r"$\varepsilon_{rr}$")
 ax[1, 0].set_ylabel(r"$\varepsilon_{\theta\theta}$")
@@ -268,8 +266,7 @@ for ax in ax.reshape(-1):
         ax.axvline(x=w, linestyle=":", color="lightgrey")
     ax.xaxis.set_major_formatter(
         FuncFormatter(
-            lambda val, pos: r"${}\pi$".format(
-                int(val / np.pi)) if val != 0 else "0"
+            lambda val, pos: r"${}\pi$".format(int(val / np.pi)) if val != 0 else "0"
         )
     )
     ax.xaxis.set_major_locator(MultipleLocator(base=4 * pi))
@@ -289,8 +286,7 @@ for w in winds:
     ax.axvline(x=w, linestyle=":", color="lightgrey")
 ax.xaxis.set_major_formatter(
     FuncFormatter(
-        lambda val, pos: r"${}\pi$".format(
-            int(val / np.pi)) if val != 0 else "0"
+        lambda val, pos: r"${}\pi$".format(int(val / np.pi)) if val != 0 else "0"
     )
 )
 ax.xaxis.set_major_locator(MultipleLocator(base=4 * pi))

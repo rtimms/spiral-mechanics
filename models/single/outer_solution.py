@@ -5,7 +5,7 @@ from numpy import pi, exp
 class OuterSolution:
     def __init__(self, r0, delta, mu, lam, alpha, alpha_cc):
         """
-        Computes the composite of the bulk solution and the 'outer solution' near r=r0. 
+        Computes the composite of the bulk solution and the 'outer solution' near r=r0.
         The paramaters and solutions are stored as attributes of the class.
         """
 
@@ -22,8 +22,7 @@ class OuterSolution:
         # S_2 = 1 / M_hat
         # S_3 = 1 / mu_hat
         self.S_1 = (
-            self.alpha * (3 * self.lam + 2 * self.mu) -
-            self.lam * self.alpha_cc
+            self.alpha * (3 * self.lam + 2 * self.mu) - self.lam * self.alpha_cc
         ) / (self.lam + 2 * self.mu)
         self.S_2 = 1 / (self.lam + 2 * self.mu)
         self.S_3 = 1 / self.mu
@@ -89,9 +88,9 @@ class OuterSolution:
         alpha_cc = self.alpha_cc
         lam = self.lam
         mu = self.mu
-        return (alpha * (3 * lam + 2 * mu) - lam * alpha_cc) / (
-            lam + 2 * mu
-        ) + self.f1(theta) / (lam + 2 * mu)
+        return (alpha * (3 * lam + 2 * mu) - lam * alpha_cc) / (lam + 2 * mu) + self.f1(
+            theta
+        ) / (lam + 2 * mu)
 
     def e_tt(self, r, theta):
         """Azimuthal strain"""
@@ -123,7 +122,7 @@ class OuterSolution:
         lam = self.lam
         mu = self.mu
         return (
-            4*mu*(lam + mu) * alpha_cc / (lam+2*mu)
+            4 * mu * (lam + mu) * alpha_cc / (lam + 2 * mu)
             - 2 * mu * alpha * (3 * lam + 2 * mu) / (lam + 2 * mu)
             + lam / (lam + 2 * mu) * self.f1(theta)
         )
