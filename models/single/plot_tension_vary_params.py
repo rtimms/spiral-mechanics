@@ -16,10 +16,10 @@ r0 = 0.25  # inner radius
 r1 = 1  # outer radius
 delta = (r1 - r0) / N
 N_plot = 5  # number of winds to plot
-path = "data/spiral/"  # path to data
+path = "/spiral/"  # path to data
 # make directory for figures if it doesn't exist
 try:
-    os.mkdir("figs" + path[4:])
+    os.mkdir("figs" + path)
 except FileExistsError:
     pass
 
@@ -83,6 +83,6 @@ for ax in ax.reshape(-1):
     ax.set_xlim([0, N_plot * 2 * pi])
     ax.set_xlabel(r"$\theta$")
 plt.tight_layout()
-plt.savefig("figs" + path[4:] + "T_vary_params.pdf", dpi=300)
+plt.savefig("figs" + path + "T_vary_params.pdf", dpi=300)
 
 plt.show()
