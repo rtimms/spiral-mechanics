@@ -65,12 +65,13 @@ theta = comsol.theta
 r = r0 + delta * theta / 2 / pi
 ax[0].plot(
     theta,
-    alpha_cc * r + delta * f2(theta),
+    u(r, theta),
     linestyle=":",
     color="black",
     label="Leading",
 )
-ax[1].plot(theta, g2(theta), linestyle=":", color="black", label="Leading")
+# we plot v/delta since v is O(delta)
+ax[1].plot(theta, v(r, theta) / delta, linestyle=":", color="black", label="Leading")
 # plot composite solutions
 for n in range(N_BL):
     idx1 = int(n * 100 / N_BL + 10)  # midpoint
@@ -87,10 +88,10 @@ for n in range(N_BL):
         v_tilde = v_data[idx2, :]
     theta = delta * Theta / r0 + 2 * n * pi
     r = r0 + delta * theta / 2 / pi
-    # u(R=theta/2/pi)/delta
+    # u(R=theta/2/pi)
     ax[0].plot(
         theta,
-        alpha_cc * r + delta * (c * u_tilde + f2(theta)),
+        u(r, theta) + delta * c * u_tilde,
         linestyle="-",
         color="tab:blue",
         label="Composite" if n == 0 else "",
@@ -98,13 +99,14 @@ for n in range(N_BL):
     # v(R=theta/2/pi)/delta
     ax[1].plot(
         theta,
-        c * v_tilde + g2(theta),
+        v(r, theta) / delta + c * v_tilde,
         linestyle="-",
         color="tab:blue",
         label="Composite" if n == 0 else "",
     )
 # plot COMSOL solutions
 theta = comsol.theta
+# u = alpha_cc*r0 + f2
 ax[0].plot(
     theta,
     comsol.f2 * delta + alpha_cc * r0,
@@ -112,6 +114,7 @@ ax[0].plot(
     color="tab:orange",
     label="COMSOL",
 )
+# v/delta = g2
 ax[1].plot(theta, comsol.g2, linestyle="--", color="tab:orange", label="COMSOL")
 ax[0].set_ylabel(r"$u$")
 ax[1].set_ylabel(r"$v/\delta$")
@@ -185,9 +188,7 @@ for n in range(N_BL):
     # e_rr
     ax[0, 0].plot(
         theta,
-        c * err_tilde
-        + (alpha * (3 * lam + 2 * mu) - lam * alpha_cc) / (lam + 2 * mu)
-        + f1(theta) / (lam + 2 * mu),
+        c * err_tilde + e_rr(theta),
         linestyle="-",
         color="tab:blue",
         label="Composite" if n == 0 else "",
@@ -203,7 +204,7 @@ for n in range(N_BL):
     # e_rt
     ax[2, 0].plot(
         theta,
-        c * ert_tilde + g1(theta) / mu / 2,
+        c * ert_tilde + e_rt(theta),
         linestyle="-",
         color="tab:blue",
         label="Composite" if n == 0 else "",
@@ -211,7 +212,7 @@ for n in range(N_BL):
     # s_rr
     ax[0, 1].plot(
         theta,
-        c * srr_tilde + f1(theta),
+        c * srr_tilde + s_rr(theta),
         linestyle="-",
         color="tab:blue",
         label="Composite" if n == 0 else "",
@@ -219,10 +220,7 @@ for n in range(N_BL):
     # s_tt
     ax[1, 1].plot(
         theta,
-        c * stt_tilde
-        + (lam + 2 * mu) * alpha_cc
-        - 2 * mu * alpha * (3 * lam + 2 * mu) / (lam + 2 * mu)
-        + lam / (lam + 2 * mu) * f1(theta),
+        c * stt_tilde + s_tt(theta),
         linestyle="-",
         color="tab:blue",
         label="Composite" if n == 0 else "",
@@ -230,7 +228,7 @@ for n in range(N_BL):
     # s_rt
     ax[2, 1].plot(
         theta,
-        c * srt_tilde + g1(theta),
+        c * srt_tilde + s_rt(theta),
         linestyle="-",
         color="tab:blue",
         label="Composite" if n == 0 else "",
