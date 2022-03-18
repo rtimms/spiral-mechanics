@@ -22,7 +22,7 @@ class OuterSolution:
         # S_2 = 1 / M_hat
         # S_3 = 1 / mu_hat
         self.S_1 = (
-            self.alpha * (3 * self.lam + 2 * self.mu) - self.lam * self.alpha_cc
+            self.alpha * (3 * self.lam + 2 * self.mu) - 2 * self.lam * self.alpha_cc
         ) / (self.lam + 2 * self.mu)
         self.S_2 = 1 / (self.lam + 2 * self.mu)
         self.S_3 = 1 / self.mu
@@ -66,7 +66,7 @@ class OuterSolution:
         mu = self.mu
         R = (r - r0) / delta
         u = alpha_cc * r + delta * (
-            (alpha * (3 * lam + 2 * mu) - lam * alpha_cc)
+            (alpha * (3 * lam + 2 * mu) - 2 * lam * alpha_cc)
             / (lam + 2 * mu)
             * (R - theta / 2 / pi)
             + self.f1(theta) / (lam + 2 * mu) * (R - theta / 2 / pi)
@@ -88,9 +88,9 @@ class OuterSolution:
         alpha_cc = self.alpha_cc
         lam = self.lam
         mu = self.mu
-        return (alpha * (3 * lam + 2 * mu) - lam * alpha_cc) / (lam + 2 * mu) + self.f1(
-            theta
-        ) / (lam + 2 * mu)
+        return (alpha * (3 * lam + 2 * mu) - 2 * lam * alpha_cc) / (
+            lam + 2 * mu
+        ) + self.f1(theta) / (lam + 2 * mu)
 
     def e_tt(self, r, theta):
         """Azimuthal strain"""
@@ -121,11 +121,9 @@ class OuterSolution:
         alpha_cc = self.alpha_cc
         lam = self.lam
         mu = self.mu
-        return (
-            4 * mu * (lam + mu) * alpha_cc / (lam + 2 * mu)
-            - 2 * mu * alpha * (3 * lam + 2 * mu) / (lam + 2 * mu)
-            + lam / (lam + 2 * mu) * self.f1(theta)
-        )
+        return lam / (lam + 2 * mu) * self.f1(theta) + 2 * mu * (alpha_cc - alpha) * (
+            3 * lam + 2 * mu
+        ) / (lam + 2 * mu)
 
     def s_rt(self, theta):
         """Shear stress"""
