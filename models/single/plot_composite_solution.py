@@ -12,7 +12,7 @@ matplotlib.rc_file("_matplotlibrc_tex", use_default_template=True)
 
 # Parameters (dimensionless) --------------------------------------------------
 alpha = 1  # expansion coefficient
-alpha_cc = 0.1  # expansion coefficient
+alpha_cc = 0.5  # expansion coefficient
 mu = 1  # shear modulus
 nu = 1 / 3  # Poisson ratio
 lam = 2 * mu * nu / (1 - 2 * nu)  # 1st Lame parameter
@@ -25,8 +25,8 @@ delta = (r1 - r0) / N
 hh = 0.01 * delta  # current collector thickness
 N_BL = 5  # number of slabs in inner solution
 N_plot = N_BL - 1  # number of winds to plot
-path = "data/inner_a1al01/"  # path to inner simulation data
-full_path = "data/a1al01/"  # path to full simulation data
+path = "data/inner_a1al05/"  # path to inner simulation data
+full_path = "data/a1al05/"  # path to full simulation data
 # make directory for figures if it doesn't exist
 try:
     os.mkdir("figs" + path[4:])
