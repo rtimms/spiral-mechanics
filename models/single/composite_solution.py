@@ -91,9 +91,9 @@ class OuterSolution:
         lam = self.lam
         mu = self.mu
         # returns bulk + outer - common part
+        # note f1 -> -S1/S2 as theta -> inf
         return (
             alpha_cc
-            #           + (alpha * (3 * lam + 2 * mu) - 2 * lam * alpha_cc) / (lam + 2 * mu)
             + self.f1(theta) / (lam + 2 * mu)
             + self.S_1 / self.S_2 / (lam + 2 * mu)
         )
@@ -125,6 +125,7 @@ class OuterSolution:
         lam = self.lam
         mu = self.mu
         # returns bulk + outer - common part
+        # note f1 -> -S1/S2 as theta -> inf
         return (
             (alpha_cc - alpha) * (3 * lam + 2 * mu)
             + self.f1(theta)
