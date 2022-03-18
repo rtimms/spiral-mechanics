@@ -4,7 +4,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter, MultipleLocator
 import os
-from outer_solution import OuterSolution
+from composite_solution import OuterSolution
 from comsol_solution import ComsolSolution, ComsolInnerSolution
 
 # set style for paper

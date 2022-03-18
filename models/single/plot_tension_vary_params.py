@@ -3,7 +3,7 @@ from numpy import pi
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter, MultipleLocator
 import os
-from outer_solution import OuterSolution
+from composite_solution import OuterSolution
 
 # set style for paper
 import matplotlib
