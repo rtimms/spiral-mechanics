@@ -12,7 +12,7 @@ matplotlib.rc_file("_matplotlibrc_tex", use_default_template=True)
 
 # Parameters (dimensionless) --------------------------------------------------
 alpha = 1  # expansion coefficient
-alpha_cc = 0.5  # expansion coefficient
+alpha_cc = 0  # expansion coefficient
 mu = 1  # shear modulus
 nu = 1 / 3  # Poisson ratio
 lam = 2 * mu * nu / (1 - 2 * nu)  # 1st Lame parameter
@@ -25,8 +25,8 @@ delta = (r1 - r0) / N
 hh = 0.01 * delta  # current collector thickness
 N_BL = 5  # number of slabs in inner solution
 N_plot = N_BL - 1  # number of winds to plot
-path = "data/inner_a1al05/"  # path to inner simulation data
-full_path = "data/a1al05/"  # path to full simulation data
+path = "data/inner_a1al0/"  # path to inner simulation data
+full_path = "data/a1al0/"  # path to full simulation data
 # make directory for figures if it doesn't exist
 try:
     os.mkdir("figs" + path[4:])
@@ -67,10 +67,9 @@ ax[0].plot(
     color="black",
     label="Bulk-surface \n composite",
 )
-# we plot v/delta since v is O(delta)
 ax[1].plot(
     theta,
-    v(r, theta) / delta,
+    v(r, theta),
     linestyle=":",
     color="black",
     label="Bulk-surface \n composite",
@@ -99,17 +98,17 @@ for n in range(N_BL):
         color="tab:blue",
         label="Bulk-surface-end \n composite" if n == 0 else "",
     )
-    # v(R=theta/2/pi)/delta
+    # v(R=theta/2/pi)
     ax[1].plot(
         theta,
-        v(r, theta) / delta + c * v_tilde,
+        v(r, theta) + c * delta * v_tilde,
         linestyle="-",
         color="tab:blue",
         label="Bulk-surface-end \n composite" if n == 0 else "",
     )
 # plot COMSOL solutions
 theta = comsol.theta
-# u = alpha_cc*r0 + f2
+# u = alpha_cc*r0 + delta*f2
 ax[0].plot(
     theta,
     comsol.f2 * delta + alpha_cc * r0,
@@ -117,16 +116,14 @@ ax[0].plot(
     color="tab:orange",
     label="COMSOL",
 )
-# v/delta = g2
-ax[1].plot(theta, comsol.g2, linestyle="--", color="tab:orange", label="COMSOL")
+# v = delta*g2
+ax[1].plot(theta, delta * comsol.g2, linestyle="--", color="tab:orange", label="COMSOL")
 ax[0].set_ylabel(r"$u$")
-ax[1].set_ylabel(r"$v/\delta$")
+ax[1].set_ylabel(r"$v$")
 ax[0].set_xlabel(r"$\theta$")
 ax[1].set_xlabel(r"$\theta$")
-ax[1].set_ylim([-4.5, 0.5])
-fig.subplots_adjust(
-    left=0.1, bottom=0.25, right=0.98, top=0.98, wspace=0.33, hspace=0.4
-)
+ax[1].set_ylim([-4.5 * delta, 0.5 * delta])
+fig.subplots_adjust(left=0.1, bottom=0.3, right=0.98, top=0.98, wspace=0.33, hspace=0.4)
 ax[1].legend(
     loc="upper center",
     bbox_to_anchor=(0.5, -0.5),
@@ -270,7 +267,7 @@ ax[0, 1].set_ylabel(r"$\sigma_{rr}$")
 ax[1, 1].set_ylabel(r"$\sigma_{\theta\theta}$")
 ax[2, 1].set_ylabel(r"$\sigma_{r\theta}$")
 fig.subplots_adjust(
-    left=0.1, bottom=0.18, right=0.98, top=0.98, wspace=0.25, hspace=0.4
+    left=0.1, bottom=0.22, right=0.98, top=0.98, wspace=0.25, hspace=0.4
 )
 ax[2, 0].legend(
     loc="upper center",
