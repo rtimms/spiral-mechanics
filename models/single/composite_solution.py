@@ -29,13 +29,15 @@ class OuterSolution:
 
         self.omega = np.sqrt(self.S_2 / self.S_3)
 
-        self.A = self.S_1 * exp(2 * pi * self.omega)
+        self.A = (self.S_1 - self.alpha_cc) * exp(2 * pi * self.omega)
         self.B = 0
         self.C = self.A / (1 - exp(2 * pi * self.omega))
         self.D = 0
 
     def f1(self, theta):
-        return (-self.S_1 + self.A * exp(-self.omega * (theta + 2 * pi))) / self.S_2
+        return (
+            (self.alpha_cc - self.S_1) + self.A * exp(-self.omega * (theta + 2 * pi))
+        ) / self.S_2
 
     def f2(self, theta):
         return self.B + self.C * exp(-self.omega * theta)
@@ -72,7 +74,6 @@ class OuterSolution:
             + self.f1(theta) / (lam + 2 * mu) * (R - theta / 2 / pi)
             + self.f2(theta)
         )
-        # returns bulk + outer - common part
         return u
 
     def v(self, r, theta):
@@ -81,22 +82,13 @@ class OuterSolution:
         r0 = self.r0
         mu = self.mu
         R = (r - r0) / delta
-        # returns bulk + outer - common part
         return delta * (self.g1(theta) / mu * (R - theta / 2 / pi) + self.g2(theta))
 
     def e_rr(self, theta):
         """Radial strain"""
-        # alpha = self.alpha
-        alpha_cc = self.alpha_cc
         lam = self.lam
         mu = self.mu
-        # returns bulk + outer - common part
-        # note f1 -> -S1/S2 as theta -> inf
-        return (
-            alpha_cc
-            + self.f1(theta) / (lam + 2 * mu)
-            + self.S_1 / self.S_2 / (lam + 2 * mu)
-        )
+        return self.S_1 / self.S_2 / (lam + 2 * mu) + self.f1(theta) / (lam + 2 * mu)
 
     def e_tt(self, r, theta):
         """Azimuthal strain"""
@@ -109,28 +101,16 @@ class OuterSolution:
             - self.g1(theta) / mu / 2 / pi
             + self.dg2dt(theta)
         )
-        # returns bulk + outer - common part
         return (1 / r) * (dvdt + self.u(r, theta))
 
     def e_rt(self, theta):
         """Shear strain"""
         mu = self.mu
-        # returns bulk + outer - common part
         return self.g1(theta) / mu / 2
 
     def s_rr(self, theta):
         """Radial stress"""
-        alpha = self.alpha
-        alpha_cc = self.alpha_cc
-        lam = self.lam
-        mu = self.mu
-        # returns bulk + outer - common part
-        # note f1 -> -S1/S2 as theta -> inf
-        return (
-            (alpha_cc - alpha) * (3 * lam + 2 * mu)
-            + self.f1(theta)
-            + self.S_1 / self.S_2
-        )
+        return self.f1(theta)
 
     def s_tt(self, theta):
         """Azimuthal stress"""
@@ -138,14 +118,12 @@ class OuterSolution:
         alpha_cc = self.alpha_cc
         lam = self.lam
         mu = self.mu
-        # returns bulk + outer - common part
         return lam / (lam + 2 * mu) * self.s_rr(theta) + 2 * mu * (alpha_cc - alpha) * (
             3 * lam + 2 * mu
         ) / (lam + 2 * mu)
 
     def s_rt(self, theta):
         """Shear stress"""
-        # returns bulk + outer - common part
         return self.g1(theta)
 
     def T(self, theta):
