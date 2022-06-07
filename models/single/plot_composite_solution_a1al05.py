@@ -305,7 +305,7 @@ ax.xaxis.set_major_formatter(
 )
 ax.xaxis.set_major_locator(MultipleLocator(base=4 * pi))
 ax.set_xlim([0, N_plot * 2 * pi])
-ax.set_ylim([-2, 0.2])
+ax.set_ylim([-1.2, 0.2])
 ax.set_xlabel(r"$\theta$")
 plt.tight_layout()
 plt.savefig("figs" + path[4:] + "T_of_theta.pdf", dpi=300)
