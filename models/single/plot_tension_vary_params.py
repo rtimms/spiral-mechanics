@@ -44,7 +44,7 @@ for i, alpha_M_hat in enumerate(alpha_M_hats):
         theta,
         outer.T(theta),
         linestyle=linestyles[i],
-        label=r"$\hat{\alpha}\hat{M} = $" + f"{alpha_M_hat}",
+        label=r"$\hat{\alpha}_{\textrm{diff}}\hat{M} = $" + f"{alpha_M_hat}",
     )
 ax[0].set_title(r"$\hat{\mu}/\hat{M} = $" + f"{mu_over_M_hat_ref}")
 ax[0].set_ylabel(r"$T$")
@@ -66,7 +66,7 @@ for i, mu_over_M_hat in enumerate(mu_over_M_hats):
         linestyle=linestyles[i],
         label=r"$\hat{\mu}/\hat{M} = $" + f"{mu_over_M_hat}",
     )
-ax[1].set_title(r"$\hat{\alpha}\hat{M} = $" + f"{alpha_M_hat_ref}")
+ax[1].set_title(r"$\hat{\alpha}_{\textrm{diff}}\hat{M} = $" + f"{alpha_M_hat_ref}")
 ax[1].set_ylabel(r"$T$")
 ax[1].legend(loc="lower right")
 
