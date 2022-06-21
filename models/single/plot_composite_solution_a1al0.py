@@ -65,16 +65,16 @@ ax[0].plot(
     u(r, theta),
     linestyle=":",
     color="black",
-    label="Bulk-surface \n composite",
+    label="Surface solution",
 )
 ax[1].plot(
     theta,
     v(r, theta),
     linestyle=":",
     color="black",
-    label="Bulk-surface \n composite",
+    label="Surface solution",
 )
-# plot composite solutions
+# plot composite solution solutions
 for n in range(N_BL):
     idx1 = int(n * 100 / N_BL + 10)  # midpoint
     idx2 = int(n * 100 / N_BL)  # inner edge
@@ -96,7 +96,7 @@ for n in range(N_BL):
         u(r, theta) + delta * c * u_tilde,
         linestyle="-",
         color="tab:blue",
-        label="Bulk-surface-end \n composite" if n == 0 else "",
+        label="Surface-end composite solution" if n == 0 else "",
     )
     # v(R=theta/2/pi)
     ax[1].plot(
@@ -104,7 +104,7 @@ for n in range(N_BL):
         v(r, theta) + c * delta * v_tilde,
         linestyle="-",
         color="tab:blue",
-        label="Bulk-surface-end \n composite" if n == 0 else "",
+        label="Surface-end composite solution" if n == 0 else "",
     )
 # plot COMSOL solutions
 theta = comsol.theta
@@ -126,7 +126,7 @@ ax[1].set_ylim([-4.5 * delta, 0.5 * delta])
 fig.subplots_adjust(left=0.1, bottom=0.3, right=0.98, top=0.98, wspace=0.33, hspace=0.4)
 ax[1].legend(
     loc="upper center",
-    bbox_to_anchor=(0.5, -0.5),
+    bbox_to_anchor=(0.45, -0.5),
     borderaxespad=0.0,
     ncol=3,
 )
@@ -143,7 +143,7 @@ for ax in ax.reshape(-1):
     )
     ax.xaxis.set_major_locator(MultipleLocator(base=4 * pi))
     ax.set_xlim([0, N_plot * 2 * pi])
-plt.savefig("figs" + path[4:] + "uv_composite.pdf", dpi=300)
+plt.savefig("figs" + path[4:] + "uv_composite_solution_al0.pdf", dpi=300)
 
 # stresses and strains at r = r0 + delta / 2 + delta * theta / 2 / pi
 fig, ax = plt.subplots(3, 2, figsize=(6.4, 6))
@@ -152,28 +152,48 @@ fig, ax = plt.subplots(3, 2, figsize=(6.4, 6))
 theta = comsol.theta
 r = r0 + delta / 2 + delta * theta / 2 / pi
 ax[0, 0].plot(
-    theta, e_rr(theta), linestyle=":", color="black", label="Bulk-surface \n composite"
+    theta,
+    e_rr(theta),
+    linestyle=":",
+    color="black",
+    label="Surface solution",
 )
 ax[0, 1].plot(
-    theta, s_rr(theta), linestyle=":", color="black", label="Bulk-surface \n composite"
+    theta,
+    s_rr(theta),
+    linestyle=":",
+    color="black",
+    label="Surface solution",
 )
 ax[1, 0].plot(
     theta,
     e_tt(r, theta),
     linestyle=":",
     color="black",
-    label="Bulk-surface \n composite",
+    label="Surface solution",
 )
 ax[1, 1].plot(
-    theta, s_tt(theta), linestyle=":", color="black", label="Bulk-surface \n composite"
+    theta,
+    s_tt(theta),
+    linestyle=":",
+    color="black",
+    label="Surface solution",
 )
 ax[2, 0].plot(
-    theta, e_rt(theta), linestyle=":", color="black", label="Bulk-surface \n composite"
+    theta,
+    e_rt(theta),
+    linestyle=":",
+    color="black",
+    label="Surface solution",
 )
 ax[2, 1].plot(
-    theta, s_rt(theta), linestyle=":", color="black", label="Bulk-surface \n composite"
+    theta,
+    s_rt(theta),
+    linestyle=":",
+    color="black",
+    label="Surface solution",
 )
-# plot composite solutions
+# plot composite solution solutions
 for n in range(N_BL):
     idx1 = int(n * 100 / N_BL + 10)  # midpoint
     idx2 = int(n * 100 / N_BL)  # inner edge
@@ -207,7 +227,7 @@ for n in range(N_BL):
         c * err_tilde + e_rr(theta),
         linestyle="-",
         color="tab:blue",
-        label="Bulk-surface-end \n composite" if n == 0 else "",
+        label="Surface-end composite solution" if n == 0 else "",
     )
     # e_tt
     ax[1, 0].plot(
@@ -215,7 +235,7 @@ for n in range(N_BL):
         c * ett_tilde + e_tt(r0 + delta / 2 + delta * theta / 2 / pi, theta),
         linestyle="-",
         color="tab:blue",
-        label="Bulk-surface-end \n composite" if n == 0 else "",
+        label="Surface-end composite solution" if n == 0 else "",
     )
     # e_rt
     ax[2, 0].plot(
@@ -223,7 +243,7 @@ for n in range(N_BL):
         c * ert_tilde + e_rt(theta),
         linestyle="-",
         color="tab:blue",
-        label="Bulk-surface-end \n composite" if n == 0 else "",
+        label="Surface-end composite solution" if n == 0 else "",
     )
     # s_rr
     ax[0, 1].plot(
@@ -231,7 +251,7 @@ for n in range(N_BL):
         c * srr_tilde + s_rr(theta),
         linestyle="-",
         color="tab:blue",
-        label="Bulk-surface-end \n composite" if n == 0 else "",
+        label="Surface-end composite solution" if n == 0 else "",
     )
     # s_tt
     ax[1, 1].plot(
@@ -239,7 +259,7 @@ for n in range(N_BL):
         c * stt_tilde + s_tt(theta),
         linestyle="-",
         color="tab:blue",
-        label="Bulk-surface-end \n composite" if n == 0 else "",
+        label="Surface-end composite solution" if n == 0 else "",
     )
     # s_rt
     ax[2, 1].plot(
@@ -247,7 +267,7 @@ for n in range(N_BL):
         c * srt_tilde + s_rt(theta),
         linestyle="-",
         color="tab:blue",
-        label="Bulk-surface-end \n composite" if n == 0 else "",
+        label="Surface-end composite solution" if n == 0 else "",
     )
 
 # plot COMSOL solutions
@@ -271,7 +291,7 @@ fig.subplots_adjust(
 )
 ax[2, 0].legend(
     loc="upper center",
-    bbox_to_anchor=(1.1, -0.5),
+    bbox_to_anchor=(1.05, -0.5),
     borderaxespad=0.0,
     ncol=3,
 )
@@ -286,12 +306,12 @@ for ax in ax.reshape(-1):
     ax.xaxis.set_major_locator(MultipleLocator(base=4 * pi))
     ax.set_xlim([0, N_plot * 2 * pi])
     ax.set_xlabel(r"$\theta$")
-plt.savefig("figs" + path[4:] + "eps_sigma_composite.pdf", dpi=300)
+plt.savefig("figs" + path[4:] + "eps_sigma_composite_solution_al0.pdf", dpi=300)
 
 
 # tension
 fig, ax = plt.subplots(figsize=(6.4, 2))
-ax.plot(theta, outer.T(theta), "-", label="Surface layer solution")
+ax.plot(theta, outer.T(theta), "-", label="Surface solution")
 ax.plot(theta, comsol.T, "--", label="COMSOL")
 ax.set_ylabel(r"$T$")
 ax.legend(loc="lower right")
@@ -308,6 +328,6 @@ ax.set_xlim([0, N_plot * 2 * pi])
 ax.set_ylim([-2, 0.2])
 ax.set_xlabel(r"$\theta$")
 plt.tight_layout()
-plt.savefig("figs" + path[4:] + "T_of_theta.pdf", dpi=300)
+plt.savefig("figs" + path[4:] + "T_of_theta_al0.pdf", dpi=300)
 
 plt.show()
