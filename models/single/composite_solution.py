@@ -40,8 +40,6 @@ class OuterSolution:
         alpha_hat_diff = (
             (self.alpha - self.alpha_cc) * (3 * self.lam + 2 * self.mu)
         ) / (self.lam + 2 * self.mu)
-        print(alpha_hat)
-        print(alpha_hat_diff)
 
     def f1(self, theta):
         return (
