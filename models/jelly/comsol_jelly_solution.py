@@ -5,7 +5,7 @@ import scipy.interpolate as interp
 
 
 class ComsolSolution:
-    def __init__(self, params, alpha_scale, path):
+    def __init__(self, params, alpha_scale, path, tension_only=False):
         """
         Loads the COMSOL solution. The variables are stored as attributes of
         the class. Note that we rescale the displacements, strains and stresses
@@ -48,54 +48,58 @@ class ComsolSolution:
         }
 
         # Load f_i and g_i ----------------------------------------------------
+        if tension_only is False:
+            # f_1 = sigma_rr
+            # we choose to evaluate sigma_rr in the positive electrode in active
+            # region 1
+            comsol = pd.read_csv(
+                path + "srr_1.csv", comment="#", header=None
+            ).to_numpy()
+            f1_r_data = comsol[:, 0]
+            f1_data = comsol[:, 1] / alpha_scale
+            f1_interp = interp.interp1d(f1_r_data, f1_data, bounds_error=False)
+            self.f1 = f1_interp(r_evals["1+ mid"])
+            self.f3 = self.f1  # f_1 = f_3
 
-        # f_1 = sigma_rr
-        # we choose to evaluate sigma_rr in the positive electrode in active
-        # region 1
-        comsol = pd.read_csv(path + "srr_1.csv", comment="#", header=None).to_numpy()
-        f1_r_data = comsol[:, 0]
-        f1_data = comsol[:, 1] / alpha_scale
-        f1_interp = interp.interp1d(f1_r_data, f1_data, bounds_error=False)
-        self.f1 = f1_interp(r_evals["1+ mid"])
-        self.f3 = self.f1  # f_1 = f_3
+            # f_2 = u(R=theta/2/pi)/delta
+            comsol = pd.read_csv(path + "u_1.csv", comment="#", header=None).to_numpy()
+            f2_r_data = comsol[:, 0]
+            f2_data = comsol[:, 1] / delta / alpha_scale
+            f2_interp = interp.interp1d(f2_r_data, f2_data, bounds_error=False)
+            self.f2 = f2_interp(r_evals["1+ in"])
 
-        # f_2 = u(R=theta/2/pi)/delta
-        comsol = pd.read_csv(path + "u_1.csv", comment="#", header=None).to_numpy()
-        f2_r_data = comsol[:, 0]
-        f2_data = comsol[:, 1] / delta / alpha_scale
-        f2_interp = interp.interp1d(f2_r_data, f2_data, bounds_error=False)
-        self.f2 = f2_interp(r_evals["1+ in"])
+            # f_4 = u(R=1/2+theta/2/pi)/delta
+            comsol = pd.read_csv(path + "u_4.csv", comment="#", header=None).to_numpy()
+            f4_r_data = comsol[:, 0]
+            f4_data = comsol[:, 1] / delta / alpha_scale
+            f4_interp = interp.interp1d(f4_r_data, f4_data, bounds_error=False)
+            self.f4 = f4_interp(r_evals["2- in"])
 
-        # f_4 = u(R=1/2+theta/2/pi)/delta
-        comsol = pd.read_csv(path + "u_4.csv", comment="#", header=None).to_numpy()
-        f4_r_data = comsol[:, 0]
-        f4_data = comsol[:, 1] / delta / alpha_scale
-        f4_interp = interp.interp1d(f4_r_data, f4_data, bounds_error=False)
-        self.f4 = f4_interp(r_evals["2- in"])
+            # g_1 = sigma_rt
+            # we choose to evaluate sigma_rt in the positive electrode in active
+            # region 1
+            comsol = pd.read_csv(
+                path + "srt_1.csv", comment="#", header=None
+            ).to_numpy()
+            g1_r_data = comsol[:, 0]
+            g1_data = comsol[:, 1] / alpha_scale
+            g1_interp = interp.interp1d(g1_r_data, g1_data, bounds_error=False)
+            self.g1 = g1_interp(r_evals["1+ mid"])
+            self.g3 = self.g1  # g_1 = g_3
 
-        # g_1 = sigma_rt
-        # we choose to evaluate sigma_rt in the positive electrode in active
-        # region 1
-        comsol = pd.read_csv(path + "srt_1.csv", comment="#", header=None).to_numpy()
-        g1_r_data = comsol[:, 0]
-        g1_data = comsol[:, 1] / alpha_scale
-        g1_interp = interp.interp1d(g1_r_data, g1_data, bounds_error=False)
-        self.g1 = g1_interp(r_evals["1+ mid"])
-        self.g3 = self.g1  # g_1 = g_3
+            # g_2 = v(R=theta/2/pi)/delta
+            comsol = pd.read_csv(path + "v_1.csv", comment="#", header=None).to_numpy()
+            g2_r_data = comsol[:, 0]
+            g2_data = comsol[:, 1] / delta / alpha_scale
+            g2_interp = interp.interp1d(g2_r_data, g2_data, bounds_error=False)
+            self.g2 = g2_interp(r_evals["1+ in"])
 
-        # g_2 = v(R=theta/2/pi)/delta
-        comsol = pd.read_csv(path + "v_1.csv", comment="#", header=None).to_numpy()
-        g2_r_data = comsol[:, 0]
-        g2_data = comsol[:, 1] / delta / alpha_scale
-        g2_interp = interp.interp1d(g2_r_data, g2_data, bounds_error=False)
-        self.g2 = g2_interp(r_evals["1+ in"])
-
-        # g_4 = v(R=1/2+theta/2/pi)/delta
-        comsol = pd.read_csv(path + "v_4.csv", comment="#", header=None).to_numpy()
-        g4_r_data = comsol[:, 0]
-        g4_data = comsol[:, 1] / delta / alpha_scale
-        g4_interp = interp.interp1d(g4_r_data, g4_data, bounds_error=False)
-        self.g4 = g4_interp(r_evals["2- in"])
+            # g_4 = v(R=1/2+theta/2/pi)/delta
+            comsol = pd.read_csv(path + "v_4.csv", comment="#", header=None).to_numpy()
+            g4_r_data = comsol[:, 0]
+            g4_data = comsol[:, 1] / delta / alpha_scale
+            g4_interp = interp.interp1d(g4_r_data, g4_data, bounds_error=False)
+            self.g4 = g4_interp(r_evals["2- in"])
 
         # Load tension --------------------------------------------------------
 
