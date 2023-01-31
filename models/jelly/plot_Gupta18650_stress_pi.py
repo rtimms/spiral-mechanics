@@ -1,7 +1,6 @@
 import numpy as np
 from numpy import pi
 import matplotlib.pyplot as plt
-from matplotlib.ticker import FuncFormatter, MultipleLocator
 import os
 from outer_solution import OuterSolution
 import pandas as pd
@@ -87,7 +86,7 @@ params.lam_n = (
 )  # 1st Lame parameter
 
 N_plot = 4  # number of winds to plot
-path = "data/jelly/Gupta18650/"  # path to data
+path = "data/Gupta18650/"  # path to data
 # make directory for figures if it doesn't exist
 try:
     os.mkdir("figs" + path[4:])

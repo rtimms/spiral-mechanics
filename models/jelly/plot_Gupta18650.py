@@ -5,7 +5,7 @@ from matplotlib.ticker import FuncFormatter, MultipleLocator
 import os
 from outer_solution import OuterSolution
 from comsol_jelly_solution import ComsolSolution
-from shared_plots import plot_fg, plot_tension
+from shared_plots import plot_fg
 
 # set style for paper
 import matplotlib
@@ -88,7 +88,7 @@ params.lam_n = (
 )  # 1st Lame parameter
 
 N_plot = 6  # number of winds to plot
-path = "data/jelly/Gupta18650/"  # path to data
+path = "data/Gupta18650/"  # path to data
 # make directory for figures if it doesn't exist
 try:
     os.mkdir("figs" + path[4:])
@@ -140,8 +140,7 @@ for ax in ax.reshape(-1):
         ax.axvline(x=w, linestyle=":", color="lightgrey")
     ax.xaxis.set_major_formatter(
         FuncFormatter(
-            lambda val, pos: r"${}\pi$".format(
-                int(val / np.pi)) if val != 0 else "0"
+            lambda val, pos: r"${}\pi$".format(int(val / np.pi)) if val != 0 else "0"
         )
     )
     ax.xaxis.set_major_locator(MultipleLocator(base=4 * pi))
@@ -168,8 +167,7 @@ for w in winds:
     ax.axvline(x=w, linestyle=":", color="lightgrey")
 ax.xaxis.set_major_formatter(
     FuncFormatter(
-        lambda val, pos: r"${}\pi$".format(
-            int(val / np.pi)) if val != 0 else "0"
+        lambda val, pos: r"${}\pi$".format(int(val / np.pi)) if val != 0 else "0"
     )
 )
 ax.xaxis.set_major_locator(MultipleLocator(base=4 * pi))
