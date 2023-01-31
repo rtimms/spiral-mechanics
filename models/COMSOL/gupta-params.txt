@@ -1,3 +1,6 @@
+alpha_cc 0.01 ""
+alpha_ccn alpha_cc ""
+alpha_ccp alpha_cc ""
 alpha_n 0.1 ""
 alpha_p -0.02 ""
 alpha_s 0 ""
