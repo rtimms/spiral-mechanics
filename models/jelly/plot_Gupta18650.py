@@ -2,7 +2,6 @@ import numpy as np
 from numpy import pi
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter, MultipleLocator
-import os
 from outer_solution import OuterSolution
 from comsol_jelly_solution import ComsolSolution
 from shared_plots import plot_fg
@@ -12,6 +11,11 @@ import matplotlib
 
 matplotlib.rc_file("_matplotlibrc_tex", use_default_template=True)
 
+# set number of winds to plot
+N_plot = 6
+
+# path to data
+path = "data/Gupta18650/"
 
 # Dimensional parameters ------------------------------------------------------
 # Gupta and Gudmundson (2021) with 26 winds
@@ -50,8 +54,6 @@ params = Parameters()
 # reference values
 mu_ref = (h_n + h_s + h_p) / (h_n / mu_n + h_s / mu_s + h_p / mu_p)
 alpha_ref = (h_n * alpha_n + h_p * alpha_p) / (h_n + h_s + h_p)
-# mu_ref = mu_n
-# alpha_ref = alpha_n
 
 #  geometry
 params.r0 = L_0 / L
@@ -87,13 +89,6 @@ params.lam_n = (
     2 * params.mu_n * params.nu_n / (1 - 2 * params.nu_n)
 )  # 1st Lame parameter
 
-N_plot = 6  # number of winds to plot
-path = "data/Gupta18650/"  # path to data
-# make directory for figures if it doesn't exist
-try:
-    os.mkdir("figs" + path[4:])
-except FileExistsError:
-    pass
 
 # Compute the boundary layer solution -----------------------------------------
 outer = OuterSolution(params)

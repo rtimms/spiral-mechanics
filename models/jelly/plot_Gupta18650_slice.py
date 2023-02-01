@@ -1,7 +1,6 @@
 import numpy as np
 from numpy import pi
 import matplotlib.pyplot as plt
-import os
 from outer_solution import OuterSolution
 import pandas as pd
 
@@ -10,6 +9,11 @@ import matplotlib
 
 matplotlib.rc_file("_matplotlibrc_tex", use_default_template=True)
 
+# set number of winds to plot
+N_plot = 8
+
+# path to data
+path = "data/Gupta18650/"
 
 # Dimensional parameters ------------------------------------------------------
 # Gupta and Gudmundson (2021) with 26 winds
@@ -48,8 +52,6 @@ params = Parameters()
 # reference values
 mu_ref = (h_n + h_s + h_p) / (h_n / mu_n + h_s / mu_s + h_p / mu_p)
 alpha_ref = (h_n * alpha_n + h_p * alpha_p) / (h_n + h_s + h_p)
-# mu_ref = mu_n
-# alpha_ref = alpha_n
 
 #  geometry
 params.r0 = L_0 / L
@@ -85,19 +87,11 @@ params.lam_n = (
     2 * params.mu_n * params.nu_n / (1 - 2 * params.nu_n)
 )  # 1st Lame parameter
 
-N_plot = 4  # number of winds to plot
-path = "data/Gupta18650/"  # path to data
-# make directory for figures if it doesn't exist
-try:
-    os.mkdir("figs" + path[4:])
-except FileExistsError:
-    pass
 
 # Compute the boundary layer solution -----------------------------------------
 outer = OuterSolution(params)
 
 # Plot slice through theta=theta_f --------------------------------------------
-
 theta_f = pi
 r0 = params.r0
 delta = params.delta
@@ -119,8 +113,7 @@ winds_n = [
     for n in list(range(N_plot))
 ]
 
-
-nr = 3
+nr = 3  # r nodes per wind
 for N in list(range(N_plot)):
     ri = r0 + delta * (2 * pi * N + theta_f) / 2 / pi
     theta = 2 * pi * N + theta_f
@@ -205,24 +198,31 @@ def remove_cc(r, s):
     return np.delete(r, idx), np.delete(s, idx)
 
 
-comsol = pd.read_csv(path + f"srr_tpi.csv", comment="#", header=None).to_numpy()
+# radial stress
+comsol = pd.read_csv(path + "srr_tpi.csv", comment="#", header=None).to_numpy()
 r, s_rr = remove_cc(comsol[:, 0], comsol[:, 1] / alpha_ref)
 ax[0, 0].plot(r, s_rr, "--", color="tab:orange", label="COMSOL")
 
-comsol = pd.read_csv(path + f"stt_tpi.csv", comment="#", header=None).to_numpy()
+# azimuthal stress
+comsol = pd.read_csv(path + "stt_tpi.csv", comment="#", header=None).to_numpy()
 r, s_tt = remove_cc(comsol[:, 0], comsol[:, 1] / alpha_ref)
 axbig.plot(r, s_tt, "--", color="tab:orange", label="COMSOL")
 
-comsol = pd.read_csv(path + f"srt_tpi.csv", comment="#", header=None).to_numpy()
+# shear stress
+comsol = pd.read_csv(path + "srt_tpi.csv", comment="#", header=None).to_numpy()
 r, s_rt = remove_cc(comsol[:, 0], comsol[:, 1] / alpha_ref)
 ax[0, 1].plot(r, s_rt, "--", color="tab:orange", label="COMSOL")
 
-ax[0, 0].set_ylim([-6, -3])
+# adjust limits
+ax[0, 0].set_ylim([-10, 0])
 axbig.set_ylim([-25, 5])
-ax[0, 1].set_ylim([-0.75, 0.75])
+ax[0, 1].set_ylim([-5, 5])
+
+# add labels
 ax[0, 0].set_ylabel(r"$\sigma_{rr}$")
 axbig.set_ylabel(r"$\sigma_{\theta\theta}$")
 ax[0, 1].set_ylabel(r"$\sigma_{r\theta}$")
+
 # add shared labels etc.
 fig.subplots_adjust(left=0.1, bottom=0.3, right=0.98, top=0.98, wspace=0.45, hspace=0.5)
 axbig.legend(
@@ -237,7 +237,7 @@ for ax in [ax[0, 0], ax[0, 1], axbig]:
     ax.set_xlim(
         [
             r0 + delta * theta_f / 2 / pi,
-            r0 + delta * (2 * pi * N_plot + theta_f) / 2 / pi,
+            r0 + delta * (2 * pi * (N_plot - 1) + theta_f) / 2 / pi,
         ]
     )
     ax.set_xlabel(r"$r$")
