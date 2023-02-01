@@ -15,20 +15,26 @@ class OuterSolution:
         param.S_1 = (
             (
                 param.l_n
-                * param.alpha_n
-                * (3 * param.lam_n + 2 * param.mu_n)
+                * (
+                    param.alpha_n * (3 * param.lam_n + 2 * param.mu_n)
+                    - 2 * param.lam_n * param.alpha_cc
+                )
                 / (param.lam_n + 2 * param.mu_n)
             )
             + (
                 param.l_s
-                * param.alpha_s
-                * (3 * param.lam_s + 2 * param.mu_s)
+                * (
+                    param.alpha_s * (3 * param.lam_s + 2 * param.mu_s)
+                    - 2 * param.lam_s * param.alpha_cc
+                )
                 / (param.lam_s + 2 * param.mu_s)
             )
             + (
                 param.l_p
-                * param.alpha_p
-                * (3 * param.lam_p + 2 * param.mu_p)
+                * (
+                    param.alpha_p * (3 * param.lam_p + 2 * param.mu_p)
+                    - 2 * param.lam_p * param.alpha_cc
+                )
                 / (param.lam_p + 2 * param.mu_p)
             )
         )
@@ -53,7 +59,7 @@ class OuterSolution:
         param.omega = np.sqrt(param.S_2 / param.S_3)
 
         param.A = 0
-        param.B = param.S_1 * exp(2 * pi * param.omega)
+        param.B = (param.S_1 - param.alpha_cc) * exp(2 * pi * param.omega)
         param.C = -param.B * exp(-2 * pi * param.omega)
         param.D = param.B - param.C
         param.E = 0
@@ -66,7 +72,9 @@ class OuterSolution:
 
     def f1(self, theta):
         param = self.param
-        return (-param.S_1 + param.B * exp(-param.omega * (theta + 2 * pi))) / param.S_2
+        return (
+            param.alpha_cc - param.S_1 + param.B * exp(-param.omega * (theta + 2 * pi))
+        ) / param.S_2
 
     def f2(self, theta):
         param = self.param

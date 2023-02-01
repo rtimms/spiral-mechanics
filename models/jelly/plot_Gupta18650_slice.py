@@ -37,8 +37,11 @@ mu_s = E_s / 2 / (1 + nu_s)
 mu_p = E_p / 2 / (1 + nu_p)
 
 # estimates of expansion due to lithiation during charge from Willenberg (2020)
-alpha_n = 0.1
-alpha_p = -0.02
+alpha_n = 0.05
+alpha_p = -0.01
+
+# estimate of cc expansion
+alpha_cc = 0.002
 
 
 # Dimensionless parameters ----------------------------------------------------
@@ -87,6 +90,8 @@ params.lam_n = (
     2 * params.mu_n * params.nu_n / (1 - 2 * params.nu_n)
 )  # 1st Lame parameter
 
+# current collector properties
+params.alpha_cc = alpha_cc / alpha_ref  # expansion coefficient
 
 # Compute the boundary layer solution -----------------------------------------
 outer = OuterSolution(params)
@@ -120,13 +125,13 @@ for N in list(range(N_plot)):
 
     sigma_rr = outer.f1(theta)
     sigma_rt = outer.g1(theta)
-    sigma_tt_n = -2 * mu_n * alpha_n * (3 * lam_n + 2 * mu_n) / (
+    sigma_tt_n = 2 * mu_n * (alpha_cc - alpha_n) * (3 * lam_n + 2 * mu_n) / (
         lam_n + 2 * mu_n
     ) + lam_n / (lam_n + 2 * mu_n) * outer.f1(theta)
-    sigma_tt_s = -2 * mu_s * alpha_s * (3 * lam_s + 2 * mu_s) / (
+    sigma_tt_s = 2 * mu_s * (alpha_cc - alpha_s) * (3 * lam_s + 2 * mu_s) / (
         lam_s + 2 * mu_s
     ) + lam_s / (lam_s + 2 * mu_s) * outer.f1(theta)
-    sigma_tt_p = -2 * mu_p * alpha_p * (3 * lam_p + 2 * mu_p) / (
+    sigma_tt_p = 2 * mu_p * (alpha_cc - alpha_p) * (3 * lam_p + 2 * mu_p) / (
         lam_p + 2 * mu_p
     ) + lam_p / (lam_p + 2 * mu_p) * outer.f1(theta)
 

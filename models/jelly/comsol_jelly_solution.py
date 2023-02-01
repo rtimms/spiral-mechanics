@@ -14,6 +14,7 @@ class ComsolSolution:
         # Unpack parameters
         r0, delta, hh, N = params.r0, params.delta, params.hh, params.N
         l_n, l_s, l_p = params.l_n, params.l_s, params.l_p
+        alpha_cc = params.alpha_cc
 
         # Compute numerical thicknesses
         h_cn = hh
@@ -61,17 +62,17 @@ class ComsolSolution:
             self.f1 = f1_interp(r_evals["1+ mid"])
             self.f3 = self.f1  # f_1 = f_3
 
-            # f_2 = u(R=theta/2/pi)/delta
+            # f_2 = (u(R=theta/2/pi) - alpha_cc*r)/delta
             comsol = pd.read_csv(path + "u_1.csv", comment="#", header=None).to_numpy()
             f2_r_data = comsol[:, 0]
-            f2_data = comsol[:, 1] / delta / alpha_scale
+            f2_data = (comsol[:, 1] / alpha_scale - alpha_cc * f2_r_data) / delta
             f2_interp = interp.interp1d(f2_r_data, f2_data, bounds_error=False)
             self.f2 = f2_interp(r_evals["1+ in"])
 
-            # f_4 = u(R=1/2+theta/2/pi)/delta
+            # f_4 = (u(R=1/2+theta/2/pi) - alpha_cc*r)/delta
             comsol = pd.read_csv(path + "u_4.csv", comment="#", header=None).to_numpy()
             f4_r_data = comsol[:, 0]
-            f4_data = comsol[:, 1] / delta / alpha_scale
+            f4_data = (comsol[:, 1] / alpha_scale - alpha_cc * f4_r_data) / delta
             f4_interp = interp.interp1d(f4_r_data, f4_data, bounds_error=False)
             self.f4 = f4_interp(r_evals["2- in"])
 
