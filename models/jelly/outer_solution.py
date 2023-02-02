@@ -11,7 +11,7 @@ class OuterSolution:
 
         # constants
 
-        # S_1 = alpha_hat
+        # S_1
         param.S_1 = (
             (
                 param.l_n
@@ -51,8 +51,54 @@ class OuterSolution:
             param.l_n / param.mu_n + param.l_s / param.mu_s + param.l_p / param.mu_p
         )
 
+        sigma_hat = (
+            (
+                param.l_n
+                * (param.alpha_n * (3 * param.lam_n + 2 * param.mu_n))
+                / (param.lam_n + 2 * param.mu_n)
+            )
+            + (
+                param.l_s
+                * (param.alpha_s * (3 * param.lam_s + 2 * param.mu_s))
+                / (param.lam_s + 2 * param.mu_s)
+            )
+            + (
+                param.l_p
+                * (param.alpha_p * (3 * param.lam_p + 2 * param.mu_p))
+                / (param.lam_p + 2 * param.mu_p)
+            )
+        )
+
+        sigma_diff_hat = (
+            (
+                param.l_n
+                * (
+                    (param.alpha_n - param.alpha_cc)
+                    * (3 * param.lam_n + 2 * param.mu_n)
+                )
+                / (param.lam_n + 2 * param.mu_n)
+            )
+            + (
+                param.l_s
+                * (
+                    (param.alpha_s - param.alpha_cc)
+                    * (3 * param.lam_s + 2 * param.mu_s)
+                )
+                / (param.lam_s + 2 * param.mu_s)
+            )
+            + (
+                param.l_p
+                * (
+                    (param.alpha_p - param.alpha_cc)
+                    * (3 * param.lam_p + 2 * param.mu_p)
+                )
+                / (param.lam_p + 2 * param.mu_p)
+            )
+        )
+
         print(f"delta = {param.delta}")
-        print(f"alpha_hat = {param.S_1}")
+        print(f"sigma_hat = {sigma_hat}")
+        print(f"sigma_diff_hat = {sigma_diff_hat}")
         print(f"M_hat = {1/param.S_2}")
         print(f"mu_hat = {1/param.S_3}")
 
