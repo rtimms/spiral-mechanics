@@ -197,7 +197,7 @@ def remove_cc(r, s):
     idx = []
     for winds in [winds_p, winds_n]:
         for w in winds:
-            i = np.where(np.abs(r - w) < params.hh * 1.05)[0]
+            i = np.where(np.abs(r - w) < params.hh * 1.01)[0]
             idx.extend(list(i))
 
     return np.delete(r, idx), np.delete(s, idx)
